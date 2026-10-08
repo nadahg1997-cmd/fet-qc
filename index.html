@@ -582,6 +582,13 @@ html,body{overscroll-behavior-y:none}
 label.f.autof{color:#8A5A00}
 label.f.autof input,label.f.autof select{background:#FFF8E6!important;border-color:#F3C98B!important}
 label.f.autof::after{content:"تلقائي من الصورة – راجعه";font-size:11px;font-weight:600;color:#A86B12}
+.banner.info{background:#E8F1FB;border:1px solid #B7D3F2;color:#1D4E89}
+.dhist{margin-bottom:14px}.dhist b{display:flex;align-items:center;gap:8px}
+.dhl{display:flex;flex-direction:column;gap:6px;margin-top:10px;max-height:300px;overflow:auto}
+.dhi{display:flex;align-items:center;gap:10px;width:100%;text-align:right;border:1px solid var(--line2);background:#fff;border-radius:10px;padding:6px 8px;cursor:pointer}
+.dhi:hover{border-color:var(--brand);background:var(--brand-l)}
+.dhi img,.dhi .noimg{width:54px;height:42px;object-fit:cover;border-radius:6px;flex:none;background:var(--line2);display:grid;place-items:center}
+.dhi span{flex:1;min-width:0}.dhi b{display:block;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.dhi small{color:var(--ink2);font-size:12px}
 </style>
 </head>
 <body>
@@ -646,8 +653,8 @@ const STAGES = [
   "machines": [
    "—"
   ],
-  "sample": "البروفا كاملة مع بطاقة التصميم",
-  "freq": "عند كل بروفا جديدة أو معدّلة (V1، V2…) – رقم الطلبية غير مطلوب",
+  "sample": "كل تصميم",
+  "freq": "عند ورود كل تصميم جديد أو معدّل",
   "extra": [
    {
     "k": "dname",
@@ -657,24 +664,6 @@ const STAGES = [
    {
     "k": "customer",
     "l": "الزبون",
-    "t": "text"
-   },
-   {
-    "k": "ver",
-    "l": "رقم النسخة",
-    "t": "sel",
-    "opts": [
-     "V1",
-     "V2",
-     "V3",
-     "V4",
-     "V5",
-     "V6"
-    ]
-   },
-   {
-    "k": "cdate",
-    "l": "تاريخ البطاقة",
     "t": "text"
    },
    {
@@ -688,22 +677,6 @@ const STAGES = [
     "t": "text"
    },
    {
-    "k": "web",
-    "l": "نوع الورق",
-    "t": "sel",
-    "opts": [
-     "ABL",
-     "AML",
-     "PBL",
-     "PML"
-    ]
-   },
-   {
-    "k": "webc",
-    "l": "لون الورق",
-    "t": "text"
-   },
-   {
     "k": "c360",
     "l": "طباعة 360",
     "t": "sel",
@@ -713,18 +686,13 @@ const STAGES = [
     ]
    },
    {
-    "k": "cap",
-    "l": "الغطاء (النوع واللون)",
-    "t": "text"
-   },
-   {
     "k": "cols",
     "l": "عدد الألوان",
     "t": "text"
    },
    {
     "k": "pant",
-    "l": "أرقام البانتون",
+    "l": "الألوان / البانتون",
     "t": "text"
    },
    {
@@ -739,7 +707,7 @@ const STAGES = [
    },
    {
     "k": "foilx",
-    "l": "حراري",
+    "l": "حراري (Cold Foil)",
     "t": "sel",
     "opts": [
      "لا",
@@ -2101,7 +2069,7 @@ VIEWS.home = {
 /* ================= PRODUCTION ================= */
 VIEWS.prod = {
   html(){
-    const t = todayStr(); const today = S.rounds.filter(r => r.date === t);
+    const t = todayStr(); const today = S.rounds.filter(r => r.date === t); const day = prodDay || t;
     const tiles = STAGES.map((s,i) => {
       const rs = today.filter(r => r.stage === s.key); const last = rs[rs.length-1];
       const cls = !last ? '' : last.decision==='مقبول' ? 's-ok' : last.decision==='مقبول بملاحظة' ? 's-warn' : 's-bad';
@@ -2111,23 +2079,25 @@ VIEWS.prod = {
     const now = new Date(); const lastBy = {};
     today.filter(r => r.machine && r.machine!=='—' && !['design','final'].includes(r.stage)).forEach(r => lastBy[r.stage+'|'+r.machine] = r);
     const due = Object.values(lastBy).map(r => { const [h,m] = String(r.time||'00:00').split(':').map(Number); const d = new Date(); d.setHours(h,m,0,0); return {r, min:Math.round((now-d)/60000)}; }).sort((a,b)=>b.min-a.min);
-    const rec = today.slice(-12).reverse();
+    const rec = S.rounds.filter(r => r.date === day).slice(-60).reverse();
     return `<h1>اختر المرحلة لتسجيل جولة</h1><div class="line">${tiles}</div>
     <h2>توقيت الجولات على الآلات</h2>
     <div class="due">${due.length ? due.map(({r,min})=>`<span class="chip ${min>30?'late':'ok'} num">${esc(r.machine)} · ${stageBy(r.stage).name} · منذ ${min} د</span>`).join('') : '<span class="muted">تظهر الآلات هنا بعد أول جولة عليها اليوم، وتتحول للأحمر بعد 30 دقيقة دون جولة.</span>'}</div>
-    <h2>آخر الجولات اليوم</h2>${roundsTable(rec, true)}`;
+    <div class="row" style="justify-content:space-between;align-items:flex-end;margin-top:22px"><h2 style="margin:0">${day===t?'جولات اليوم':'جولات يوم '+day}</h2><label class="f" style="max-width:200px">عرض جولات يوم<input type="date" id="prodDay" value="${day}" max="${t}"></label></div>
+    ${roundsTable(rec, true)}<p class="muted" style="font-size:12.5px">اضغط "فتح" لعرض أي جولة. صاحب الجولة ومديرة القسم يستطيعان تعديلها.</p>`;
   },
-  bind(){ $$('[data-st]').forEach(b => b.onclick = () => go('round', {stage:b.dataset.st})); bindDelRounds(); }
+  bind(){ $$('[data-st]').forEach(b => b.onclick = () => go('round', {stage:b.dataset.st})); bindDelRounds(); $('#prodDay') && ($('#prodDay').onchange = e => { prodDay = e.target.value; render(); }); }
 };
 function roundsTable(rs, del){
-  del = del && isMgr();
+  const canDel = del && isMgr(); del = !!del;
   return `<div class="tw"><table class="t"><thead><tr><th>التاريخ</th><th>الوقت</th><th>الوردية</th><th>المرحلة</th><th>النوع</th><th>الآلة</th><th>الطلبية</th><th>المنتج</th><th>غير المطابق</th><th>القرار</th><th>الحجز / NCR</th>${del?'<th class="noprint"></th>':''}</tr></thead><tbody>
-  ${rs.map(r=>`<tr><td class="num">${r.date}</td><td class="num">${r.time}</td><td>${r.shift}</td><td>${stageBy(r.stage).name}</td><td>${r.type}</td><td>${esc(r.machine)}</td><td class="num">${esc(ordersLabel(r))}</td><td>${r.images&&r.images.length?`<button class="camb" data-rimg="${r.id}" title="صور البروفا">📷 ${r.images.length}</button> `:''}${esc(itemsLabel(r))}${itemsOf(r).length>1?` <span class="pill p-مقبول_بشرط">${itemsOf(r).length} منتجات</span>`:''}</td><td>${esc([...(r.failed||[]),...r.defects].join('، '))} ${clsTag(r.cls)}</td><td>${r.stage==='design'?designPill(r.decision):decPill(r.decision)}${r.editedBy?' <span class="muted" title="عُدّلت">✎</span>':''}</td><td class="num">${esc([r.hold,r.ncr].filter(Boolean).join(' / '))}</td>${del?`<td class="noprint"><div class="row" style="flex-wrap:nowrap"><button class="btn sm" data-edit="${r.id}">تعديل</button><button class="btn sm d" data-del="${r.id}">حذف</button></div></td>`:''}</tr>`).join('') || `<tr><td colspan="12" class="muted">لا توجد جولات.</td></tr>`}
+  ${rs.map(r=>`<tr><td class="num">${r.date}</td><td class="num">${r.time}</td><td>${r.shift}</td><td>${stageBy(r.stage).name}</td><td>${r.type}</td><td>${esc(r.machine)}</td><td class="num">${esc(ordersLabel(r))}</td><td>${r.images&&r.images.length?`<button class="camb" data-rimg="${r.id}" title="صور البروفا">📷 ${r.images.length}</button> `:''}${esc(itemsLabel(r))}${itemsOf(r).length>1?` <span class="pill p-مقبول_بشرط">${itemsOf(r).length} منتجات</span>`:''}</td><td>${esc([...(r.failed||[]),...r.defects].join('، '))} ${clsTag(r.cls)}</td><td>${r.stage==='design'?designPill(r.decision):decPill(r.decision)}${r.editedBy?' <span class="muted" title="عُدّلت">✎</span>':''}</td><td class="num">${esc([r.hold,r.ncr].filter(Boolean).join(' / '))}</td>${del?`<td class="noprint"><div class="row" style="flex-wrap:nowrap"><button class="btn sm" data-edit="${r.id}">فتح</button>${canDel?`<button class="btn sm d" data-del="${r.id}">حذف</button>`:''}</div></td>`:''}</tr>`).join('') || `<tr><td colspan="12" class="muted">لا توجد جولات.</td></tr>`}
   </tbody></table></div>`;
 }
-function bindDelRounds(){ $$('[data-edit]').forEach(b => b.onclick = () => { const r = S.rounds.find(x => String(x.id)===b.dataset.edit); if(!r) return; F = JSON.parse(JSON.stringify(r)); F.editId = r.id; F.items = itemsOf(r); F.mi = r.mi || 0; F.order = ''; go('round', {stage:r.stage}); }); $$('[data-del]').forEach(b => b.onclick = () => ask('حذف هذه الجولة نهائياً؟','حذف الجولة',() => { S.rounds = S.rounds.filter(r => String(r.id)!==b.dataset.del); save(); rerender(); toast('تم حذف الجولة'); }, true)); }
+function openRound(id){ const r = S.rounds.find(x => String(x.id)===String(id)); if(!r) return; F = JSON.parse(JSON.stringify(r)); F.editId = r.id; F.items = itemsOf(r); F.mi = r.mi || 0; F.order = ''; F.viewOnly = !(isMgr() || r.inspector === (CUR.name || S.settings.inspector)); go('round', {stage:r.stage}); }
+function bindDelRounds(){ $$('[data-edit]').forEach(b => b.onclick = () => openRound(b.dataset.edit)); $$('[data-del]').forEach(b => b.onclick = () => ask('حذف هذه الجولة نهائياً؟','حذف الجولة',() => { S.rounds = S.rounds.filter(r => String(r.id)!==b.dataset.del); save(); rerender(); toast('تم حذف الجولة'); }, true)); }
 
-let F = null;
+let F = null, prodDay = '';
 function newRound(k){ const s = stageBy(k); F = {stage:k, type:'جولة', machine: s.machines.length===1 ? s.machines[0] : '', order:'', items:[], mi:0, box:'', samples:(s.sample.match(/^\d+/)||[''])[0], extra:{}, vals:{}, checks:{}, defects:[], source:'نفس المرحلة', cls:null, decision:null, action:'', notes:'', qty:''}; }
 function fSpec(){ return specOfItem((F.items||[])[F.mi||0] || (F.items||[])[0]) || orderBy(F.order); }
 function suggestRound(){
@@ -2185,13 +2155,15 @@ VIEWS.round = {
     return `<div class="row" style="justify-content:space-between"><h1 style="margin:0;display:flex;align-items:center;gap:12px"><span class="sti big">${LI(STAGE_ICON[s.key])}</span>مرحلة ${s.name}</h1><button class="btn" id="back">رجوع</button></div>
     <p class="muted">${esc(s.wi)} · ${esc(s.form)} · العينة: ${esc(s.sample)} · ${esc(s.freq)}</p>
     ${F.editId?`<div class="banner warn">تعديل جولة سابقة (${esc((S.rounds.find(x=>x.id===F.editId)||{}).inspector||'')} – ${esc((S.rounds.find(x=>x.id===F.editId)||{}).date||'')} ${esc((S.rounds.find(x=>x.id===F.editId)||{}).time||'')}). يُسجل اسمك كمعدِّل.</div>`:''}
+    ${F.viewOnly?`<div class="banner info">عرض فقط – هذه الجولة سجّلها ${esc((S.rounds.find(x=>x.id===F.editId)||{}).inspector||'')}. التعديل لصاحب الجولة أو لمديرة القسم.</div>`:''}
+    ${s.key==='design' ? (F.editId ? '' : designHistoryHtml()) + designImagesHtml(F) : ''}
     ${cls==='حرج'&&s.key!=='design'?'<div class="banner bad">عيب حرج: أوقف الآلة الآن، أبلغ رئيس الوردية ومدير ضبط الجودة، واحجز كل الإنتاج منذ آخر فحص سليم. سيُفتح NCR تلقائياً عند الحفظ.</div>':''}
     <div class="panel">
       ${['design','final'].includes(s.key)?'':`<div class="pick" id="typePick" style="margin-bottom:12px">${['جولة','بدء تشغيل'].map(x=>`<button class="${F.type===x?'on':''}" data-v="${x}">${x==='جولة'?'جولة دورية':'موافقة بدء تشغيل'}</button>`).join('')}</div>`}
       <div class="grid">
         <label class="f">${s.key==='design'?'رقم الطلبية (اختياري – إن وُجدت)':F.items&&F.items.length?'إضافة طلبية أخرى (اختياري)':'رقم الطلبية'}<input type="text" inputmode="numeric" list="ordList" id="fOrder" value="${esc(F.order)}" placeholder="اكتب أو اختر"></label>
         ${['design'].includes(s.key)?'':`<label class="f">${s.key==='final'?'رموز الكراتين المفحوصة':'رقم الصندوق / الكرتونة'}<input type="text" id="fBox" value="${esc(F.box)}"></label>`}
-        <label class="f">عدد العينات<input type="number" id="fSamples" value="${esc(F.samples)}"></label>${extra}
+        ${s.key==='design'?'':`<label class="f">عدد العينات<input type="number" id="fSamples" value="${esc(F.samples)}"></label>`}${extra}
       </div>
       <datalist id="ordList">${[...new Map(S.orders.map(x => [String(x.order_number), x])).values()].map(x=>`<option value="${esc(x.order_number)}">${esc(ordRows(x.order_number).length>1 ? ordRows(x.order_number).length+' منتجات – '+(x.customer||'') : x.product_name)}</option>`).join('')}</datalist>
       ${rows.length>1?`<div class="multi"><div class="mh"><b>الطلبية ${esc(F.order)} فيها ${rows.length} منتجات</b><span class="muted">اختر المنتجات التي تُفحص في هذه الجولة – منتج واحد أو أكثر معاً</span><button class="btn sm" id="pickAll">كل المنتجات</button></div>
@@ -2205,7 +2177,7 @@ VIEWS.round = {
     <h2>بنود الفحص</h2>
     <button class="btn" id="allOk" style="margin-bottom:8px">كل البنود مطابقة ✓</button>
     <div class="panel">${checkRows(s.checks, o, F.checks, F.vals)}</div>
-    ${s.key==='design' ? designImagesHtml(F) : `    <h2>العيوب المرصودة</h2>
+    ${s.key==='design' ? '' : `    <h2>العيوب المرصودة</h2>
     <div class="panel"><div class="pick" id="defPick">${DEFECTS.map(x=>`<button class="${F.defects.includes(x)?'on':''}" data-v="${x}">${x}</button>`).join('')}</div>
       <div class="grid" style="margin-top:12px">
         <label class="f">مصدر العيب<select id="fSource">${opt(SOURCES, F.source)}</select></label>
@@ -2219,7 +2191,7 @@ VIEWS.round = {
       <label class="f">الإجراء المتخذ<input type="text" id="fAction" value="${esc(F.action)}"></label>
       <label class="f">ملاحظات / اسم الصورة<input type="text" id="fNotes" value="${esc(F.notes)}"></label>
     </div>
-    <div class="sticky-save"><button class="btn p" id="saveR">حفظ الجولة</button></div>`;
+    ${F.viewOnly ? '' : `<div class="sticky-save"><button class="btn p" id="saveR">${F.editId ? 'حفظ التعديل' : 'حفظ الجولة'}</button></div>`}`;
   },
   bind(){
     const s = stageBy(F.stage); const reset = () => { F.cls = null; F.decision = null; };
@@ -2239,7 +2211,7 @@ VIEWS.round = {
     $$('[data-rm]').forEach(b => b.onclick = () => { F.items.splice(+b.dataset.rm,1); F.mi = 0; reset(); rerender(); });
     $('#fMi') && ($('#fMi').onchange = e => { F.mi = +e.target.value; reset(); rerender(); });
     $('#fBox') && ($('#fBox').oninput = e => F.box = e.target.value);
-    $('#fSamples').oninput = e => F.samples = e.target.value;
+    $('#fSamples') && ($('#fSamples').oninput = e => F.samples = e.target.value);
     $$('[data-ex]').forEach(el => el.onchange = () => { F.extra[el.dataset.ex] = el.value; if(s.key==='final' || s.key==='design'){ reset(); rerender(); } });
     $$('[data-num]').forEach(el => el.onchange = () => { F.vals[el.dataset.num] = el.value; reset(); rerender(); });
     $$('.tri').forEach(t => t.querySelectorAll('button').forEach(b => b.onclick = () => { F.checks[t.dataset.ck] = b.dataset.v; reset(); rerender(); }));
@@ -2256,6 +2228,7 @@ VIEWS.round = {
 };
 function nextHoldNo(date){ const ymd = date.slice(2).replace(/-/g,''); return `H-${ymd}-${pad(S.holds.filter(h=>h.no.startsWith('H-'+ymd)).length+1)}`; }
 function saveRound(){
+  if(F && F.viewOnly){ toast('هذه الجولة للعرض فقط'); return; }
   const s = stageBy(F.stage);
   if(s.key==='design'){ if(!(F.extra.dname||'').trim() || !(F.extra.customer||'').trim()){ toast('اكتب اسم التصميم والزبون من بطاقة التصميم'); return; }
     if(!F.items || !F.items.length) F.items = [{order:F.order||'', code:'', product:F.extra.dname.trim(), customer:F.extra.customer.trim()}]; }
@@ -3785,12 +3758,29 @@ const DESIGN_DEC = {'مقبول':'معتمد للطباعة', 'مقبول بمل
 const designPill = d => `<span class="pill p-${String(d).replace(/ /g,'_')}">${esc(DESIGN_DEC[d]||d)}</span>`;
 function designCard(F){
   const x = F.extra || {}, f = (l, v, w) => v ? `<div class="${w||''}"><span>${l}</span><b>${esc(v)}</b></div>` : '';
-  const filled = ['dname','customer','dia','len','web','cols'].filter(k => (x[k]||'').trim()).length;
-  return `<div class="pcards"><div class="pcard dcard2"><div class="ph3"><b>بطاقة التصميم</b><span>${filled<6?'املأ الخانات من بطاقة FET أسفل البروفا':'مكتملة'}</span>${x.ver?`<em>${esc(x.ver)}</em>`:''}</div>
+  const filled = ['dname','customer','dia','len','cols'].filter(k => (x[k]||'').trim()).length;
+  return `<div class="pcards"><div class="pcard dcard2"><div class="ph3"><b>بطاقة التصميم</b><span>${filled<5?'املأ الخانات أو ارفع صورة البروفا لتعبئتها':'مكتملة'}</span>${x.ver?`<em>${esc(x.ver)}</em>`:''}</div>
     <div class="pf">${f('اسم التصميم', x.dname, 'rel')}${f('الزبون', x.customer, 'rel')}${f('القطر', x.dia ? x.dia+' ملم' : '', 'rel')}${f('الطول', x.len ? x.len+' ملم' : '', 'rel')}${f('الورق', [x.web, x.webc].filter(Boolean).join(' '))}${f('360', x.c360)}
       ${f('الغطاء', x.cap)}${f('عدد الألوان', x.cols)}${f('البانتون', x.pant)}${f('الورنيش', x.varn)}${f('حراري', x.foilx)}${f('التاريخ', x.cdate)}${f('الطلبية', (F.items||[]).map(i=>i.order).filter(Boolean).join('، '))}</div>
     <p class="muted" style="margin:8px 0 0;font-size:12.5px">رقم الطلبية غير مطلوب في التصميم. عندما يصبح التصميم طلبية، تعدّل مديرة القسم الجولة وتضيف رقمها.</p></div></div>`;
 }
+
+/* [DESIGN] فتح تصميم سابق */
+let designQ = '';
+function designHistoryHtml(){
+  const all = S.rounds.filter(x => x.stage === 'design').slice().reverse();
+  if(!all.length) return '';
+  const q = designQ.trim().toLowerCase();
+  const list = (q ? all.filter(x => [(x.extra||{}).dname, (x.extra||{}).customer, itemsLabel(x), ordersLabel(x)].join(' ').toLowerCase().includes(q)) : all).slice(0, 8);
+  return `<div class="panel dhist"><div class="row" style="justify-content:space-between;align-items:center"><b>${LI('file')} فتح تصميم سابق</b><input type="search" id="dhQ" placeholder="ابحث باسم التصميم أو الزبون" value="${esc(designQ)}" style="max-width:280px"></div>
+    <div class="dhl">${list.map(x => `<button class="dhi" data-open="${x.id}">${x.images&&x.images[0]?`<img src="${x.images[0].thumb}" alt="">`:'<span class="noimg">'+LI('file')+'</span>'}<span><b>${esc((x.extra||{}).dname || itemsLabel(x) || 'تصميم')}</b><small>${esc((x.extra||{}).customer||'')} · ${esc(x.date)} · ${esc(x.inspector)}${ordersLabel(x)?' · طلبية '+esc(ordersLabel(x)):''}</small></span>${designPill(x.decision)}</button>`).join('') || '<p class="muted" style="margin:6px 0">لا نتائج.</p>'}</div></div>`;
+}
+const _rbHist = VIEWS.round.bind;
+VIEWS.round.bind = function(){
+  _rbHist();
+  const q = $('#dhQ'); if(q) q.oninput = () => { designQ = q.value; const pos = q.selectionStart; rerender(); const n = $('#dhQ'); if(n){ n.focus(); n.setSelectionRange(pos, pos); } };
+  $$('[data-open]').forEach(b => b.onclick = () => openRound(b.dataset.open));
+};
 
 /* ================= EXECUTIVE MANAGEMENT REPORT ================= */
 PARENT.exec = 'rep'; NAV_OF.exec = 'rep'; PAGE.exec = ['التقارير', 'التقرير التنفيذي للإدارة'];
@@ -3953,18 +3943,20 @@ function parseDesignCard(text, fileName, customers){
   const fileBase = String(fileName || '').replace(/\.[^.]+$/, '').replace(/[_]+/g, ' ').replace(/-/g, ' ').replace(/\s+/g, ' ').trim();
   const NXN = /(\d{2})\s*[xX×]\s*(\d{2,3})/;
   /* التاريخ */
-  const d = m(/(\d{1,2}\s*[\/.\-]\s*\d{1,2}\s*[\/.\-]\s*20\d{2})/); if(d) out.cdate = d.replace(/\s/g, '').replace(/[.\-]/g, '/');
+
   /* اسم التصميم */
   let dn = m(/Design\s*Name[:\s]*([^\n]+)/i).replace(/\s*(Size|Diameter|Web|Cap)\b.*$/i, '');
   if(!dn && NXN.test(fileBase)) dn = fileBase;
   if(!dn) dn = m(/([A-Za-z][^\n]*?\d{2}\s*[xX×]\s*\d{2,3}[^\n]*)/).replace(/^(Customer|Design\s*Name)\s*/i, '');
   /* الزبون */
   let cu = m(/Customer[:\s]+([A-Za-z0-9&.'\-]+(?:\s[A-Za-z0-9&.'\-]+){0,3}?)\s*(?:Design\s*Name|\n|$)/i);
-  if(cu && (NXN.test(cu) || !/^[A-Za-z][A-Za-z&.'\-]{2,}/.test(cu) || /^(Design|Size|Web|Cap|Date|Code)$/i.test(cu))) cu = '';
+  if(cu && (NXN.test(cu) || !/^[A-Za-z][A-Za-z&.'\-]{2,}/.test(cu) || /^(Design|Name|Size|Web|Cap|Date|Code|Diameter|Length|Type|Color)\b/i.test(cu))) cu = '';
+  if(!cu){ const dup = (T + '\n' + dn).match(/\b([A-Za-z][\w&.'\-]{2,}(?:\s[A-Za-z][\w&.'\-]{2,})?)\s+\1\b/i); if(dup){ cu = dup[1]; const k = T.search(new RegExp(dup[1] + '\\s+' + dup[1], 'i')); if(k >= 0){ const line = T.slice(k).split('\n')[0]; const rest = line.slice(dup[1].length).trim(); if(NXN.test(rest) || !dn) dn = rest.replace(/\s+(Size|Diameter)\b.*$/i, ''); } } }
   const known = (customers || []).filter(Boolean).sort((a, b) => b.length - a.length);
   if(!cu){ const k = known.find(c => (T + ' ' + dn).toLowerCase().includes(String(c).toLowerCase().split(/[\s.]/)[0])); if(k) cu = k; }
   if(!cu && dn) cu = dn.split(' ')[0];
   if(cu && dn){ const i = dn.toLowerCase().indexOf(cu.toLowerCase().split(/[\s.]/)[0]); if(i > 0) dn = dn.slice(i); }
+  { const w = (dn||'').trim().split(/\s+/); if(w.length > 2 && w[0].toLowerCase() === w[1].toLowerCase()){ if(!cu) cu = w[0]; dn = w.slice(1).join(' '); } }
   if(dn) out.dname = dn.trim(); if(cu) out.customer = cu.trim();
   /* القطر والطول */
   let dia = m(/Diameter[^\d]{0,20}(\d{2}(?:\.\d+)?)\s*mm/i), len = m(/Length[^\d]{0,20}(\d{2,3}(?:\.\d+)?)\s*mm/i);
@@ -3975,16 +3967,21 @@ function parseDesignCard(text, fileName, customers){
   /* 360 */
   if(/Code[\s:]*360\b/i.test(T) || /\b(AML|ABL|PBL|PML)\b[\s\S]{0,40}?\b360\b/i.test(T)) out.c360 = 'نعم';
   /* عدد الألوان */
-  const cols = m(/Colou?rs?[:\s]+(\d{1,2})\s+Pantone/i) || m(/Colou?rs?[ :]+(\d{1,2})\b/i); if(cols) out.cols = cols;
+  const cols = m(/Colou?rs?[:\s]+(\d{1,2})\s+Pantone/i) || m(/Colou?rs?[ :]+(\d{1,2})\b/i); if(cols && +cols > 0 && +cols < 13) out.cols = cols;
   /* البانتون */
-  const tok = []; const re = /(?:^|[\s,،])(White\s?Base|\d{3,4}(?:\s?C)?|K|Black|Cyan|Magenta|Yellow)\s+(?:New|Old|Repeat|Same)\b/gim; let x;
+  const tok = []; const re = /(?:^|[\s,،])(White\s?Base|\d{3,4}(?:\s?C)?|K|Black|Cyan|Magenta|Yellow)[\s|]+(?:New|Old|Repeat|Same)\b/gim; let x;
   while((x = re.exec(T))) { const v = x[1].replace(/White\s?Base/i, 'White Base').trim(); if(v === '360' || /^20\d{2}$/.test(v)) continue; if(!tok.includes(v)) tok.push(v); }
   if(!tok.length && /White\s?Base/i.test(T)) tok.push('White Base');
   if(tok.length) out.pant = tok.join('، ');
+  if(!out.cols){ const rows = (T.match(/(?:^|[\s,،])(White\s?Base|\d{3,4}(?:\s?C)?|K|Black|Cyan|Magenta|Yellow|Varnish)[\s|]+(?:New|Old|Repeat|Same)\b/gim) || []).length; if(rows >= 3) out.cols = String(rows); }
+  /* colour rows fallback: عدد صفوف جدول الألوان (مع الورنيش) */
+  if(!out.cols && tok.length >= 2){ const vRow = /\bVarnish[\s|]+(?:New|Old|Repeat|Same)\b/i.test(T) ? 1 : 0; out.cols = String(tok.length + vRow); }
   /* الورنيش */
   const v = m(/\b(Glossy|Gloss|Matte|Matt)\b/i); if(v) out.varn = /mat/i.test(v) ? 'مت Matte' : 'لميع Glossy';
   /* الحراري */
-  const f = m(/Cold\s*Foil[:\s]*(Yes|No|Gold|Silver|--?|—)/i); if(f) out.foilx = /yes|gold|silver/i.test(f) ? 'نعم' : 'لا';
+  const f = m(/Cold\s*Foil[:\s]*(Yes|No|Gold|Silver|Holo\w*|--?|—|–)/i);
+  if(f) out.foilx = /yes|gold|silver|holo/i.test(f) ? 'نعم' : 'لا';
+  else { const mid = T.match(/Colou?rs?[ :]+\d{1,2}\s+(?:\d{1,2}\s+)?([\s\S]{0,24}?)\b(Glossy|Gloss|Matte|Matt|Mat)\b/i); if(mid && /^[\s\-–—|_]*$/.test(mid[1])) out.foilx = 'لا'; }
   return out;
 }
 
@@ -4067,12 +4064,22 @@ document.addEventListener('click', e => { const b = e.target.closest('[data-rimg
 
 /* [OCR] تعبئة بطاقة التصميم تلقائياً من الصورة – لا تُعبّأ: نوع الورق ولونه، ونوع الغطاء ولونه */
 async function cropCard(dataUrl){
+  /* يقص جزء البطاقة السفلي، ويحوّله رمادياً بتباين عالٍ، ويضع تحته نسخة معكوسة الألوان
+     حتى تُقرأ العناوين البيضاء على الخلفية السوداء (Customer, Colours…) */
   const img = new Image(); await new Promise((res, rej) => { img.onload = res; img.onerror = rej; img.src = dataUrl; });
   const portrait = img.height > img.width * 1.2, sy = portrait ? Math.round(img.height * 0.52) : 0, sh = img.height - sy;
-  const scale = Math.min(1, 2200 / img.width), c = document.createElement('canvas');
-  c.width = Math.round(img.width * scale); c.height = Math.round(sh * scale); const x = c.getContext('2d');
-  x.fillStyle = '#fff'; x.fillRect(0, 0, c.width, c.height); x.drawImage(img, 0, sy, img.width, sh, 0, 0, c.width, c.height);
-  return c.toDataURL('image/jpeg', .9);
+  const W = Math.min(2200, img.width), scale = W / img.width, H = Math.round(sh * scale);
+  const c = document.createElement('canvas'); c.width = W; c.height = H * 2; const x = c.getContext('2d');
+  x.fillStyle = '#fff'; x.fillRect(0, 0, W, H * 2); x.drawImage(img, 0, sy, img.width, sh, 0, 0, W, H);
+  const d = x.getImageData(0, 0, W, H), p = d.data; let lo = 255, hi = 0;
+  for(let i = 0; i < p.length; i += 4){ const g = (p[i] * 299 + p[i+1] * 587 + p[i+2] * 114) / 1000; p[i] = g; if(g < lo) lo = g; if(g > hi) hi = g; }
+  const k = 255 / Math.max(1, hi - lo);
+  for(let i = 0; i < p.length; i += 4){ const g = (p[i] - lo) * k; p[i] = p[i+1] = p[i+2] = g; }
+  x.putImageData(d, 0, 0);
+  const inv = x.createImageData(W, H), q = inv.data;
+  for(let i = 0; i < p.length; i += 4){ q[i] = q[i+1] = q[i+2] = 255 - p[i]; q[i+3] = 255; }
+  x.putImageData(inv, 0, H);
+  return c.toDataURL('image/jpeg', .88);
 }
 async function autoFillDesign(orig, fileName){
   const customers = [...new Set(S.orders.map(o => o.customer).filter(Boolean))];
@@ -4082,7 +4089,7 @@ async function autoFillDesign(orig, fileName){
     catch(e){ why = String(e && e.message || e).includes('OCR_NOT_ENABLED') ? 'not_enabled' : 'failed'; }
   } else why = 'offline';
   const got = parseDesignCard(text, fileName, customers);
-  ['web','webc','cap'].forEach(k => delete got[k]);
+  const allowed = new Set((stageBy('design').extra || []).map(e => e.k)); Object.keys(got).forEach(k => { if(!allowed.has(k)) delete got[k]; });
   const keys = Object.keys(got).filter(k => got[k] && !String(F.extra[k] || '').trim());
   keys.forEach(k => F.extra[k] = got[k]);
   F.autoKeys = [...new Set([...(F.autoKeys || []), ...keys])];
