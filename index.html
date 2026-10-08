@@ -4015,6 +4015,40 @@ function parseDesignCard(text, fileName, customers){
   else if(hasText && /Cold\s*Foil/i.test(T)) out.foilx = 'لا';
   return out;
 }
+/* [OCR-SHEET] قراءة بطاقة FET بالموقع الثابت للخانات: البرنامج يقصّ كل خانة ويكتب اسمها بجانبها في صورة واحدة */
+const CARD_FIELDS = [['DATE',[.566,.760,.727,.780]],['CUSTOMER',[.154,.784,.296,.804]],['DESIGN',[.425,.784,.727,.804]],['DIAMETER',[.256,.808,.360,.828]],['LENGTH',[.468,.808,.727,.828]],
+  ['CODE',[.542,.831,.727,.850]],['COLOURS',[.153,.899,.182,.919]],['PANTONE',[.268,.899,.302,.919]],['METALIC',[.391,.899,.453,.919]],['COLDFOIL',[.541,.899,.570,.919]],['VARNISH',[.654,.899,.727,.919]]]
+  .concat(Array.from({length:8}, (_, i) => ['C' + (i + 1), [.812, .7605 + .02315 * i, .905, .7605 + .02315 * (i + 1) - .002]]));
+function parseCardSheet(text){
+  const T = String(text || '').replace(/\r/g, '');
+  const get = lab => { const x = T.match(new RegExp('(?:^|\\n)\\s*' + lab + '\\s*[:;.]?\\s*([^\\n#]*)', 'i')); return x ? x[1].replace(/^[\s|_=™'"`~\-–—.,:;]+(?=\S)/, '').replace(/[\s|_=™'"`~.,:;]+$/, '').trim() : null; };
+  const out = {}, num = s => { const x = String(s || '').replace(/,/g, '.').match(/\d{1,3}(?:\.\d+)?/); return x ? x[0] : ''; };
+  const cu = get('CUSTOMER'), dn = get('DESIGN');
+  if(cu && /[A-Za-z\u0600-\u06FF]{2,}/.test(cu)) out.customer = cu.replace(/\s{2,}/g, ' ');
+  if(dn && /[A-Za-z\u0600-\u06FF]{2,}/.test(dn)) out.dname = dn.replace(/\s{2,}/g, ' ');
+  const dia = num(get('DIAMETER')); if(dia && +dia >= 10 && +dia <= 60) out.dia = dia;
+  const len = num(get('LENGTH')); if(len && +len >= 40 && +len <= 260) out.len = len;
+  const code = get('CODE'); if(code !== null) out.c360 = /360/.test(code) ? 'نعم' : 'لا';
+  const cols = num(get('COLOURS')); if(cols && +cols > 0 && +cols < 13) out.cols = String(+cols);
+  const pn = num(get('PANTONE')); if(pn && +pn < 13) out.pantN = String(+pn);
+  const me = get('METALIC'); if(me !== null){ const d = num(me); out.metal = d ? String(+d) : (/[-–—]/.test(me) || me === '' ? '0' : ''); if(!out.metal) delete out.metal; }
+  const cf = get('COLDFOIL'); if(cf !== null) out.foilx = /yes|gold|silver|holo|[1-9]/i.test(cf) ? 'نعم' : 'لا';
+  const vt = new Set(), addV = s => { if(/spot/i.test(s)) vt.add('S'); else if(/mat/i.test(s)) vt.add('M'); else if(/gl?oss|lossy/i.test(s)) vt.add('G'); };
+  const va = get('VARNISH'); if(va) addV(va);
+  const colours = []; let rows = 0;
+  for(let i = 1; i <= 8; i++){
+    let c = get('C' + i); if(!c) continue; c = c.replace(/^[^A-Za-z0-9]+/, '').trim(); if(!c) continue;
+    rows++;
+    if(/varn/i.test(c)){ addV(c); continue; }
+    c = c.replace(/White\s?Base/i, 'White Base').replace(/\s+(New|Old|Repeat)$/i, '');
+    if(/^[A-Za-z]$/.test(c)) c = c.toUpperCase();
+    colours.push(c);
+  }
+  if(colours.length) out.pant = colours.join('، ');
+  if(!out.cols && rows >= 2) out.cols = String(rows);
+  if(vt.size) out.varn = vt.has('S') ? (vt.has('M') ? 'مت + سبوت' : vt.has('G') ? 'لميع + سبوت' : 'سبوت Spot') : vt.has('M') ? 'مت Matte' : 'لميع Glossy';
+  return out;
+}
 
 
 /* ================= [IMAGES] صور البروفا في مرحلة التصميم ================= */
@@ -4115,16 +4149,34 @@ async function cropCard(dataUrl){
   x.putImageData(inv, 0, H);
   return c.toDataURL('image/jpeg', .88);
 }
+async function buildCardSheet(dataUrl){
+  const img = new Image(); await new Promise((res, rej) => { img.onload = res; img.onerror = rej; img.src = dataUrl; });
+  const W = img.width, H = img.height, ratio = W / H; if(ratio < .66 || ratio > .75) return null;
+  const rowH = 110, cellH = 80, CW = 1500, c = document.createElement('canvas'); c.width = CW; c.height = CARD_FIELDS.length * rowH + 20;
+  const x = c.getContext('2d'); x.fillStyle = '#fff'; x.fillRect(0, 0, c.width, c.height); x.direction = 'ltr'; x.textAlign = 'left'; x.font = 'bold 44px Arial, sans-serif';
+  CARD_FIELDS.forEach(([k, [a, b, cc, d]], i) => {
+    const y = 10 + i * rowH, lab = k + ':'; x.fillStyle = '#000'; x.fillText(lab, 10, y + 60);
+    const lw = x.measureText(lab).width, sx = a * W, sy = b * H, sw = (cc - a) * W, sh = (d - b) * H, dw = Math.min(sw * cellH / sh, CW - lw - 120);
+    x.drawImage(img, sx, sy, sw, sh, 10 + lw + 30, y, dw, cellH); x.fillStyle = '#000'; x.fillText('#', 10 + lw + 30 + dw + 25, y + 60);
+  });
+  return c.toDataURL('image/jpeg', .92);
+}
+const ocrText = async dataUrl => JSON.parse(await rpc('ocrImage', JSON.stringify({b64:dataUrl.split(',')[1]}))).text || '';
 async function autoFillDesign(orig, fileName){
   const customers = [...new Set(S.orders.map(o => o.customer).filter(Boolean))];
-  let text = '', why = '';
+  let text = '', why = '', got = {};
   if(GAS_MODE && navigator.onLine !== false){
-    try{ toast('جارٍ قراءة بطاقة التصميم من الصورة…'); const card = await cropCard(orig); text = JSON.parse(await rpc('ocrImage', JSON.stringify({b64:card.split(',')[1]}))).text || ''; }
-    catch(e){ why = String(e && e.message || e).includes('OCR_NOT_ENABLED') ? 'not_enabled' : 'failed'; }
+    toast('جارٍ قراءة بطاقة التصميم من الصورة…');
+    try{
+      const sheet = await buildCardSheet(orig);
+      if(sheet){ text = await ocrText(sheet); got = parseCardSheet(text); }
+      if(!got.dname && !got.customer){ const t2 = await ocrText(await cropCard(orig)); text = (text ? text + '\n-----\n' : '') + t2; got = Object.assign(parseDesignCard(t2, fileName, customers), got); }
+    }catch(e){ why = String(e && e.message || e).includes('OCR_NOT_ENABLED') ? 'not_enabled' : 'failed'; }
   } else why = 'offline';
+  if(!got.dname && !got.customer) got = Object.assign(parseDesignCard('', fileName, customers), got);
+  if(got.customer){ const k = customers.find(c => String(c).toLowerCase().split(/[\s.]/)[0] === got.customer.toLowerCase().split(/[\s.]/)[0]); if(k) got.customer = k; }
   F.ocr = {text: text.slice(0, 3000), why, at: Date.now(), file: fileName};
-  const got = parseDesignCard(text, fileName, customers);
-  const allowed = new Set((stageBy('design').extra || []).map(e => e.k)); Object.keys(got).forEach(k => { if(!allowed.has(k)) delete got[k]; });
+  ['web','webc','cap','ver','cdate'].forEach(k => delete got[k]);
   const keys = Object.keys(got).filter(k => got[k] && !String(F.extra[k] || '').trim());
   keys.forEach(k => F.extra[k] = got[k]);
   F.autoKeys = [...new Set([...(F.autoKeys || []), ...keys])];
