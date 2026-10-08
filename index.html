@@ -562,6 +562,8 @@ nav.tabs{padding-bottom:env(safe-area-inset-bottom)}
 .pn.q{background:#FFF8E6;border-color:#F3D9A0}.pn.q b{color:var(--warn)}
 .pn.gm{background:var(--bad-l);border-color:#EDB5AE}.pn.gm b{color:var(--bad)}
 .pn.s{opacity:.8}
+.diag{margin-top:8px;font-size:12px;color:var(--ink2)}.diag div{word-break:break-all;margin-top:4px}
+html,body{overscroll-behavior-y:none}
 </style>
 </head>
 <body>
@@ -1758,7 +1760,7 @@ async function save(){
   dirty = true; if(typeof localPersist==='function') localPersist(); if(serverMode){ scheduleSync(); return; } if(typeof localOK!=='undefined' && localOK && typeof window.storage==='undefined'){ dirty = false; return; } if(!persistent) return;
   try{ await window.storage.set(KEY, JSON.stringify(S)); dirty = false; }catch(e){ toast('تعذر الحفظ التلقائي – احفظ نسخة احتياطية من "المزيد ← البيانات"'); }
 }
-window.addEventListener('beforeunload', e => { if((!persistent || serverMode) && dirty && !(typeof localOK!=='undefined' && localOK)){ e.preventDefault(); e.returnValue=''; } });
+window.addEventListener('beforeunload', e => { if(['round','matform','auditform','compform'].includes(view)){ e.preventDefault(); e.returnValue=''; return; } if((!persistent || serverMode) && dirty && !(typeof localOK!=='undefined' && localOK)){ e.preventDefault(); e.returnValue=''; } });
 
 const $ = s => document.querySelector(s);
 const $$ = s => [...document.querySelectorAll(s)];
@@ -2876,7 +2878,7 @@ renderHeader = function(){
   if(serverMode && CUR.name){
     $('#inspSel').classList.add('hide'); chip.classList.remove('hide');
     chip.innerHTML = `<b>${esc(CUR.name)}</b><span>${CUR.role==='manager'?'مدير القسم':'مراقب'}</span><button id="logout" title="تسجيل الخروج">خروج</button>`;
-    $('#logout').onclick = () => ask('تسجيل الخروج من هذا الجهاز؟', 'خروج', () => { GAS_PIN = ''; CUR = {name:'', role:''}; try{ history.replaceState(null,'',location.pathname+location.search.replace(/([?&])(pin|u)=[^&]*/g,'')); }catch(e){} location.reload(); });
+    $('#logout').onclick = () => ask('تسجيل الخروج من هذا الجهاز؟', 'خروج', () => { GAS_PIN = ''; CUR = {name:'', role:''}; IDB.del('session'); IDB.del('draft'); try{ history.replaceState(null,'',location.pathname+location.search.replace(/([?&])(pin|u)=[^&]*/g,'')); }catch(e){} setTimeout(() => location.reload(), 300); });
   } else if(chip) chip.classList.add('hide');
 };
 /* more menu: add team & dashboard */
@@ -3753,9 +3755,10 @@ async function apiLogin(user, pin){
   const r = await fetch('api/login', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({user, pin})});
   if(r.status === 401) throw new Error('BADPIN'); return r.json();
 }
+let USERS_ERR = '';
 async function apiUsers(){
-  try{ const l = GAS_MODE ? JSON.parse(await rpc('users', '')) : await (await fetch('api/users')).json(); if(Array.isArray(l) && l.length) IDB.set('users', l); return l; }
-  catch(e){ return (await IDB.get('users')) || []; }
+  try{ const l = GAS_MODE ? JSON.parse(await rpc('users', '')) : await (await fetch('api/users')).json(); USERS_ERR = ''; if(Array.isArray(l) && l.length) IDB.set('users', l); return l; }
+  catch(e){ USERS_ERR = String(e && e.message || e); return (await IDB.get('users')) || []; }
 }
 let serverEpoch = '';
 /* ---- device storage (IndexedDB): work offline, upload when online ---- */
@@ -3799,12 +3802,15 @@ async function askPin(wrong){
   const users = await apiUsers();
   $('#modalBody').innerHTML = `<div class="login"><img src="${LOGO}" alt=""><b>نظام ضبط الجودة</b><span>F.E.T Packaging · سجّل الدخول بحسابك</span></div>
     ${wrong==='offline'?'<p class="lerr">لا يوجد اتصال، ولم يسبق الدخول بهذا الحساب على هذا الجهاز. يلزم دخول واحد على الأقل مع الإنترنت.</p>':wrong?'<p class="lerr">اسم المستخدم أو الرمز غير صحيح</p>':''}
-    <label class="f">المستخدم<select id="uIn">${users.map(u=>`<option ${u===(LAST_USER||CUR.name)?'selected':''}>${esc(u)}</option>`).join('')}</select></label>
+    ${users.length ? `<label class="f">المستخدم<select id="uIn">${users.map(u=>`<option ${u===(LAST_USER||CUR.name)?'selected':''}>${esc(u)}</option>`).join('')}</select></label>`
+      : `<p class="lerr">تعذر تحميل قائمة المستخدمين من الخادم.${PWA_API ? '<br><small>تأكد من الإنترنت، ومن تحديث Code.gs ونشر "إصدار جديد" في Google، ومن أن الرابط في config.js هو رابط النشر الحالي.</small>' : ''}</p>
+         <label class="f">اكتب اسمك كما هو مسجل<input type="text" id="uIn" value="${esc(LAST_USER||CUR.name||'')}" placeholder="مثال: احمد احمد"></label>
+         <details class="diag"><summary>تفاصيل تقنية</summary><div dir="ltr">${esc(PWA_API ? PWA_API.slice(0,60)+'…' : location.host)}<br>${esc(USERS_ERR||'empty list')}</div></details>`}
     <label class="f" style="margin-top:10px">الرمز السري<input type="password" inputmode="numeric" id="pinIn" autocomplete="current-password"></label>
     <button class="btn p" id="pinOk" style="width:100%;margin-top:14px">دخول</button>`;
   $('#modal').classList.remove('hide'); $('#modal').classList.add('loginmode'); $('#pinIn').focus();
   const go_ = async () => {
-    const user = $('#uIn').value, pin = $('#pinIn').value.trim(); LAST_USER = user;
+    const user = $('#uIn').value.trim(), pin = $('#pinIn').value.trim(); LAST_USER = user;
     const h = await sha(user + '|' + pin + '|fet-qc');
     try{ const r = await apiLogin(user, pin); CUR = {name:r.name, role:r.role}; GAS_PIN = pin; IDB.set('auth:' + user, {h, role:r.role}); }
     catch(e){
@@ -3821,7 +3827,7 @@ async function askPin(wrong){
     const ul = await apiUsers(); if(ul.length) S.settings.inspectors = ul; else if(!S.settings.inspectors.includes(CUR.name)) S.settings.inspectors.push(CUR.name);
     S.settings.inspector = CUR.name;
     if(!S.orders.length) S.orders = DEFAULT_ORDERS;
-    autoDaily(); renderHeader(); render(); toast(`أهلاً ${CUR.name}`);
+    autoDaily(); renderHeader(); render(); toast(`أهلاً ${CUR.name}`); saveSession(); restoreDraft();
   };
   $('#pinOk').onclick = go_; $('#pinIn').onkeydown = e => { if(e.key==='Enter') go_(); };
 }
@@ -3898,6 +3904,25 @@ async function syncNow(){
 }
 function scheduleSync(){ clearTimeout(syncTimer); updateSyncPill(); syncTimer = setTimeout(syncNow, 300); }
 
+/* ---- keep the session after a page refresh + autosave of unfinished forms ---- */
+const SESSION_HOURS = 14;
+function saveSession(){ IDB.set('session', {name:CUR.name, role:CUR.role, pin:GAS_PIN, exp:Date.now() + SESSION_HOURS*3600e3}); }
+async function loadSession(){ const s = await IDB.get('session'); if(s && s.exp > Date.now() && s.name && s.pin){ CUR = {name:s.name, role:s.role}; GAS_PIN = s.pin; return true; } return false; }
+const DRAFT_VIEWS = ['round','matform','auditform'];
+let draftTimer = null;
+function saveDraft(){ clearTimeout(draftTimer); draftTimer = setTimeout(() => {
+  if(!DRAFT_VIEWS.includes(view)) { IDB.del('draft'); return; }
+  IDB.set('draft', {view, arg: arg && typeof arg === 'object' ? arg : null, F: view==='round' ? F : null, M: view==='matform' ? M : null, A: view==='auditform' ? A : null, user:CUR.name, at:Date.now()});
+}, 300); }
+['input','change','click'].forEach(ev => document.addEventListener(ev, () => { if(DRAFT_VIEWS.includes(view)) saveDraft(); }, true));
+async function restoreDraft(){
+  const d = await IDB.get('draft'); if(!d || Date.now() - d.at > 12*3600e3 || !DRAFT_VIEWS.includes(d.view)) return;
+  if(d.view === 'round' && d.F){ F = d.F; go('round', {stage:d.F.stage}); }
+  else if(d.view === 'matform' && d.M){ M = d.M; go('matform', d.arg || {}); }
+  else if(d.view === 'auditform' && d.A){ A = d.A; go('auditform', {type:d.A.type}); }
+  else return;
+  toast('تم استرجاع ما كنت تكتبه قبل تحديث الصفحة – أكمل واضغط حفظ');
+}
 async function startApp(){
   if(GAS_MODE) serverMode = true;
   else if(location.protocol.startsWith('http')){
@@ -3909,7 +3934,9 @@ async function startApp(){
     setInterval(() => { if(CUR.role) syncNow(); }, GAS_MODE ? 15000 : 5000);
     document.addEventListener('visibilitychange', () => { if(!document.hidden && CUR.role) syncNow(); });
     S.orders = DEFAULT_ORDERS;
-    if(CUR.name && GAS_PIN){ try{ const r = await apiLogin(CUR.name, GAS_PIN); CUR = {name:r.name, role:r.role}; }catch(e){ CUR.role = ''; } }
+    if(!(CUR.name && GAS_PIN)) await loadSession();
+    if(CUR.name && GAS_PIN && !CUR.role){ try{ const r = await apiLogin(CUR.name, GAS_PIN); CUR = {name:r.name, role:r.role}; }catch(e){ if(String(e && e.message || e).includes('BADPIN')) CUR.role = ''; else { const s = await IDB.get('session'); CUR.role = s && s.name===CUR.name ? s.role : ''; online = false; } } }
+    else if(CUR.name && GAS_PIN && CUR.role){ apiLogin(CUR.name, GAS_PIN).then(r => { CUR.role = r.role; saveSession(); }).catch(e => { if(String(e && e.message || e).includes('BADPIN')){ IDB.del('session'); location.reload(); } }); }
     if(!CUR.role){ renderHeader(); render(); askPin(false); return; }
     S.orders = []; await localRestore(); await syncNow();
     if(!S.orders.length){ S.orders = DEFAULT_ORDERS; S.ordersDate = '2026-10-05'; }
@@ -3920,6 +3947,7 @@ async function startApp(){
     await load(); CUR = {name:S.settings.inspector || 'مدير القسم', role:'manager'}; S.settings.inspector = CUR.name; if(!S.reports) S.reports = []; autoDaily();
   }
   renderHeader(); render();
+  if(serverMode && CUR.role){ saveSession(); restoreDraft(); }
 }
 startApp();
 
