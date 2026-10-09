@@ -4171,7 +4171,7 @@ async function autoFillDesign(orig, fileName){
       const sheet = await buildCardSheet(orig);
       if(sheet){ text = await ocrText(sheet); got = parseCardSheet(text); }
       if(!got.dname && !got.customer){ const t2 = await ocrText(await cropCard(orig)); text = (text ? text + '\n-----\n' : '') + t2; got = Object.assign(parseDesignCard(t2, fileName, customers), got); }
-    }catch(e){ errMsg = String(e && e.message || e); why = errMsg.includes('OCR_NOT_ENABLED') ? 'not_enabled' : 'failed'; }
+    }catch(e){ errMsg = String(e && e.message || e); try{ const v = JSON.parse(await rpc('serverVersion', '')); errMsg += ' | server v' + v.version + (v.ocr ? '' : ' (Drive API off)'); }catch(e2){ errMsg += ' | server: old version (no serverVersion) – انشر إصداراً جديداً'; } why = errMsg.includes('OCR_NOT_ENABLED') ? 'not_enabled' : 'failed'; }
   } else why = 'offline';
   if(!got.dname && !got.customer) got = Object.assign(parseDesignCard('', fileName, customers), got);
   if(got.customer){ const k = customers.find(c => String(c).toLowerCase().split(/[\s.]/)[0] === got.customer.toLowerCase().split(/[\s.]/)[0]); if(k) got.customer = k; }
