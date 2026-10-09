@@ -634,6 +634,16 @@ label.f.autof::after{content:"تلقائي من الصورة – راجعه";fon
 .rb{background:#fff;border:1px solid var(--line2);border-radius:10px;padding:10px 12px;display:flex;flex-direction:column;gap:2px}
 .rb span{font-size:12.5px;color:var(--ink2)}.rb b{font-size:30px;line-height:1.1;color:#1D4E89}.rb small{font-size:12px;color:var(--ink2)}
 @media(max-width:700px){.rg{grid-template-columns:1fr}}
+/* draw: both machines */
+.dmgrid{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start}
+@media(max-width:1100px){.dmgrid{grid-template-columns:1fr}}
+.dmach{border-top:5px solid var(--line)}.dmach.run{border-top-color:var(--ok)}.dmach.stop{border-top-color:var(--bad)}
+.mhd{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px}.mhd b{display:flex;gap:8px;align-items:center;font-size:18px}.mhd .li{width:22px;height:22px}
+.mst button.run.on{background:var(--ok);border-color:var(--ok);color:#fff}.mst button.stop.on{background:var(--bad);border-color:var(--bad);color:#fff}
+.mh3{font-size:15px;margin:16px 0 8px}
+.dmach .pcards .pbody{grid-template-columns:1fr!important}.dmach .pimg img{height:200px!important}
+.req{color:var(--bad);font-weight:700}
+label.f.boxf{background:#FFF8E6;border:1px dashed #F3C98B;border-radius:10px;padding:8px}
 </style>
 </head>
 <body>
@@ -682,6 +692,7 @@ setTimeout(function(){ if(window.__appLoaded) return; var m=document.getElementB
    [KPI_DEF]    مؤشرات الأداء وأهدافها
    [ERP_NOTES]  ملاحظات ERP التي تظهر للمراقب بجانب كل منتج
    [OCR]        قراءة بطاقة التصميم من الصورة (parseDesignCard)
+   [DRAW]       صفحة السحب للآلتين، العيوب لكل مرحلة، أسباب التوقف
    [DESIGNS]    مكتبة التصاميم (رفع وربط صور التصاميم بالمنتجات)
    [IMAGES]     صور البروفا: الحجم الأقصى IMG_MAX وحجم المصغّرة
    [DESIGN]     مرحلة التصميم: بطاقة التصميم وتسميات القرار
@@ -1961,7 +1972,7 @@ STAGES.find(s => s.key==='final').extra = [{k:'lot',l:'كمية الطلبية (
 
 const blank = () => ({settings:{inspectors:[],inspector:'',shift:'صباحية',manager:'ندى حجازي',qa:'محمد براء رحمون',reviewer:'Talal Alraee',ceo:'أيهم سكرية',
   weldMin:1.8,weldMax:3,seamMin:2,seamMax:4,devices:JSON.parse(JSON.stringify(DEVICES)),th:JSON.parse(JSON.stringify(TH_LOC))},
-  orders:DEFAULT_ORDERS, ordersDate:'', reports:[], pimgs:[], rounds:[], holds:[], handovers:[], mats:[], ncrs:[], complaints:[], audits:[], cals:[], ths:[], aid:[], coas:[]});
+  orders:DEFAULT_ORDERS, ordersDate:'', reports:[], pimgs:[], stops:[], rounds:[], holds:[], handovers:[], mats:[], ncrs:[], complaints:[], audits:[], cals:[], ths:[], aid:[], coas:[]});
 let S = blank();
 let persistent = typeof window.storage !== 'undefined' && window.storage && typeof window.storage.get === 'function';
 let dirty = false;
@@ -2223,10 +2234,10 @@ VIEWS.round = {
     ${s.key==='design' ? (F.editId ? '' : designHistoryHtml()) + designImagesHtml(F) : ''}
     ${cls==='حرج'&&s.key!=='design'?'<div class="banner bad">عيب حرج: أوقف الآلة الآن، أبلغ رئيس الوردية ومدير ضبط الجودة، واحجز كل الإنتاج منذ آخر فحص سليم. سيُفتح NCR تلقائياً عند الحفظ.</div>':''}
     <div class="panel">
-      ${['design','final'].includes(s.key)?'':`<div class="pick" id="typePick" style="margin-bottom:12px">${(s.key==='print' ? [['بدء تشغيل','طباعة بداية التشغيل'],['فحص نهائي','فحص طباعة نهائي']] : [['جولة','جولة دورية'],['بدء تشغيل','موافقة بدء تشغيل']]).map(([x,l])=>`<button class="${F.type===x?'on':''}" data-v="${x}">${l}</button>`).join('')}</div>`}
+      ${s.key!=='print'?'':`<div class="pick" id="typePick" style="margin-bottom:12px">${(s.key==='print' ? [['بدء تشغيل','طباعة بداية التشغيل'],['فحص نهائي','فحص طباعة نهائي']] : [['جولة','جولة دورية'],['بدء تشغيل','موافقة بدء تشغيل']]).map(([x,l])=>`<button class="${F.type===x?'on':''}" data-v="${x}">${l}</button>`).join('')}</div>`}
       <div class="grid">
-        <label class="f">${s.key==='design'?'رقم الطلبية (اختياري – إن وُجدت)':F.items&&F.items.length?'إضافة طلبية أخرى (اختياري)':'رقم الطلبية'}<input type="text" inputmode="numeric" list="ordList" id="fOrder" value="${esc(F.order)}" placeholder="اكتب أو اختر"></label>
-        ${['design','print'].includes(s.key)?'':`<label class="f">${s.key==='final'?'رموز الكراتين المفحوصة':'رقم الصندوق / الكرتونة'}<input type="text" id="fBox" value="${esc(F.box)}"></label>`}
+        <label class="f">${s.key==='design'?'رقم الطلبية (اختياري – إن وُجدت)':'رقم الطلبية'}<input type="text" inputmode="numeric" list="ordList" id="fOrder" value="${esc(F.order || ((F.items||[])[0]||{}).order || '')}" placeholder="اكتب أو اختر"></label>
+        
         ${s.key==='design'?'':`<label class="f">عدد العينات<input type="number" id="fSamples" value="${esc(F.samples)}"></label>`}${extra}
       </div>
       <datalist id="ordList">${[...new Map(S.orders.map(x => [String(x.order_number), x])).values()].map(x=>`<option value="${esc(x.order_number)}">${esc(ordRows(x.order_number).length>1 ? ordRows(x.order_number).length+' منتجات – '+(x.customer||'') : x.product_name)}</option>`).join('')}</datalist>
@@ -2242,7 +2253,7 @@ VIEWS.round = {
     <button class="btn" id="allOk" style="margin-bottom:8px">كل البنود مطابقة ✓</button>
     ${s.key==='print' && typeof repeatPanel==='function' ? repeatPanel(F) : ''}${typeof printNotesBanner==='function' ? printNotesBanner(F, s) : ''}<div class="panel">${checkRows(stageChecks(s), o, F.checks, F.vals)}</div>
     ${['design','print'].includes(s.key) ? '' : `    <h2>العيوب المرصودة</h2>
-    <div class="panel"><div class="pick" id="defPick">${DEFECTS.map(x=>`<button class="${F.defects.includes(x)?'on':''}" data-v="${x}">${x}</button>`).join('')}</div>
+    <div class="panel"><div class="pick" id="defPick">${defectsFor(s.key).map(x=>`<button class="${F.defects.includes(x)?'on':''}" data-v="${x}">${x}</button>`).join('')}</div>
       <div class="grid" style="margin-top:12px">
         <label class="f">مصدر العيب<select id="fSource">${opt(SOURCES, F.source)}</select></label>
         <label class="f">التصنيف ${sg.cls?`(مقترح: ${sg.cls})`:''}<select id="fCls"><option value="">لا يوجد</option>${opt(['ثانوي','رئيسي','حرج'], cls)}</select></label>
@@ -2252,6 +2263,7 @@ VIEWS.round = {
     <div class="dec">${DECISIONS.map(d=>`<button data-d="${d}" class="${dec===d?'on':''} ${sg.dec===d?'sug':''}">${s.key==='design'?DESIGN_DEC[d]:d}</button>`).join('')}</div>
     <div class="grid" style="margin-top:12px">
       ${(dec==='محجور'||dec==='مرفوض')&&s.key!=='design'?`<label class="f">الكمية المحجوزة / المرفوضة<input type="text" id="fQty" value="${esc(F.qty)}" placeholder="مثال: 3 صناديق"></label>`:''}
+      ${['design','print'].includes(s.key)?'':`<label class="f boxf">${s.key==='final'?'رموز الكراتين المفحوصة':'رقم الصندوق / الكرتونة'} <span class="req">*</span><input type="text" id="fBox" value="${esc(F.box)}" placeholder="اكتب الرقم قبل الحفظ"></label>`}
       <label class="f">الإجراء المتخذ<input type="text" id="fAction" value="${esc(F.action)}"></label>
       ${s.key==='print' && F.type==='بدء تشغيل' ? `<label class="f" style="grid-column:1/-1">ملاحظات بداية التشغيل <span class="muted">(تظهر للمراقب في فحص الطباعة النهائي لنفس الطلبية)</span><textarea id="fNotes" rows="3" placeholder="مثال: اللون الأحمر أغمق قليلاً من العينة – تم تعديل الحبر">${esc(F.notes)}</textarea></label>` : `<label class="f">ملاحظات<input type="text" id="fNotes" value="${esc(F.notes)}"></label>`}
     </div>
@@ -2263,7 +2275,7 @@ VIEWS.round = {
     $('#typePick') && $$('#typePick button').forEach(b => b.onclick = () => { F.type = b.dataset.v; reset(); rerender(); });
     $('#machPick') && $$('#machPick button').forEach(b => b.onclick = () => { F.machine = b.dataset.v; rerender(); });
     $('#fOrder').onchange = e => {
-      F.order = e.target.value.trim(); reset(); F.items = F.items || [];
+      F.order = e.target.value.trim(); reset(); F.items = (F.items || []).filter(i => String(i.order) === F.order); F.mi = 0;
       const rows = ordRows(F.order);
       if(F.order && rows.length===0 && !F.items.some(i => String(i.order)===F.order)) F.items.push({order:F.order, code:'', product:'', customer:''});
       if(rows.length===1 && !F.items.some(i => String(i.order)===F.order && i.code===rows[0].product_code)) F.items.push({order:F.order, code:rows[0].product_code||'', product:rows[0].product_name||'', customer:rows[0].customer||''});
@@ -2296,8 +2308,8 @@ function saveRound(){
   const s = stageBy(F.stage);
   if(s.key==='design'){ if(!(F.extra.dname||'').trim() || !(F.extra.customer||'').trim()){ toast('اكتب اسم التصميم والزبون من بطاقة التصميم'); return; }
     if(!F.items || !F.items.length) F.items = [{order:F.order||'', code:'', product:F.extra.dname.trim(), customer:F.extra.customer.trim()}]; }
-  if(!F.items || !F.items.length){ toast(F.order && ordRows(F.order).length>1 ? 'اختر منتجاً واحداً على الأقل من الطلبية' : 'اكتب رقم الطلبية أولاً'); $('#fOrder').focus(); return; }
-  if(s.machines.length>1 && !F.machine){ toast('اختر الآلة'); return; }
+  if(!F.items || !F.items.length){ toast(F.order && ordRows(F.order).length>1 ? 'اختر منتجاً واحداً على الأقل من الطلبية' : 'اكتب رقم الطلبية أولاً'); $('#fOrder') && $('#fOrder').focus(); return null; }
+  if(s.machines.length>1 && !F.machine){ toast('اختر الآلة'); return null; }
   const sg = suggestRound(), o = fSpec(), d = new Date(); const it0 = F.items[0];
   const checks = stageChecks(s).concat(F.type==='بدء تشغيل' && s.key!=='print'?[{k:'lineclear',l:'تنظيف الخط',t:'ok'},{k:'master',l:'العينة المعتمدة',t:'ok'}]:[]);
   const failed = checks.filter(c => (c.t==='ok' && F.checks[c.k]==='n') || (c.t==='num' && (evalNum(c, F.vals[c.k], o)==='out' || (c.multi && (F.vals[c.k+'_r']||[]).some(v => v!=='' && evalNum(c, v, o)==='out'))))).map(c => c.l.split('(')[0].trim());
@@ -2324,6 +2336,7 @@ function saveRound(){
   }
   if(old){ const i = S.rounds.indexOf(old); Object.keys(old).forEach(k => delete old[k]); Object.assign(old, r); save(); toast('تم تعديل الجولة'); newRound(F.stage); go('prod'); return; }
   S.rounds.push(r); save();
+  if(F.__multi) return r;
   toast([ 'تم حفظ الجولة', r.hold && `حجز ${r.hold}`, r.ncr && `و${r.ncr}`].filter(Boolean).join(' – '));
   const keep = {machine:F.machine, items:F.items.map(i => ({...i})), mi:F.mi}; newRound(F.stage); Object.assign(F, keep);
   go('prod');
@@ -3369,6 +3382,7 @@ function computeDaily(D, date, by) {
   var openH = D.holds.filter(function (h) { return h.date <= date && (h.status !== 'مغلق' || (h.closed && h.closed > date)); }).map(function (h) { return { no: h.no, date: h.date, stage: rcStageName(h.stage), order: h.order, desc: h.desc, qty: h.qty, age: rcDays(h.date, date) }; });
   var comps = D.complaints.filter(function (c) { return c.date === date; }).map(function (c) { return { no: c.no, customer: c.customer, product: c.product, desc: c.desc }; });
   var auds = D.audits.filter(function (a) { return a.date === date; }), cals = D.cals.filter(function (c) { return c.date === date; }), ths = D.ths.filter(function (x) { return x.date === date; });
+  var stops = (D.stops || []).filter(function (x) { return x.date === date; }).map(function (x) { return { time: x.time, shift: x.shift, stage: rcStageName(x.stage), machine: x.machine, reason: x.reasonLabel || x.reason, detail: x.detail || '', inspector: x.inspector }; });
   var due = (D.orders || []).filter(function (o) { return o.order_delivery_date && rcDays(date, o.order_delivery_date) <= 7 && rcDays(date, o.order_delivery_date) >= -30; })
     .sort(function (a, b) { return String(a.order_delivery_date).localeCompare(String(b.order_delivery_date)); }).slice(0, 15)
     .map(function (o) { var rr = D.rounds.filter(function (r) { return r.date <= date && rcItems(r).some(function (i) { return String(i.order) === String(o.order_number) && (!i.code || !o.product_code || i.code === o.product_code); }); }); var fr = rr.filter(function (r) { return r.stage === 'final'; }).pop();
@@ -3387,7 +3401,7 @@ function computeDaily(D, date, by) {
       mats: mats.length, matRej: mats.filter(function (m) { return m.decision === 'مرفوض'; }).length, ncrNew: ncrNew.length, ncrOpen: openN.length, ncrLate: lateN.length, holdsOpen: openH.length, comps: comps.length,
       audits: auds.length, auditFails: auds.reduce(function (a, x) { return a + (x.failed || []).length; }, 0), cals: cals.length, calBad: cals.filter(function (c) { return !c.ok; }).length, ths: ths.length, thBad: ths.filter(function (x) { return !x.ok; }).length },
     stages: stages, defects: defects, products: products, inspectors: Object.keys(insp).map(function (k) { return insp[k]; }), problems: problems.slice(0, 80),
-    mats: mats, ncrNew: ncrNew, ncrLate: lateN, holdsOpen: openH, comps: comps, due: due, notes: '' };
+    mats: mats, ncrNew: ncrNew, ncrLate: lateN, holdsOpen: openH, comps: comps, due: due, stops: stops, notes: '' };
 }
 
 function renderDaily(s, opts) {
@@ -3427,7 +3441,9 @@ function renderDaily(s, opts) {
     ((s.holdsOpen.length + s.ncrNew.length + s.ncrLate.length + s.comps.length) ? '' : '<tr><td colspan="4" class="mu">لا توجد بنود مفتوحة.</td></tr>') + '</tbody></table>';
   h += sec(10, 'طلبات تسليمها خلال 7 أيام') + (s.due.length ? '<table class="t"><thead><tr><th>الطلبية</th><th>الزبون</th><th>المنتج</th><th>المرحلة في ERP</th><th>التسليم</th><th>أيام</th><th>الجودة</th></tr></thead><tbody>' +
     s.due.map(function (o) { return '<tr><td>' + e(o.order) + '</td><td>' + e(o.customer) + '</td><td>' + e(o.product) + '</td><td>' + e(o.stage) + '</td><td>' + e(o.delivery) + '</td><td class="' + (o.days < 0 ? 'cr' : o.days <= 3 ? 'cw' : '') + '">' + o.days + '</td><td>' + pill(o.qc) + '</td></tr>'; }).join('') + '</tbody></table>' : '<p class="mu">لا توجد طلبات قريبة التسليم في ملف ERP.</p>');
-  h += sec(11, 'ملاحظات وقرارات مدير القسم') + '<div class="nt">' + (s.notes ? e(s.notes).replace(/\n/g, '<br>') : '&nbsp;') + '</div>';
+  var stp = s.stops || [];
+  h += sec(11, 'توقف الآلات') + (stp.length ? '<table class="t"><thead><tr><th>الوقت</th><th>الوردية</th><th>المرحلة / الآلة</th><th>السبب</th><th>التفاصيل</th><th>المراقب</th></tr></thead><tbody>' + stp.map(function (x) { return '<tr><td>' + e(x.time) + '</td><td>' + e(x.shift) + '</td><td>' + e(x.stage) + ' – ' + e(x.machine) + '</td><td><b>' + e(x.reason) + '</b></td><td>' + e(x.detail) + '</td><td class="sm">' + e(x.inspector) + '</td></tr>'; }).join('') + '</tbody></table>' : '<p class="mu">لم تُسجّل توقفات للآلات.</p>');
+  h += sec(12, 'ملاحظات وقرارات مدير القسم') + '<div class="nt">' + (s.notes ? e(s.notes).replace(/\n/g, '<br>') : '&nbsp;') + '</div>';
   h += '<table class="sg"><tr><td><b>إعداد</b>' + e(opts.manager || 'ندى حجازي') + '<span>مدير ضبط الجودة</span></td><td><b>مراجعة</b>' + e(opts.qa || 'محمد براء رحمون') + '<span>مدير ضمان الجودة</span></td><td><b>اعتماد</b>' + e(opts.ceo || 'أيهم سكرية') + '<span>المدير التنفيذي</span></td></tr></table>';
   h += '<div class="ft">QC-01-F20 · Issue 6.0 · F.E.T Packaging – تقرير مولّد آلياً من نظام ضبط الجودة</div></div>';
   return h;
@@ -3460,7 +3476,7 @@ const _repHtml = VIEWS.rep.html, _repBind = VIEWS.rep.bind;
 VIEWS.rep.html = function(){ return repTabs('rep') + _repHtml(); };
 VIEWS.rep.bind = function(){ _repBind(); bindRepTabs(); };
 const DCSS = `<style>${DAILY_CSS}</style>`;
-function dataArrays(){ return {rounds:S.rounds, holds:S.holds, ncrs:S.ncrs, mats:S.mats.map(m => ({...m, name: m.name || (matBy(m.type)||{}).name})), complaints:S.complaints, audits:S.audits, cals:S.cals, ths:S.ths, orders:S.orders, settings:S.settings}; }
+function dataArrays(){ return {rounds:S.rounds, holds:S.holds, ncrs:S.ncrs, mats:S.mats.map(m => ({...m, name: m.name || (matBy(m.type)||{}).name})), complaints:S.complaints, audits:S.audits, cals:S.cals, ths:S.ths, stops:S.stops||[], orders:S.orders, settings:S.settings}; }
 function makeDaily(date){
   const snap = computeDaily(dataArrays(), date, CUR.name || S.settings.manager);
   const old = S.reports.find(r => r.id === snap.id);
@@ -3596,7 +3612,7 @@ VIEWS.data.bind = function(){
 
 const LUCIDE = {"home": "<path d=\"M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8\" /> <path d=\"M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z\" />", "prod": "<path d=\"M12 16h.01\" /> <path d=\"M16 16h.01\" /> <path d=\"M3 19a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5a.5.5 0 0 0-.769-.422l-4.462 2.844A.5.5 0 0 1 15 10.5v-2a.5.5 0 0 0-.769-.422L9.77 10.922A.5.5 0 0 1 9 10.5V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2z\" /> <path d=\"M8 16h.01\" />", "mat": "<path d=\"M12 22V12\" /> <path d=\"m16 17 2 2 4-4\" /> <path d=\"M21 11.127V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.729l7 4a2 2 0 0 0 2 .001l1.32-.753\" /> <path d=\"M3.29 7 12 12l8.71-5\" /> <path d=\"m7.5 4.27 8.997 5.148\" />", "ncr": "<path d=\"M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z\" /> <path d=\"M12 8v4\" /> <path d=\"M12 16h.01\" />", "hold": "<path d=\"M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z\" /> <path d=\"m3.3 7 8.7 5 8.7-5\" /> <path d=\"M12 22V12\" />", "mon": "<rect width=\"8\" height=\"4\" x=\"8\" y=\"2\" rx=\"1\" ry=\"1\" /> <path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\" /> <path d=\"m9 14 2 2 4-4\" />", "rep": "<path d=\"M3 3v16a2 2 0 0 0 2 2h16\" /> <path d=\"M18 17V9\" /> <path d=\"M13 17V5\" /> <path d=\"M8 17v-3\" />", "team": "<path d=\"M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2\" /> <path d=\"M16 3.128a4 4 0 0 1 0 7.744\" /> <path d=\"M22 21v-2a4 4 0 0 0-3-3.87\" /> <circle cx=\"9\" cy=\"7\" r=\"4\" />", "mgr": "<path d=\"M16 7h6v6\" /> <path d=\"m22 7-8.5 8.5-5-5L2 17\" />", "more": "<rect width=\"7\" height=\"7\" x=\"3\" y=\"3\" rx=\"1\" /> <rect width=\"7\" height=\"7\" x=\"14\" y=\"3\" rx=\"1\" /> <rect width=\"7\" height=\"7\" x=\"14\" y=\"14\" rx=\"1\" /> <rect width=\"7\" height=\"7\" x=\"3\" y=\"14\" rx=\"1\" />", "hand": "<path d=\"M8 3 4 7l4 4\" /> <path d=\"M4 7h16\" /> <path d=\"m16 21 4-4-4-4\" /> <path d=\"M20 17H4\" />", "comp": "<path d=\"M22 17a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 21.286V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2z\" /> <path d=\"M12 15h.01\" /> <path d=\"M12 7v4\" />", "coa": "<path d=\"m15.477 12.89 1.515 8.526a.5.5 0 0 1-.81.47l-3.58-2.687a1 1 0 0 0-1.197 0l-3.586 2.686a.5.5 0 0 1-.81-.469l1.514-8.526\" /> <circle cx=\"12\" cy=\"8\" r=\"6\" />", "sup": "<path d=\"M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2\" /> <path d=\"M15 18H9\" /> <path d=\"M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 17.52 8H14\" /> <circle cx=\"17\" cy=\"18\" r=\"2\" /> <circle cx=\"7\" cy=\"18\" r=\"2\" />", "data": "<ellipse cx=\"12\" cy=\"5\" rx=\"9\" ry=\"3\" /> <path d=\"M3 5V19A9 3 0 0 0 21 19V5\" /> <path d=\"M3 12A9 3 0 0 0 21 12\" />", "bell": "<path d=\"M10.268 21a2 2 0 0 0 3.464 0\" /> <path d=\"M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326\" />", "search": "<path d=\"m21 21-4.34-4.34\" /> <circle cx=\"11\" cy=\"11\" r=\"8\" />", "logout": "<path d=\"m16 17 5-5-5-5\" /> <path d=\"M21 12H9\" /> <path d=\"M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4\" />", "dash": "<rect width=\"7\" height=\"9\" x=\"3\" y=\"3\" rx=\"1\" /> <rect width=\"7\" height=\"5\" x=\"14\" y=\"3\" rx=\"1\" /> <rect width=\"7\" height=\"9\" x=\"14\" y=\"12\" rx=\"1\" /> <rect width=\"7\" height=\"5\" x=\"3\" y=\"16\" rx=\"1\" />", "s_design": "<path d=\"M15.707 21.293a1 1 0 0 1-1.414 0l-1.586-1.586a1 1 0 0 1 0-1.414l5.586-5.586a1 1 0 0 1 1.414 0l1.586 1.586a1 1 0 0 1 0 1.414z\" /> <path d=\"m18 13-1.375-6.874a1 1 0 0 0-.746-.776L3.235 2.028a1 1 0 0 0-1.207 1.207L5.35 15.879a1 1 0 0 0 .776.746L13 18\" /> <path d=\"m2.3 2.3 7.286 7.286\" /> <circle cx=\"11\" cy=\"11\" r=\"2\" />", "s_print": "<path d=\"M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2\" /> <path d=\"M6 9V3a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v6\" /> <rect x=\"6\" y=\"14\" width=\"12\" height=\"8\" rx=\"1\" />", "s_draw": "<ellipse cx=\"12\" cy=\"5\" rx=\"9\" ry=\"3\" /> <path d=\"M3 5v14a9 3 0 0 0 18 0V5\" />", "s_sort": "<path d=\"M2 5h20\" /> <path d=\"M6 12h12\" /> <path d=\"M9 19h6\" />", "s_mix": "<path d=\"M14 2v6a2 2 0 0 0 .245.96l5.51 10.08A2 2 0 0 1 18 22H6a2 2 0 0 1-1.755-2.96l5.51-10.08A2 2 0 0 0 10 8V2\" /> <path d=\"M6.453 15h11.094\" /> <path d=\"M8.5 2h7\" />", "s_inj": "<path d=\"m18 2 4 4\" /> <path d=\"m17 7 3-3\" /> <path d=\"M19 9 8.7 19.3c-1 1-2.5 1-3.4 0l-.6-.6c-1-1-1-2.5 0-3.4L15 5\" /> <path d=\"m9 11 4 4\" /> <path d=\"m5 19-3 3\" /> <path d=\"m14 4 6 6\" />", "s_asm": "<path d=\"M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.106-3.105c.32-.322.863-.22.983.218a6 6 0 0 1-8.259 7.057l-7.91 7.91a1 1 0 0 1-2.999-3l7.91-7.91a6 6 0 0 1 7.057-8.259c.438.12.54.662.219.984z\" />", "s_cap": "<path d=\"M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z\" /> <path d=\"M12 22V12\" /> <polyline points=\"3.29 7 12 12 20.71 7\" /> <path d=\"m7.5 4.27 9 5.15\" />", "s_seal": "<path d=\"M14 13V8.5C14 7 15 7 15 5a3 3 0 0 0-6 0c0 2 1 2 1 3.5V13\" /> <path d=\"M20 15.5a2.5 2.5 0 0 0-2.5-2.5h-11A2.5 2.5 0 0 0 4 15.5V17a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1z\" /> <path d=\"M5 22h14\" />", "s_final": "<path d=\"M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z\" /> <path d=\"m16 9-5.5 5.5L8 12\" />", "thermo": "<path d=\"M14 4v10.54a4 4 0 1 1-4 0V4a2 2 0 0 1 4 0Z\" />", "ruler": "<path d=\"M21.3 15.3a2.4 2.4 0 0 1 0 3.4l-2.6 2.6a2.4 2.4 0 0 1-3.4 0L2.7 8.7a2.41 2.41 0 0 1 0-3.4l2.6-2.6a2.41 2.41 0 0 1 3.4 0Z\" /> <path d=\"m14.5 12.5 2-2\" /> <path d=\"m11.5 9.5 2-2\" /> <path d=\"m8.5 6.5 2-2\" /> <path d=\"m17.5 15.5 2-2\" />", "clean": "<path d=\"M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z\" /> <path d=\"M20 2v4\" /> <path d=\"M22 4h-4\" /> <circle cx=\"4\" cy=\"20\" r=\"2\" />", "plus": "<circle cx=\"12\" cy=\"12\" r=\"10\" /> <path d=\"M8 12h8\" /> <path d=\"M12 8v8\" />", "ok": "<path d=\"M21.801 10A10 10 0 1 1 17 3.335\" /> <path d=\"m9 11 3 3L22 4\" />", "warn": "<path d=\"m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3\" /> <path d=\"M12 9v4\" /> <path d=\"M12 17h.01\" />", "file": "<path d=\"M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z\" /> <path d=\"M14 2v5a1 1 0 0 0 1 1h5\" /> <path d=\"M10 9H8\" /> <path d=\"M16 13H8\" /> <path d=\"M16 17H8\" />", "scan": "<path d=\"M3 7V5a2 2 0 0 1 2-2h2\" /> <path d=\"M17 3h2a2 2 0 0 1 2 2v2\" /> <path d=\"M21 17v2a2 2 0 0 1-2 2h-2\" /> <path d=\"M7 21H5a2 2 0 0 1-2-2v-2\" /> <circle cx=\"12\" cy=\"12\" r=\"3\" /> <path d=\"m16 16-1.9-1.9\" />", "clock": "<circle cx=\"12\" cy=\"12\" r=\"10\" /> <path d=\"M12 6v6l4 2\" />", "alert": "<path d=\"M12 16h.01\" /> <path d=\"M12 8v4\" /> <path d=\"M15.312 2a2 2 0 0 1 1.414.586l4.688 4.688A2 2 0 0 1 22 8.688v6.624a2 2 0 0 1-.586 1.414l-4.688 4.688a2 2 0 0 1-1.414.586H8.688a2 2 0 0 1-1.414-.586l-4.688-4.688A2 2 0 0 1 2 15.312V8.688a2 2 0 0 1 .586-1.414l4.688-4.688A2 2 0 0 1 8.688 2z\" />", "activity": "<path d=\"M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2\" />", "gauge": "<path d=\"m12 14 4-4\" /> <path d=\"M3.34 19a10 10 0 1 1 17.32 0\" />"};
 /* [VERSION] رقم إصدار البرنامج – يظهر أسفل القائمة وفي شاشة الدخول */
-const APP_VERSION = '8.3';
+const APP_VERSION = '8.4';
 let SERVER_VERSION = '';
 async function checkServerVersion(){ if(!GAS_MODE) return; try{ const v = JSON.parse(await rpc('serverVersion', '')); SERVER_VERSION = v.version + (v.ocr ? '' : ' (Drive API غير مفعّل)'); }catch(e){ SERVER_VERSION = /NET/.test(String(e && e.message || e)) ? '' : 'قديم – انشر إصداراً جديداً'; } try{ renderTabs(); }catch(e){} }
 /* [ERRORS] بدل الصفحة الفارغة: رسالة واضحة وزر إعادة تحميل */
@@ -3868,7 +3884,7 @@ function productImageHtml(o, idx){
     <label class="btn sm">${typeof LI==='function'?LI('plus'):''} رفع صورة المنتج<input type="file" accept="image/*" class="hide" data-pup="${idx}"></label></div>`;
 }
 /* [PF_SHOW] الحقول المعروضة في كل مرحلة (الباقي يظهر في المراحل الأخرى) */
-const PF_SHOW = {print: ['customer','ptype','pcolor','thick','rollw','rolll','print360','foil','varn','qty','delivery']};
+const PF_SHOW = {draw: ['customer','dia','len','ptype','pcolor','thick','rollw','print360','foil','qty','delivery'], print: ['customer','ptype','pcolor','thick','rollw','rolll','print360','foil','varn','qty','delivery']};
 /* [ERP_NOTES] ملاحظات ERP التي تظهر للمراقب (cost_notes غير مستوردة) */
 const ERP_NOTES = [['quality_notes','ملاحظات الجودة','q'], ['gm_notes','ملاحظات المدير العام','gm'], ['production_notes','ملاحظات الإنتاج',''], ['sales_notes','ملاحظات المبيعات',''],
   ['coordination_notes','ملاحظات التنسيق',''], ['design_notes','ملاحظات التصميم',''], ['customer_notes','ملاحظات الزبون',''], ['stock_notes','ملاحظات المستودع','s']];
@@ -3939,7 +3955,7 @@ function printNotesBanner(F, s){
 /* ربط الصور والرفع من بطاقات المنتج */
 document.addEventListener('click', e => {
   if(e.target.closest('[data-go-lib]')){ go('designs'); return; }
-  const v = e.target.closest('[data-pimg]'); if(v){ const it = (F.items || [])[+v.dataset.pimg]; const o = it && specOfItem(it); const im = o && productImage(o); if(im) viewImage(im); return; }
+  const v = e.target.closest('[data-pimg]'); if(v){ const own = v.closest('.dmach'); const its = own && typeof DM !== 'undefined' && DM ? DM.machines[own.dataset.m].items : (F && F.items) || []; const it = its[+v.dataset.pimg]; const o = it && specOfItem(it); const im = o && productImage(o); if(im) viewImage(im); return; }
   const sv = e.target.closest('[data-sgv]'); if(sv){ const d = S.rounds.find(r => String(r.id) === sv.dataset.sgv); if(d) viewImage(d.images[0]); return; }
   const l = e.target.closest('[data-sgl]'); if(l){ const it = (F.items || [])[+l.dataset.sgl]; const o = it && specOfItem(it); const d = S.rounds.find(r => String(r.id) === l.dataset.d); if(o && d){ linkDesign(o, d); rerender(); toast('تم ربط التصميم بالمنتج'); } }
 });
@@ -4103,6 +4119,8 @@ VIEWS.exec = {
         ${head(9,'فريق الجودة والالتزام')}
         <table class="xt"><thead><tr><th>المراقب</th><th class="c">الجولات</th><th class="c">صباحي / مسائي</th><th class="c">جولات / وردية</th><th class="c">الالتزام بفاصل 30 د</th><th class="c">مشاكل اكتشفها</th><th class="c">حرج</th><th class="c">مواد</th><th class="c">مراقبات</th></tr></thead><tbody>
           ${us.map(s => `<tr><td><b>${esc(s.name)}</b></td><td class="c num">${s.rounds}</td><td class="c num">${s.m} / ${s.e}</td><td class="c num">${s.perShift}</td><td class="c num" style="background:${s.ontime===null?'':s.ontime>=90?'#D6EFE3':s.ontime>=70?'#FCEFD6':'#F4B6B6'}">${s.ontime===null?'—':s.ontime+'%'}</td><td class="c num">${s.issues}</td><td class="c num">${s.crit}</td><td class="c num">${s.mats}</td><td class="c num">${s.audits}</td></tr>`).join('') || '<tr><td colspan="9" class="muted">لا يوجد نشاط.</td></tr>'}</tbody></table>
+        ${(() => { const st = (S.stops || []).filter(z => inR(z.date, P.cur)); if(!st.length) return head('⏸','توقف الآلات') + '<p class="muted">لم تُسجّل توقفات في الفترة.</p>'; const ms = [...new Set(st.map(z => z.machine))], rs = [...new Set(st.map(z => z.reasonLabel || z.reason))];
+          return head('⏸','توقف الآلات') + `<table class="xt"><thead><tr><th>الآلة</th>${rs.map(r => `<th class="c">${esc(r)}</th>`).join('')}<th class="c">المجموع</th></tr></thead><tbody>${ms.map(m => `<tr><td><b>${esc(m)}</b></td>${rs.map(r => `<td class="c num">${st.filter(z => z.machine===m && (z.reasonLabel||z.reason)===r).length || ''}</td>`).join('')}<td class="c num"><b>${st.filter(z => z.machine===m).length}</b></td></tr>`).join('')}</tbody></table>`; })()}
         ${head(10,'حالات عدم المطابقة المفتوحة')}
         <table class="xt"><thead><tr><th>الرقم</th><th>التاريخ</th><th>المصدر</th><th>الوصف</th><th>السبب الجذري</th><th>المسؤول والموعد</th><th>الحالة</th></tr></thead><tbody>
           ${openN.slice(-15).reverse().map(n => `<tr><td class="num">${esc(n.no)}</td><td class="num">${esc(n.date)}</td><td>${esc(n.source)}</td><td>${esc(n.desc)}</td><td>${esc(n.root)||'<span class="muted">لم يُحدد</span>'}</td><td>${esc(n.actions.filter(a=>a.what).map(a=>`${a.who||'—'} (${a.due||''})`).join('، '))||'—'}</td><td><span class="pill st-${ncrStatus(n).replace(/ /g,'_')}">${ncrStatus(n)}</span></td></tr>`).join('') || '<tr><td colspan="7" class="muted">لا توجد حالات مفتوحة.</td></tr>'}</tbody></table>
@@ -4304,13 +4322,14 @@ VIEWS.round.bind = function(){
 const _saveRoundImg = saveRound;
 saveRound = function(){
   const isDesign = F && F.stage === 'design', imgs = isDesign ? (F.images || []) : [], editId = F && F.editId, before = S.rounds.length;
-  _saveRoundImg();
+  const res = _saveRoundImg();
   const r = editId ? S.rounds.find(x => x.id === editId) : (S.rounds.length > before ? S.rounds[S.rounds.length - 1] : null);
-  if(!r || !isDesign) return;
+  if(!r || !isDesign) return res;
   r.images = imgs.map(im => ({key:im.key, name:im.name, thumb:im.thumb, id:im.id || '', ...(serverMode ? {} : {full:im.full})}));
   save();
   if(view === 'prod') rerender();
   if(serverMode){ (async () => { for(const im of imgs.filter(x => !x.id && x.full)) await queueImage(r.id, im); processImageQueue(); })(); }
+  return res;
 };
 async function queueImage(rid, im){ const q = (await IDB.get('imgq')) || []; if(!q.some(x => x.key === im.key)) q.push({rid, key:im.key, name:im.name, full:im.full}); await IDB.set('imgq', q); }
 let imgBusy = false;
@@ -4472,6 +4491,118 @@ async function linkQueued(i){
   }catch(e){ toast('تعذر الرفع: ' + (e && e.message || e)); }
 }
 
+/* ================= [DRAW] مرحلة السحب: الآلتان في صفحة واحدة + حالات التوقف ================= */
+/* عيوب كل مرحلة: السحب يأخذ عيوب السحب + عيوب الطباعة الظاهرة على التيوب */
+const DRAW_DEFECTS = ['ضعف لحام','انفصال لحام','طرطرة','حز','جروح','آثار حرارة','ضربة شفرة','آثار بكرة','خط ملون يزول بالكحول','أوساخ داخلية','طول خارج الحد','قطر خارج الحد','تيوب بيضاوي','لحام غير مستقيم'];
+const PRINT_DEFECTS = ['كتابة / نص','لون مختلف عن العينة','زوال اللون','انحراف اللكر','كورونا','أوساخ طباعة','انزياح الطباعة','360 غير مكتمل','حراري غير مكتمل'];
+function defectsFor(stage){ return stage === 'draw' ? DRAW_DEFECTS.concat(PRINT_DEFECTS) : DEFECTS; }
+/* [STOPS] أسباب توقف الآلة */
+const STOP_REASONS = [['noprod','لا يوجد منتج', ''], ['maint','صيانة / عطل', 'وصف العطل'], ['mold','تبديل قالب', 'القطر الجديد'], ['operator','غياب مشغل', ''], ['other','أخرى', 'السبب']];
+const stopLabel = k => (STOP_REASONS.find(x => x[0] === k) || [k, k])[1];
+let DM = null;
+function newDM(){
+  const st = stageBy('draw'); DM = {machines: {}};
+  st.machines.forEach(m => { const save = F; newRound('draw'); const f = F; F = save; f.machine = m; f.status = ''; f.reason = ''; f.detail = ''; DM.machines[m] = f; });
+}
+function withF(f, fn){ const save = F; F = f; try{ return fn(); } finally { F = save; } }
+function drawMachineHtml(m, f){
+  const s = stageBy('draw');
+  const head = `<div class="mhd"><b>${LI('s_draw')} مكنة السحب ${esc(m)}</b><div class="pick mst">${[['run','تعمل'],['stop','متوقفة']].map(([k,l]) => `<button class="${f.status===k?'on':''} ${k}" data-mst="${k}">${l}</button>`).join('')}</div></div>`;
+  if(f.status === 'stop'){
+    const r = STOP_REASONS.find(x => x[0] === f.reason);
+    return head + `<div class="pick" data-reasons>${STOP_REASONS.map(([k,l]) => `<button class="${f.reason===k?'on':''}" data-rsn="${k}">${l}</button>`).join('')}</div>
+      ${f.reason ? `<label class="f" style="margin-top:10px">${r && r[2] ? r[2] + (['maint','other'].includes(f.reason) ? ' <span class="req">*</span>' : '') : 'ملاحظة (اختياري)'}<input type="text" data-detail value="${esc(f.detail)}" placeholder="${f.reason==='mold'?'مثال: قطر 30':f.reason==='maint'?'مثال: عطل في السخان':''}"></label>` : ''}`;
+  }
+  if(f.status !== 'run') return head + `<p class="muted" style="margin:8px 0 0">اختر حالة الآلة.</p>`;
+  const rows = f.order ? ordRows(f.order) : [];
+  const o = withF(f, () => fSpec()), sg = withF(f, () => suggestRound());
+  const cls = f.cls ?? sg.cls, dec = f.decision ?? sg.dec;
+  const inItems = (o2, code) => (f.items||[]).some(i => String(i.order)===String(o2) && i.code===code);
+  return head + `<div class="grid"><label class="f">رقم الطلبية<input type="text" inputmode="numeric" list="ordList" data-ord value="${esc(f.order || ((f.items||[])[0]||{}).order || '')}" placeholder="اكتب أو اختر"></label></div>
+    ${rows.length > 1 ? `<div class="pick" style="margin-top:8px">${rows.map((x,i) => `<button class="pchip ${inItems(x.order_number, x.product_code)?'on':''}" data-pi="${i}"><b>${esc(x.product_name)}</b><small>${esc(x.product_code)} · قطر ${esc(x.product_diameter||'—')} · طول ${esc(x.tube_cylinder_length||'—')}</small></button>`).join('')}</div>` : ''}
+    ${(f.items||[]).length ? productCards(f.items, 'draw', f.mi||0) : f.order ? orderCard(null, f.order) : ''}
+    <h3 class="mh3">بنود الفحص</h3><div class="mchecks">${checkRows(stageChecks(s), o, f.checks, f.vals)}</div>
+    <h3 class="mh3">العيوب المرصودة <span class="muted">(السحب والطباعة)</span></h3><div class="pick" data-defs>${defectsFor('draw').map(x => `<button class="${f.defects.includes(x)?'on':''}" data-dv="${esc(x)}">${esc(x)}</button>`).join('')}</div>
+    <h3 class="mh3">القرار <span class="muted">(المقترح بإطار متقطع)</span></h3><div class="dec">${DECISIONS.map(d => `<button data-dd="${d}" class="${dec===d?'on':''} ${sg.dec===d?'sug':''}">${d}</button>`).join('')}</div>
+    <div class="grid" style="margin-top:12px">
+      <label class="f">رقم الرول<input type="text" data-roll value="${esc(f.extra.roll||'')}"></label>
+      <label class="f boxf">رقم الصندوق <span class="req">*</span><input type="text" data-box value="${esc(f.box||'')}" placeholder="اكتب الرقم قبل الحفظ"></label>
+      ${dec==='محجور'||dec==='مرفوض' ? `<label class="f">الكمية المحجوزة / المرفوضة<input type="text" data-qty value="${esc(f.qty||'')}"></label>` : ''}
+      <label class="f">ملاحظات<input type="text" data-notes value="${esc(f.notes||'')}"></label>
+    </div>`;
+}
+VIEWS.drawm = {
+  html(){
+    if(!DM) newDM();
+    const s = stageBy('draw');
+    return `<div class="pagehead"><div><h1 style="margin:0;display:flex;align-items:center;gap:12px"><span class="sti big">${LI('s_draw')}</span>جولة مرحلة السحب</h1><p>${esc(s.form)} · ${esc(s.wi)} · العينة: ${esc(s.sample)} لكل آلة · كل 30 دقيقة</p></div><button class="btn" id="dmBack">رجوع</button></div>
+      <datalist id="ordList">${[...new Map(S.orders.map(x => [String(x.order_number), x])).values()].map(x => `<option value="${esc(x.order_number)}">${esc(ordRows(x.order_number).length>1 ? ordRows(x.order_number).length+' منتجات – '+(x.customer||'') : x.product_name)}</option>`).join('')}</datalist>
+      <div class="dmgrid">${Object.entries(DM.machines).map(([m, f]) => `<div class="panel dmach ${f.status}" data-m="${esc(m)}">${drawMachineHtml(m, f)}</div>`).join('')}</div>
+      <div class="sticky-save"><button class="btn p" id="dmSave">حفظ جولة السحب (${Object.keys(DM.machines).length} آلات)</button></div>`;
+  },
+  bind(){
+    $('#dmBack').onclick = () => go('prod');
+    $$('.dmach').forEach(p => {
+      const f = DM.machines[p.dataset.m], upd = () => { rerender(); if(typeof saveDraft === 'function') saveDraft(); };
+      p.querySelectorAll('[data-mst]').forEach(b => b.onclick = () => { f.status = b.dataset.mst; upd(); });
+      p.querySelectorAll('[data-rsn]').forEach(b => b.onclick = () => { f.reason = b.dataset.rsn; upd(); });
+      const det = p.querySelector('[data-detail]'); if(det) det.oninput = e => f.detail = e.target.value;
+      const ord = p.querySelector('[data-ord]'); if(ord) ord.onchange = e => {
+        f.order = e.target.value.trim(); f.items = []; f.mi = 0; f.cls = null; f.decision = null;
+        const rows = ordRows(f.order);
+        if(f.order && rows.length === 0) f.items.push({order:f.order, code:'', product:'', customer:''});
+        if(rows.length === 1) f.items.push({order:f.order, code:rows[0].product_code||'', product:rows[0].product_name||'', customer:rows[0].customer||''});
+        upd();
+      };
+      p.querySelectorAll('[data-pi]').forEach(b => b.onclick = () => { const x = ordRows(f.order)[+b.dataset.pi]; const i = f.items.findIndex(t => t.code === x.product_code);
+        if(i >= 0) f.items.splice(i, 1); else f.items.push({order:String(x.order_number), code:x.product_code||'', product:x.product_name||'', customer:x.customer||''}); f.cls = null; f.decision = null; upd(); });
+      p.querySelectorAll('.tri').forEach(t => t.querySelectorAll('button').forEach(b => b.onclick = () => { const k = t.dataset.ck; f.checks[k] = f.checks[k] === b.dataset.v ? '' : b.dataset.v; f.cls = null; f.decision = null; upd(); }));
+      p.querySelectorAll('[data-dv]').forEach(b => b.onclick = () => { const v = b.dataset.dv; f.defects = f.defects.includes(v) ? f.defects.filter(x => x !== v) : f.defects.concat(v); f.cls = null; f.decision = null; upd(); });
+      p.querySelectorAll('[data-dd]').forEach(b => b.onclick = () => { f.decision = b.dataset.dd; upd(); });
+      const bind = (sel, fn) => { const el = p.querySelector(sel); if(el) el.oninput = e => fn(e.target.value); };
+      bind('[data-roll]', v => f.extra.roll = v); bind('[data-box]', v => f.box = v); bind('[data-qty]', v => f.qty = v); bind('[data-notes]', v => f.notes = v);
+    });
+    $('#dmSave').onclick = saveDrawRound;
+  }
+};
+function saveDrawRound(){
+  const ms = Object.entries(DM.machines), s = stageBy('draw');
+  for(const [m, f] of ms){
+    if(!f.status){ toast(`اختر حالة الآلة ${m}: تعمل أو متوقفة`); return; }
+    if(f.status === 'stop'){ if(!f.reason){ toast(`اختر سبب توقف الآلة ${m}`); return; } if(['maint','other'].includes(f.reason) && !String(f.detail||'').trim()){ toast(`اكتب ${f.reason==='maint'?'وصف العطل':'السبب'} للآلة ${m}`); return; } continue; }
+    if(!(f.items||[]).length){ toast(`اكتب رقم الطلبية للآلة ${m}`); return; }
+    const unchecked = stageChecks(s).filter(c => c.t === 'ok' && !f.checks[c.k]); if(unchecked.length){ toast(`الآلة ${m}: أكمل بنود الفحص (${unchecked.map(c => c.l).join('، ')})`); return; }
+    if(!String(f.box||'').trim()){ toast(`اكتب رقم الصندوق للآلة ${m}`); return; }
+  }
+  const d = new Date(); let saved = 0, stops = 0; const notes = [];
+  for(const [m, f] of ms){
+    if(f.status === 'stop'){
+      S.stops = S.stops || [];
+      S.stops.push({id:uid(), date:todayStr(d), time:timeStr(d), shift:S.settings.shift, inspector:S.settings.inspector, stage:'draw', machine:m, reason:f.reason, reasonLabel:stopLabel(f.reason), detail:f.detail||''});
+      stops++; continue;
+    }
+    const save = F; F = f; F.__multi = true; F.machine = m;
+    let r = null; try{ r = saveRound(); } finally { delete f.__multi; F = save; }
+    if(!r){ toast(`تعذر حفظ جولة الآلة ${m}`); return; }
+    saved++; if(r.hold) notes.push(`${m}: حجز ${r.hold}`); if(r.ncr) notes.push(`${m}: ${r.ncr}`);
+  }
+  save(); DM = null; if(typeof IDB !== 'undefined') IDB.del('draft');
+  toast([`تم حفظ جولة السحب: ${saved} آلة تعمل${stops ? '، ' + stops + ' متوقفة' : ''}`].concat(notes).join(' – '));
+  go('prod');
+}
+/* الدخول لمرحلة السحب يفتح صفحة الآلتين */
+const _prodBindDraw = VIEWS.prod.bind;
+VIEWS.prod.bind = function(){ _prodBindDraw(); $$('[data-st="draw"]').forEach(b => b.onclick = () => { if(!DM) newDM(); go('drawm'); }); };
+PARENT.drawm = 'prod'; NAV_OF.drawm = 'prod'; PAGE.drawm = ['جولات الإنتاج', 'جولة السحب'];
+/* سجل التوقفات في صفحة جولات الإنتاج */
+const _prodHtmlDraw = VIEWS.prod.html;
+VIEWS.prod.html = function(){
+  const h = _prodHtmlDraw(); const day = typeof prodDay !== 'undefined' && prodDay ? prodDay : todayStr();
+  const st = (S.stops || []).filter(x => x.date === day);
+  if(!st.length) return h;
+  return h + `<h2>توقف الآلات (${st.length})</h2><div class="tw"><table class="t"><thead><tr><th>الوقت</th><th>الوردية</th><th>المرحلة / الآلة</th><th>السبب</th><th>التفاصيل</th><th>المراقب</th></tr></thead><tbody>${st.slice().reverse().map(x => `<tr><td class="num">${esc(x.time)}</td><td>${esc(x.shift)}</td><td>${esc(stageBy(x.stage).name)} – ${esc(x.machine)}</td><td><b>${esc(x.reasonLabel || stopLabel(x.reason))}</b></td><td>${esc(x.detail||'')}</td><td>${esc(x.inspector)}</td></tr>`).join('')}</tbody></table></div>`;
+};
+
 /* ================= SERVER SYNC (لابتوب القسم) ================= */
 const PWA_API = (typeof window !== 'undefined' && window.PWA_API && /^(https:\/\/|http:\/\/localhost)/.test(window.PWA_API)) ? window.PWA_API : '';
 const GAS_MODE = (typeof google !== 'undefined' && !!(google.script && google.script.run)) || !!PWA_API;
@@ -4534,7 +4665,7 @@ window.addEventListener('online', () => { if(CUR && CUR.role) syncNow(); });
 window.addEventListener('offline', () => { online = false; updateSyncPill(); render(); });
 let serverMode = false, online = true, syncVer = 0, syncing = false, syncTimer = null, lastSync = null, snap = {}, settingsSnap = '';
 const CLIENT = 'c' + Date.now().toString(36) + Math.random().toString(36).slice(2,6);
-const SYNC_COLS = ['rounds','holds','handovers','mats','ncrs','complaints','audits','cals','ths','aid','coas','reports','pimgs'];
+const SYNC_COLS = ['rounds','holds','handovers','mats','ncrs','complaints','audits','cals','ths','aid','coas','reports','pimgs','stops'];
 const FORM_VIEWS = ['round','matform','ncrform','auditform','compform','data','hand','letter','coaprint'];
 const keyOf = x => String(x.id ?? x.no ?? [x.date,x.time,x.type,x.code,x.loc,x.name,x.from].map(v=>v??'').join('|'));
 const strip = x => { const {_m,_v,_c,...r} = x; return JSON.stringify(r); };
@@ -4654,16 +4785,17 @@ function scheduleSync(){ clearTimeout(syncTimer); updateSyncPill(); syncTimer = 
 const SESSION_HOURS = 14;
 function saveSession(){ IDB.set('session', {name:CUR.name, role:CUR.role, pin:GAS_PIN, exp:Date.now() + SESSION_HOURS*3600e3}); }
 async function loadSession(){ const s = await IDB.get('session'); if(s && s.exp > Date.now() && s.name && s.pin){ CUR = {name:s.name, role:s.role}; GAS_PIN = s.pin; return true; } return false; }
-const DRAFT_VIEWS = ['round','matform','auditform'];
+const DRAFT_VIEWS = ['round','matform','auditform','drawm'];
 let draftTimer = null;
 function saveDraft(){ clearTimeout(draftTimer); draftTimer = setTimeout(() => {
   if(!DRAFT_VIEWS.includes(view)) { IDB.del('draft'); return; }
-  IDB.set('draft', {view, arg: arg && typeof arg === 'object' ? arg : null, F: view==='round' ? F : null, M: view==='matform' ? M : null, A: view==='auditform' ? A : null, user:CUR.name, at:Date.now()});
+  IDB.set('draft', {view, arg: arg && typeof arg === 'object' ? arg : null, F: view==='round' ? F : null, M: view==='matform' ? M : null, A: view==='auditform' ? A : null, DMs: view==='drawm' ? DM : null, user:CUR.name, at:Date.now()});
 }, 300); }
 ['input','change','click'].forEach(ev => document.addEventListener(ev, () => { if(DRAFT_VIEWS.includes(view)) saveDraft(); }, true));
 async function restoreDraft(){
   const d = await IDB.get('draft'); if(!d || Date.now() - d.at > 12*3600e3 || !DRAFT_VIEWS.includes(d.view)) return;
-  if(d.view === 'round' && d.F){ F = d.F; go('round', {stage:d.F.stage}); }
+  if(d.view === 'drawm' && d.DMs){ DM = d.DMs; go('drawm'); }
+  else if(d.view === 'round' && d.F){ F = d.F; go('round', {stage:d.F.stage}); }
   else if(d.view === 'matform' && d.M){ M = d.M; go('matform', d.arg || {}); }
   else if(d.view === 'auditform' && d.A){ A = d.A; go('auditform', {type:d.A.type}); }
   else return;
