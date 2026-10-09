@@ -4064,7 +4064,7 @@ function designImagesHtml(F){
   const imgs = F.images || [];
   return `<h2>صور البروفا</h2><div class="panel"><div class="imgs">${imgs.map((im, i) => `<div class="imgt"><img src="${im.thumb}" data-iv="${i}" alt="صورة البروفا ${i+1}"><span>${esc(im.name || 'صورة')}${im.id || !serverMode ? '' : ' · بانتظار الرفع'}</span><button data-ir="${i}" aria-label="حذف الصورة">×</button></div>`).join('')}
     <label class="imgadd">${LI('plus')}<b>إضافة صورة البروفا</b><small>صورة، لقطة شاشة، أو كاميرا التابلت</small><input type="file" accept="image/*" multiple id="imgIn" class="hide"></label></div>
-    ${imgs.length ? `<div class="row" style="margin-top:10px;align-items:center"><button class="btn sm" id="ocrAgain">${LI('scan')} قراءة الصورة مرة أخرى</button>${F.ocr ? `<span class="muted" style="font-size:12.5px">${F.ocr.why==='not_enabled'?'⚠️ القراءة من الصورة غير مفعّلة في Google (Drive API)':F.ocr.why==='offline'?'⚠️ دون إنترنت – قُرئ اسم الملف فقط':F.ocr.why==='failed'?'⚠️ تعذرت القراءة من Google':F.ocr.text?'✓ قُرئت البطاقة':'⚠️ لم يُقرأ نص من الصورة'}</span>` : ''}</div>
+    ${imgs.length ? `<div class="row" style="margin-top:10px;align-items:center"><button class="btn sm" id="ocrAgain">${LI('scan')} قراءة الصورة مرة أخرى</button>${F.ocr ? `<span class="muted" style="font-size:12.5px">${F.ocr.why==='not_enabled'?'⚠️ القراءة من الصورة غير مفعّلة في Google (Drive API)':F.ocr.why==='offline'?'⚠️ دون إنترنت – قُرئ اسم الملف فقط':F.ocr.why==='failed'?'⚠️ تعذرت القراءة من Google: '+esc(F.ocr.err||''):F.ocr.text?'✓ قُرئت البطاقة':'⚠️ لم يُقرأ نص من الصورة'}</span>` : ''}</div>
       ${F.ocr && F.ocr.text ? `<details class="diag" style="margin-top:6px"><summary>النص الذي قرأه البرنامج من الصورة</summary><div dir="ltr" style="white-space:pre-wrap;text-align:left;background:#F4F6F8;padding:8px;border-radius:8px;max-height:220px;overflow:auto">${esc(F.ocr.text)}</div></details>` : ''}` : ''}
     <p class="muted" style="margin:8px 0 0;font-size:12.5px">تُصغَّر الصورة تلقائياً وتُرفع إلى Drive (مجلد "صور التصاميم") عند الحفظ. دون إنترنت تبقى على الجهاز وتُرفع عند عودته.</p></div>`;
 }
@@ -4164,24 +4164,24 @@ async function buildCardSheet(dataUrl){
 const ocrText = async dataUrl => JSON.parse(await rpc('ocrImage', JSON.stringify({b64:dataUrl.split(',')[1]}))).text || '';
 async function autoFillDesign(orig, fileName){
   const customers = [...new Set(S.orders.map(o => o.customer).filter(Boolean))];
-  let text = '', why = '', got = {};
+  let text = '', why = '', got = {}, errMsg = '';
   if(GAS_MODE && navigator.onLine !== false){
     toast('جارٍ قراءة بطاقة التصميم من الصورة…');
     try{
       const sheet = await buildCardSheet(orig);
       if(sheet){ text = await ocrText(sheet); got = parseCardSheet(text); }
       if(!got.dname && !got.customer){ const t2 = await ocrText(await cropCard(orig)); text = (text ? text + '\n-----\n' : '') + t2; got = Object.assign(parseDesignCard(t2, fileName, customers), got); }
-    }catch(e){ why = String(e && e.message || e).includes('OCR_NOT_ENABLED') ? 'not_enabled' : 'failed'; }
+    }catch(e){ errMsg = String(e && e.message || e); why = errMsg.includes('OCR_NOT_ENABLED') ? 'not_enabled' : 'failed'; }
   } else why = 'offline';
   if(!got.dname && !got.customer) got = Object.assign(parseDesignCard('', fileName, customers), got);
   if(got.customer){ const k = customers.find(c => String(c).toLowerCase().split(/[\s.]/)[0] === got.customer.toLowerCase().split(/[\s.]/)[0]); if(k) got.customer = k; }
-  F.ocr = {text: text.slice(0, 3000), why, at: Date.now(), file: fileName};
+  F.ocr = {text: text.slice(0, 3000), why, err: errMsg.slice(0, 300), at: Date.now(), file: fileName};
   ['web','webc','cap','ver','cdate'].forEach(k => delete got[k]);
   const keys = Object.keys(got).filter(k => got[k] && !String(F.extra[k] || '').trim());
   keys.forEach(k => F.extra[k] = got[k]);
   F.autoKeys = [...new Set([...(F.autoKeys || []), ...keys])];
   if(view === 'round') rerender(); if(typeof saveDraft === 'function') saveDraft();
-  const note = why === 'offline' ? ' (من اسم الملف فقط – القراءة الكاملة تحتاج إنترنت)' : why === 'not_enabled' ? ' (القراءة من الصورة تحتاج تفعيل Drive API في مشروع Google)' : why === 'failed' ? ' (تعذرت قراءة الصورة – من اسم الملف فقط)' : '';
+  const note = why === 'offline' ? ' (من اسم الملف فقط – القراءة الكاملة تحتاج إنترنت)' : why === 'not_enabled' ? ' (القراءة من الصورة تحتاج تفعيل Drive API في مشروع Google)' : why === 'failed' ? ' (تعذرت قراءة الصورة من Google – انظر السبب تحت الصورة)' : '';
   toast(keys.length ? `تمت تعبئة ${keys.length} خانات تلقائياً – راجع الخانات الصفراء${note}` : `لم تُقرأ بيانات جديدة من الصورة${note}`);
 }
 
