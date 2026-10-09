@@ -627,6 +627,13 @@ label.f.autof::after{content:"تلقائي من الصورة – راجعه";fon
 @media(max-width:700px){.dli{grid-template-columns:1fr}}
 #ivPct{min-width:52px;text-align:center;font-weight:700}.ivbar{flex-wrap:wrap;align-items:center}
 .imgview{direction:ltr}
+.dhdel{display:inline-flex;align-items:center;gap:4px;font-size:12px;color:var(--bad);border:1px solid #EDB5AE;border-radius:8px;padding:3px 8px;background:#fff;cursor:pointer;margin-inline-start:6px}.dhdel .li{width:14px;height:14px}
+.rep2{margin-bottom:12px;border:2px solid #CFE0F5;background:#F6FAFF}
+.rep2 .rh{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:10px}.rep2 .rh b{display:flex;gap:6px;align-items:center}.rep2 .rh .li{width:18px;height:18px}
+.rg{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.rb{background:#fff;border:1px solid var(--line2);border-radius:10px;padding:10px 12px;display:flex;flex-direction:column;gap:2px}
+.rb span{font-size:12.5px;color:var(--ink2)}.rb b{font-size:30px;line-height:1.1;color:#1D4E89}.rb small{font-size:12px;color:var(--ink2)}
+@media(max-width:700px){.rg{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -938,7 +945,8 @@ const STAGES = [
    {
     "k": "roll",
     "l": "رقم الرول",
-    "t": "txt"
+    "t": "txt",
+    "onlyType": "فحص نهائي"
    }
   ],
   "checks": [
@@ -2162,8 +2170,8 @@ function suggestRound(){
     if(ch.t==='ok' && F.checks[ch.k]==='n' && RANK[ch.c] > RANK[c]) c = ch.c;
     if(ch.t==='num' && evalNum(ch, F.vals[ch.k], o)==='out' && RANK[ch.c||'رئيسي'] > RANK[c]) c = ch.c || 'رئيسي';
   });
-  if(F.type==='بدء تشغيل' && F.checks.lineclear==='n') c = 'حرج';
-  if(F.type==='بدء تشغيل' && F.checks.master==='n' && RANK[c] < 2) c = 'رئيسي';
+  if(F.type==='بدء تشغيل' && F.stage!=='print' && F.checks.lineclear==='n') c = 'حرج';
+  if(F.type==='بدء تشغيل' && F.stage!=='print' && F.checks.master==='n' && RANK[c] < 2) c = 'رئيسي';
   let d = c==='حرج'||c==='رئيسي' ? 'محجور' : c==='ثانوي' ? 'مقبول بملاحظة' : 'مقبول';
   if(F.stage==='final'){
     const lot = +F.extra.lot || 0; const a = aqlFor(lot);
@@ -2200,7 +2208,7 @@ VIEWS.round = {
     const rows = F.order ? ordRows(F.order) : [];
     const inItems = (o2, code) => (F.items||[]).some(i => String(i.order)===String(o2) && i.code===code);
     const cls = F.cls ?? sg.cls, dec = F.decision ?? sg.dec;
-    const extra = (s.extra||[]).map(e => e.t==='sel'
+    const extra = (s.extra||[]).filter(e => !e.onlyType || e.onlyType===F.type).map(e => e.t==='sel'
       ? `<label class="f">${esc(e.l)}<select data-ex="${e.k}"><option value=""></option>${opt(e.opts, F.extra[e.k])}</select></label>`
       : `<label class="f">${esc(e.l)}<input type="${e.t==='num'?'number':'text'}" class="num" data-ex="${e.k}" value="${esc(F.extra[e.k]??'')}"></label>`).join('');
     let plan = '';
@@ -2218,7 +2226,7 @@ VIEWS.round = {
       ${['design','final'].includes(s.key)?'':`<div class="pick" id="typePick" style="margin-bottom:12px">${(s.key==='print' ? [['بدء تشغيل','طباعة بداية التشغيل'],['فحص نهائي','فحص طباعة نهائي']] : [['جولة','جولة دورية'],['بدء تشغيل','موافقة بدء تشغيل']]).map(([x,l])=>`<button class="${F.type===x?'on':''}" data-v="${x}">${l}</button>`).join('')}</div>`}
       <div class="grid">
         <label class="f">${s.key==='design'?'رقم الطلبية (اختياري – إن وُجدت)':F.items&&F.items.length?'إضافة طلبية أخرى (اختياري)':'رقم الطلبية'}<input type="text" inputmode="numeric" list="ordList" id="fOrder" value="${esc(F.order)}" placeholder="اكتب أو اختر"></label>
-        ${['design'].includes(s.key)?'':`<label class="f">${s.key==='final'?'رموز الكراتين المفحوصة':'رقم الصندوق / الكرتونة'}<input type="text" id="fBox" value="${esc(F.box)}"></label>`}
+        ${['design','print'].includes(s.key)?'':`<label class="f">${s.key==='final'?'رموز الكراتين المفحوصة':'رقم الصندوق / الكرتونة'}<input type="text" id="fBox" value="${esc(F.box)}"></label>`}
         ${s.key==='design'?'':`<label class="f">عدد العينات<input type="number" id="fSamples" value="${esc(F.samples)}"></label>`}${extra}
       </div>
       <datalist id="ordList">${[...new Map(S.orders.map(x => [String(x.order_number), x])).values()].map(x=>`<option value="${esc(x.order_number)}">${esc(ordRows(x.order_number).length>1 ? ordRows(x.order_number).length+' منتجات – '+(x.customer||'') : x.product_name)}</option>`).join('')}</datalist>
@@ -2229,10 +2237,10 @@ VIEWS.round = {
       ${s.key==='design' ? designCard(F) : F.items&&F.items.length ? productCards(F.items, s.key, F.mi||0) : orderCard(o, F.order)}${plan}
       ${s.machines.length>1?`<div style="margin-top:12px"><div class="muted b">الآلة</div><div class="pick" id="machPick">${s.machines.map(x=>`<button class="${F.machine===x?'on':''}" data-v="${esc(x)}">${esc(x)}</button>`).join('')}</div></div>`:''}
     </div>
-    ${F.type==='بدء تشغيل'?`<div class="panel" style="margin-top:12px">${checkRows([{k:'lineclear',l:'تنظيف الخط من المنتج السابق',a:'لا تيوبات أو أغطية أو كراتين أو لصاقات من المنتج السابق',c:'حرج',t:'ok'},{k:'master',l:'العينة المعتمدة موجودة في المرحلة',a:'موقعة ومرمزة',c:'رئيسي',t:'ok'}], o, F.checks, F.vals)}</div>`:''}
+    ${F.type==='بدء تشغيل' && s.key!=='print'?`<div class="panel" style="margin-top:12px">${checkRows([{k:'lineclear',l:'تنظيف الخط من المنتج السابق',a:'لا تيوبات أو أغطية أو كراتين أو لصاقات من المنتج السابق',c:'حرج',t:'ok'},{k:'master',l:'العينة المعتمدة موجودة في المرحلة',a:'موقعة ومرمزة',c:'رئيسي',t:'ok'}], o, F.checks, F.vals)}</div>`:''}
     <h2>بنود الفحص</h2>
     <button class="btn" id="allOk" style="margin-bottom:8px">كل البنود مطابقة ✓</button>
-    ${typeof printNotesBanner==='function' ? printNotesBanner(F, s) : ''}<div class="panel">${checkRows(stageChecks(s), o, F.checks, F.vals)}</div>
+    ${s.key==='print' && typeof repeatPanel==='function' ? repeatPanel(F) : ''}${typeof printNotesBanner==='function' ? printNotesBanner(F, s) : ''}<div class="panel">${checkRows(stageChecks(s), o, F.checks, F.vals)}</div>
     ${['design','print'].includes(s.key) ? '' : `    <h2>العيوب المرصودة</h2>
     <div class="panel"><div class="pick" id="defPick">${DEFECTS.map(x=>`<button class="${F.defects.includes(x)?'on':''}" data-v="${x}">${x}</button>`).join('')}</div>
       <div class="grid" style="margin-top:12px">
@@ -2268,7 +2276,7 @@ VIEWS.round = {
     $('#fMi') && ($('#fMi').onchange = e => { F.mi = +e.target.value; reset(); rerender(); });
     $('#fBox') && ($('#fBox').oninput = e => F.box = e.target.value);
     $('#fSamples') && ($('#fSamples').oninput = e => F.samples = e.target.value);
-    $$('[data-ex]').forEach(el => el.onchange = () => { F.extra[el.dataset.ex] = el.value; if(s.key==='final' || s.key==='design'){ reset(); rerender(); } });
+    $$('[data-ex]').forEach(el => el.onchange = () => { F.extra[el.dataset.ex] = el.value; if(['final','design','print'].includes(s.key)){ reset(); rerender(); } });
     $$('[data-num]').forEach(el => el.onchange = () => { F.vals[el.dataset.num] = el.value; reset(); rerender(); });
     $$('.tri').forEach(t => t.querySelectorAll('button').forEach(b => b.onclick = () => { F.checks[t.dataset.ck] = b.dataset.v; reset(); rerender(); }));
     $('#allOk').onclick = () => { stageChecks(s).filter(c=>c.t==='ok').forEach(c => { if(!F.checks[c.k]) F.checks[c.k]='y'; }); reset(); rerender(); };
@@ -2291,7 +2299,7 @@ function saveRound(){
   if(!F.items || !F.items.length){ toast(F.order && ordRows(F.order).length>1 ? 'اختر منتجاً واحداً على الأقل من الطلبية' : 'اكتب رقم الطلبية أولاً'); $('#fOrder').focus(); return; }
   if(s.machines.length>1 && !F.machine){ toast('اختر الآلة'); return; }
   const sg = suggestRound(), o = fSpec(), d = new Date(); const it0 = F.items[0];
-  const checks = stageChecks(s).concat(F.type==='بدء تشغيل'?[{k:'lineclear',l:'تنظيف الخط',t:'ok'},{k:'master',l:'العينة المعتمدة',t:'ok'}]:[]);
+  const checks = stageChecks(s).concat(F.type==='بدء تشغيل' && s.key!=='print'?[{k:'lineclear',l:'تنظيف الخط',t:'ok'},{k:'master',l:'العينة المعتمدة',t:'ok'}]:[]);
   const failed = checks.filter(c => (c.t==='ok' && F.checks[c.k]==='n') || (c.t==='num' && (evalNum(c, F.vals[c.k], o)==='out' || (c.multi && (F.vals[c.k+'_r']||[]).some(v => v!=='' && evalNum(c, v, o)==='out'))))).map(c => c.l.split('(')[0].trim());
   const old = F.editId ? S.rounds.find(x => x.id===F.editId) : null;
   const r = {id:old?old.id:uid(), date:old?old.date:todayStr(d), time:old?old.time:timeStr(d), shift:old?old.shift:S.settings.shift, inspector:old?old.inspector:S.settings.inspector, stage:F.stage, type:F.type, machine:F.machine,
@@ -3588,7 +3596,7 @@ VIEWS.data.bind = function(){
 
 const LUCIDE = {"home": "<path d=\"M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8\" /> <path d=\"M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z\" />", "prod": "<path d=\"M12 16h.01\" /> <path d=\"M16 16h.01\" /> <path d=\"M3 19a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5a.5.5 0 0 0-.769-.422l-4.462 2.844A.5.5 0 0 1 15 10.5v-2a.5.5 0 0 0-.769-.422L9.77 10.922A.5.5 0 0 1 9 10.5V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2z\" /> <path d=\"M8 16h.01\" />", "mat": "<path d=\"M12 22V12\" /> <path d=\"m16 17 2 2 4-4\" /> <path d=\"M21 11.127V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.729l7 4a2 2 0 0 0 2 .001l1.32-.753\" /> <path d=\"M3.29 7 12 12l8.71-5\" /> <path d=\"m7.5 4.27 8.997 5.148\" />", "ncr": "<path d=\"M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z\" /> <path d=\"M12 8v4\" /> <path d=\"M12 16h.01\" />", "hold": "<path d=\"M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z\" /> <path d=\"m3.3 7 8.7 5 8.7-5\" /> <path d=\"M12 22V12\" />", "mon": "<rect width=\"8\" height=\"4\" x=\"8\" y=\"2\" rx=\"1\" ry=\"1\" /> <path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\" /> <path d=\"m9 14 2 2 4-4\" />", "rep": "<path d=\"M3 3v16a2 2 0 0 0 2 2h16\" /> <path d=\"M18 17V9\" /> <path d=\"M13 17V5\" /> <path d=\"M8 17v-3\" />", "team": "<path d=\"M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2\" /> <path d=\"M16 3.128a4 4 0 0 1 0 7.744\" /> <path d=\"M22 21v-2a4 4 0 0 0-3-3.87\" /> <circle cx=\"9\" cy=\"7\" r=\"4\" />", "mgr": "<path d=\"M16 7h6v6\" /> <path d=\"m22 7-8.5 8.5-5-5L2 17\" />", "more": "<rect width=\"7\" height=\"7\" x=\"3\" y=\"3\" rx=\"1\" /> <rect width=\"7\" height=\"7\" x=\"14\" y=\"3\" rx=\"1\" /> <rect width=\"7\" height=\"7\" x=\"14\" y=\"14\" rx=\"1\" /> <rect width=\"7\" height=\"7\" x=\"3\" y=\"14\" rx=\"1\" />", "hand": "<path d=\"M8 3 4 7l4 4\" /> <path d=\"M4 7h16\" /> <path d=\"m16 21 4-4-4-4\" /> <path d=\"M20 17H4\" />", "comp": "<path d=\"M22 17a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 21.286V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2z\" /> <path d=\"M12 15h.01\" /> <path d=\"M12 7v4\" />", "coa": "<path d=\"m15.477 12.89 1.515 8.526a.5.5 0 0 1-.81.47l-3.58-2.687a1 1 0 0 0-1.197 0l-3.586 2.686a.5.5 0 0 1-.81-.469l1.514-8.526\" /> <circle cx=\"12\" cy=\"8\" r=\"6\" />", "sup": "<path d=\"M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2\" /> <path d=\"M15 18H9\" /> <path d=\"M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 17.52 8H14\" /> <circle cx=\"17\" cy=\"18\" r=\"2\" /> <circle cx=\"7\" cy=\"18\" r=\"2\" />", "data": "<ellipse cx=\"12\" cy=\"5\" rx=\"9\" ry=\"3\" /> <path d=\"M3 5V19A9 3 0 0 0 21 19V5\" /> <path d=\"M3 12A9 3 0 0 0 21 12\" />", "bell": "<path d=\"M10.268 21a2 2 0 0 0 3.464 0\" /> <path d=\"M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326\" />", "search": "<path d=\"m21 21-4.34-4.34\" /> <circle cx=\"11\" cy=\"11\" r=\"8\" />", "logout": "<path d=\"m16 17 5-5-5-5\" /> <path d=\"M21 12H9\" /> <path d=\"M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4\" />", "dash": "<rect width=\"7\" height=\"9\" x=\"3\" y=\"3\" rx=\"1\" /> <rect width=\"7\" height=\"5\" x=\"14\" y=\"3\" rx=\"1\" /> <rect width=\"7\" height=\"9\" x=\"14\" y=\"12\" rx=\"1\" /> <rect width=\"7\" height=\"5\" x=\"3\" y=\"16\" rx=\"1\" />", "s_design": "<path d=\"M15.707 21.293a1 1 0 0 1-1.414 0l-1.586-1.586a1 1 0 0 1 0-1.414l5.586-5.586a1 1 0 0 1 1.414 0l1.586 1.586a1 1 0 0 1 0 1.414z\" /> <path d=\"m18 13-1.375-6.874a1 1 0 0 0-.746-.776L3.235 2.028a1 1 0 0 0-1.207 1.207L5.35 15.879a1 1 0 0 0 .776.746L13 18\" /> <path d=\"m2.3 2.3 7.286 7.286\" /> <circle cx=\"11\" cy=\"11\" r=\"2\" />", "s_print": "<path d=\"M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2\" /> <path d=\"M6 9V3a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v6\" /> <rect x=\"6\" y=\"14\" width=\"12\" height=\"8\" rx=\"1\" />", "s_draw": "<ellipse cx=\"12\" cy=\"5\" rx=\"9\" ry=\"3\" /> <path d=\"M3 5v14a9 3 0 0 0 18 0V5\" />", "s_sort": "<path d=\"M2 5h20\" /> <path d=\"M6 12h12\" /> <path d=\"M9 19h6\" />", "s_mix": "<path d=\"M14 2v6a2 2 0 0 0 .245.96l5.51 10.08A2 2 0 0 1 18 22H6a2 2 0 0 1-1.755-2.96l5.51-10.08A2 2 0 0 0 10 8V2\" /> <path d=\"M6.453 15h11.094\" /> <path d=\"M8.5 2h7\" />", "s_inj": "<path d=\"m18 2 4 4\" /> <path d=\"m17 7 3-3\" /> <path d=\"M19 9 8.7 19.3c-1 1-2.5 1-3.4 0l-.6-.6c-1-1-1-2.5 0-3.4L15 5\" /> <path d=\"m9 11 4 4\" /> <path d=\"m5 19-3 3\" /> <path d=\"m14 4 6 6\" />", "s_asm": "<path d=\"M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.106-3.105c.32-.322.863-.22.983.218a6 6 0 0 1-8.259 7.057l-7.91 7.91a1 1 0 0 1-2.999-3l7.91-7.91a6 6 0 0 1 7.057-8.259c.438.12.54.662.219.984z\" />", "s_cap": "<path d=\"M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z\" /> <path d=\"M12 22V12\" /> <polyline points=\"3.29 7 12 12 20.71 7\" /> <path d=\"m7.5 4.27 9 5.15\" />", "s_seal": "<path d=\"M14 13V8.5C14 7 15 7 15 5a3 3 0 0 0-6 0c0 2 1 2 1 3.5V13\" /> <path d=\"M20 15.5a2.5 2.5 0 0 0-2.5-2.5h-11A2.5 2.5 0 0 0 4 15.5V17a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1z\" /> <path d=\"M5 22h14\" />", "s_final": "<path d=\"M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z\" /> <path d=\"m16 9-5.5 5.5L8 12\" />", "thermo": "<path d=\"M14 4v10.54a4 4 0 1 1-4 0V4a2 2 0 0 1 4 0Z\" />", "ruler": "<path d=\"M21.3 15.3a2.4 2.4 0 0 1 0 3.4l-2.6 2.6a2.4 2.4 0 0 1-3.4 0L2.7 8.7a2.41 2.41 0 0 1 0-3.4l2.6-2.6a2.41 2.41 0 0 1 3.4 0Z\" /> <path d=\"m14.5 12.5 2-2\" /> <path d=\"m11.5 9.5 2-2\" /> <path d=\"m8.5 6.5 2-2\" /> <path d=\"m17.5 15.5 2-2\" />", "clean": "<path d=\"M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z\" /> <path d=\"M20 2v4\" /> <path d=\"M22 4h-4\" /> <circle cx=\"4\" cy=\"20\" r=\"2\" />", "plus": "<circle cx=\"12\" cy=\"12\" r=\"10\" /> <path d=\"M8 12h8\" /> <path d=\"M12 8v8\" />", "ok": "<path d=\"M21.801 10A10 10 0 1 1 17 3.335\" /> <path d=\"m9 11 3 3L22 4\" />", "warn": "<path d=\"m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3\" /> <path d=\"M12 9v4\" /> <path d=\"M12 17h.01\" />", "file": "<path d=\"M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z\" /> <path d=\"M14 2v5a1 1 0 0 0 1 1h5\" /> <path d=\"M10 9H8\" /> <path d=\"M16 13H8\" /> <path d=\"M16 17H8\" />", "scan": "<path d=\"M3 7V5a2 2 0 0 1 2-2h2\" /> <path d=\"M17 3h2a2 2 0 0 1 2 2v2\" /> <path d=\"M21 17v2a2 2 0 0 1-2 2h-2\" /> <path d=\"M7 21H5a2 2 0 0 1-2-2v-2\" /> <circle cx=\"12\" cy=\"12\" r=\"3\" /> <path d=\"m16 16-1.9-1.9\" />", "clock": "<circle cx=\"12\" cy=\"12\" r=\"10\" /> <path d=\"M12 6v6l4 2\" />", "alert": "<path d=\"M12 16h.01\" /> <path d=\"M12 8v4\" /> <path d=\"M15.312 2a2 2 0 0 1 1.414.586l4.688 4.688A2 2 0 0 1 22 8.688v6.624a2 2 0 0 1-.586 1.414l-4.688 4.688a2 2 0 0 1-1.414.586H8.688a2 2 0 0 1-1.414-.586l-4.688-4.688A2 2 0 0 1 2 15.312V8.688a2 2 0 0 1 .586-1.414l4.688-4.688A2 2 0 0 1 8.688 2z\" />", "activity": "<path d=\"M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2\" />", "gauge": "<path d=\"m12 14 4-4\" /> <path d=\"M3.34 19a10 10 0 1 1 17.32 0\" />"};
 /* [VERSION] رقم إصدار البرنامج – يظهر أسفل القائمة وفي شاشة الدخول */
-const APP_VERSION = '8.2';
+const APP_VERSION = '8.3';
 let SERVER_VERSION = '';
 async function checkServerVersion(){ if(!GAS_MODE) return; try{ const v = JSON.parse(await rpc('serverVersion', '')); SERVER_VERSION = v.version + (v.ocr ? '' : ' (Drive API غير مفعّل)'); }catch(e){ SERVER_VERSION = /NET/.test(String(e && e.message || e)) ? '' : 'قديم – انشر إصداراً جديداً'; } try{ renderTabs(); }catch(e){} }
 /* [ERRORS] بدل الصفحة الفارغة: رسالة واضحة وزر إعادة تحميل */
@@ -3781,12 +3789,38 @@ VIEWS.round.bind = function(){
 /* ERP product information next to every selected product, highlighted for the current stage */
 const PF = [
   ['customer','الزبون', o => o.customer], ['code','كود المنتج', o => o.product_code], ['dia','القطر', o => o.product_diameter], ['len','الطول', o => o.tube_cylinder_length],
-  ['ptype','نوع الورق', o => o.paper_type], ['pcolor','لون الورق', o => o.roll_color], ['thick','سماكة الورق (Set)', o => setThickness(o.set)], ['varn','الورنيش (من التصميم)', o => (designFor(o) || {extra:{}}).extra.varn || (((S.pimgs || []).find(p => p.code === o.product_code)) || {}).varn || ''], ['print360','طباعة 360', o => o.is360==null||o.is360==='' ? '' : (o.is360==1?'نعم':'لا')],
+  ['ptype','نوع الورق', o => o.paper_type], ['pcolor','لون الورق', o => o.roll_color], ['thick','سماكة الورق (Set)', o => setThickness(o.set)], ['rollw','عرض الرول (Set)', o => parseSet(o.set).width ? parseSet(o.set).width + ' ملم' : ''], ['rolll','طول الرول (Set)', o => parseSet(o.set).meters ? parseSet(o.set).meters + ' م' : ''], ['varn','الورنيش (من التصميم)', o => (designFor(o) || {extra:{}}).extra.varn || (((S.pimgs || []).find(p => p.code === o.product_code)) || {}).varn || ''], ['print360','طباعة 360', o => o.is360==null||o.is360==='' ? '' : (o.is360==1?'نعم':'لا')],
   ['foil','حراري (Cold foil)', o => o.cold_foil==null||o.cold_foil==='' ? '' : (o.cold_foil==1?'نعم':'لا')], ['shoulder','لون الكتف', o => o.shoulder_color], ['tooth','السن', o => o.tooth_type],
   ['hole','قطر الفوهة', o => o.hole_diameter], ['cap','الغطاء', o => [o.cap_name, o.cap_code].filter(Boolean).join(' – ')], ['nozzle','النوزل / الملحق', o => o.nozzle_name],
   ['qty','الكمية', o => o.quantity ? Number(o.quantity).toLocaleString('en') : ''], ['total','إجمالي التيوبات', o => o.total_tubes && o.total_tubes != o.quantity ? Number(o.total_tubes).toLocaleString('en') : ''],
   ['colors','عدد الألوان', o => o.colors_number], ['width','عرض الرول', o => o.roll_width], ['printshop','المطبعة', o => o.printshop], ['set','الطقم', o => o.set],
   ['arabic','الاسم العربي', o => o.product_name_arabic], ['seller','البائع', o => o.seller], ['delivery','التسليم', o => o.order_delivery_date], ['erpstage','المرحلة في ERP', o => o.stage]];
+/* [ZLIST] قيم Z لأسطوانات الطباعة (من ملف الزدرات): طول التكرار = Z × 3.175 ÷ عدد التكرار الطولي */
+const Z_LIST = [60, 62, 63, 66, 72, 76, 80, 88, 90, 92, 96, 101, 104, 108, 112, 117], Z_PITCH = 3.175, Z_MAX_REP = 8;
+/* [TUBEW] عرض التيوب المفرود حسب القطر (القيم المعروفة تُكتب هنا، والباقي يُحسب π × القطر + 3 ملم) */
+const TUBE_W = {35: 113};
+function parseSet(set){ const v = String(set || ''); const x = v.match(/(\d{2,3})\s*\/\s*(\d{1,2})\s*MIC\s*-?\s*(\d{2,4})\s*MM\s*-?\s*(\d{2,5})\s*m/i); return x ? {thick:+x[1], mic:+x[2], width:+x[3], meters:+x[4]} : {}; }
+function zMatches(L){ const out = []; if(!(L > 0)) return out; Z_LIST.forEach(z => { for(let n = 1; n <= Z_MAX_REP; n++){ const v = z * Z_PITCH / n; const d = Math.abs(v - L); if(d <= 0.15) out.push({z, n, v:+v.toFixed(3), d}); } }); return out.sort((a, b) => a.d - b.d || a.n - b.n); }
+function tubeWidth(dia){ dia = +dia; return TUBE_W[dia] || (dia ? +(Math.PI * dia + 3).toFixed(1) : 0); }
+function acrossRepeat(rollW, tw){ if(!(rollW > 0 && tw > 0)) return 0; const r = rollW / tw, n = Math.round(r); return Math.abs(r - n) <= .06 ? n : Math.floor(r); }
+function repeatInfo(o){
+  const L = +String(o.tube_cylinder_length || '').replace(',', '.'), st = parseSet(o.set), rollW = st.width || +o.roll_width || 0, tw = tubeWidth(o.product_diameter);
+  const zm = zMatches(L);
+  return {L, rollW, tw, zm, z: zm[0] ? zm[0].z : '', n: zm[0] ? zm[0].n : '', across: acrossRepeat(rollW, tw)};
+}
+function repeatPanel(F){
+  const it = (F.items || [])[F.mi || 0], o = it && specOfItem(it); if(!o) return '';
+  const ri = repeatInfo(o), x = F.extra || {};
+  const z = x.rz || ri.z, n = x.rn || ri.n, w = x.rw || ri.across, edited = x.rz || x.rn || x.rw;
+  return `<div class="panel rep2"><div class="rh"><b>${typeof LI==='function'?LI('ruler'):''} التكرار في الطباعة – ${esc(o.product_name)}</b>${edited ? '<span class="pill p-مقبول_بملاحظة">معدّل يدوياً</span>' : '<span class="muted">محسوب تلقائياً – يمكن تعديله</span>'}</div>
+    <div class="rg">
+      <div class="rb"><span>التكرار الطولي</span><b class="num">${n || '—'}</b><small>Z ${esc(z || '—')}${ri.L ? ` · طول المنتج ${ri.L} ملم` : ''}${z && n ? ` · ${(z * Z_PITCH / n).toFixed(3)} ملم للتكرار` : ''}</small></div>
+      <div class="rb"><span>التكرار العرضي</span><b class="num">${w || '—'}</b><small>${ri.rollW ? `عرض الرول ${ri.rollW} ملم` : 'عرض الرول غير معروف'}${ri.tw ? ` ÷ عرض التيوب ${ri.tw} ملم` : ''}</small></div>
+      <div class="rb"><span>على كل طول أسطوانة</span><b class="num">${n && w ? n * w : '—'}</b><small>تيوب (طولي × عرضي)</small></div>
+    </div>
+    ${ri.zm.length > 1 ? `<p class="muted" style="margin:6px 0 0;font-size:12.5px">احتمالات أخرى: ${ri.zm.slice(1, 4).map(m => `Z ${m.z} × ${m.n}`).join('، ')}</p>` : !ri.zm.length && ri.L ? `<p class="muted" style="margin:6px 0 0;font-size:12.5px">لا يوجد Z في الجدول يطابق الطول ${ri.L} ملم – اكتبه يدوياً.</p>` : ''}
+    <div class="grid" style="margin-top:10px"><label class="f">Z<input type="number" class="num" data-ex="rz" value="${esc(x.rz || '')}" placeholder="${esc(ri.z)}"></label><label class="f">التكرار الطولي<input type="number" class="num" data-ex="rn" value="${esc(x.rn || '')}" placeholder="${esc(ri.n)}"></label><label class="f">التكرار العرضي<input type="number" class="num" data-ex="rw" value="${esc(x.rw || '')}" placeholder="${esc(ri.across)}"></label></div></div>`;
+}
 /* [SET] سماكة الورق تُؤخذ من حقل set فقط، مثال: 35-white-ABL-270 / 12MIC-226MM-750m ← 270 / 12 MIC */
 function setThickness(set){ const v = String(set || ''); if(!v) return ''; const x = v.match(/(\d{2,3})\s*\/\s*(\d{1,2})\s*MIC/i); return x ? `${x[1]} / ${x[2]} MIC` : v; }
 /* [PIMGS] صورة المنتج: من صور المنتجات المربوطة، أو من جولة التصميم المرتبطة بالطلبية، أو اقتراح بالتشابه في الاسم */
@@ -3834,7 +3868,7 @@ function productImageHtml(o, idx){
     <label class="btn sm">${typeof LI==='function'?LI('plus'):''} رفع صورة المنتج<input type="file" accept="image/*" class="hide" data-pup="${idx}"></label></div>`;
 }
 /* [PF_SHOW] الحقول المعروضة في كل مرحلة (الباقي يظهر في المراحل الأخرى) */
-const PF_SHOW = {print: ['customer','ptype','pcolor','thick','print360','foil','varn','qty','delivery']};
+const PF_SHOW = {print: ['customer','ptype','pcolor','thick','rollw','rolll','print360','foil','varn','qty','delivery']};
 /* [ERP_NOTES] ملاحظات ERP التي تظهر للمراقب (cost_notes غير مستوردة) */
 const ERP_NOTES = [['quality_notes','ملاحظات الجودة','q'], ['gm_notes','ملاحظات المدير العام','gm'], ['production_notes','ملاحظات الإنتاج',''], ['sales_notes','ملاحظات المبيعات',''],
   ['coordination_notes','ملاحظات التنسيق',''], ['design_notes','ملاحظات التصميم',''], ['customer_notes','ملاحظات الزبون',''], ['stock_notes','ملاحظات المستودع','s']];
@@ -3845,7 +3879,7 @@ function erpNotesHtml(o){
   return `<div class="pnotes">${ns.map(([l,c,v]) => `<div class="pn ${c}"><b>${l}</b><span>${esc(v)}</span></div>`).join('')}</div>`;
 }
 /* [PF_STAGE] */
-const PF_STAGE = {design:['ptype','pcolor','print360','foil','customer','colors'], print:['ptype','pcolor','thick','print360','foil','varn'], draw:['dia','len','ptype','thick'], sort:['ptype','pcolor','print360','foil'], mix:['shoulder','cap'],
+const PF_STAGE = {design:['ptype','pcolor','print360','foil','customer','colors'], print:['ptype','pcolor','thick','rollw','print360','foil','varn'], draw:['dia','len','ptype','thick'], sort:['ptype','pcolor','print360','foil'], mix:['shoulder','cap'],
   inj:['shoulder','tooth','hole','len','dia'], asm:['cap','nozzle'], cap:['cap','qty','customer'], seal:['dia','len'], final:['dia','len','paper','cap','shoulder','hole','qty']};
 function productCards(items, stageKey, mi){
   const rel = new Set(PF_STAGE[stageKey] || []);
@@ -3882,7 +3916,7 @@ function designHistoryHtml(){
   const q = designQ.trim().toLowerCase();
   const list = (q ? all.filter(x => [(x.extra||{}).dname, (x.extra||{}).customer, itemsLabel(x), ordersLabel(x)].join(' ').toLowerCase().includes(q)) : all).slice(0, 8);
   return `<div class="panel dhist"><div class="row" style="justify-content:space-between;align-items:center"><b>${LI('file')} فتح تصميم سابق</b><input type="search" id="dhQ" placeholder="ابحث باسم التصميم أو الزبون" value="${esc(designQ)}" style="max-width:280px"></div>
-    <div class="dhl">${list.map(x => `<button class="dhi" data-open="${x.id}">${x.images&&x.images[0]?`<img src="${x.images[0].thumb}" alt="">`:'<span class="noimg">'+LI('file')+'</span>'}<span><b>${esc((x.extra||{}).dname || itemsLabel(x) || 'تصميم')}</b><small>${esc((x.extra||{}).customer||'')} · ${esc(x.date)} · ${esc(x.inspector)}${ordersLabel(x)?' · طلبية '+esc(ordersLabel(x)):''}</small></span>${designPill(x.decision)}</button>`).join('') || '<p class="muted" style="margin:6px 0">لا نتائج.</p>'}</div></div>`;
+    <div class="dhl">${list.map(x => `<button class="dhi" data-open="${x.id}">${x.images&&x.images[0]?`<img src="${x.images[0].thumb}" alt="">`:'<span class="noimg">'+LI('file')+'</span>'}<span><b>${esc((x.extra||{}).dname || itemsLabel(x) || 'تصميم')}</b><small>${esc((x.extra||{}).customer||'')} · ${esc(x.date)} · ${esc(x.inspector)}${ordersLabel(x)?' · طلبية '+esc(ordersLabel(x)):''}</small></span>${designPill(x.decision)}${(isMgr() || x.inspector === CUR.name) ? `<span class="dhdel" data-deldesign="${x.id}" title="حذف هذا التصميم">${LI('alert')} حذف</span>` : ''}</button>`).join('') || '<p class="muted" style="margin:6px 0">لا نتائج.</p>'}</div></div>`;
 }
 const _rbHist = VIEWS.round.bind;
 VIEWS.round.bind = function(){
@@ -3917,6 +3951,18 @@ document.addEventListener('change', e => {
 /* استبدال المصغّرة بالصورة الكاملة المحفوظة على الجهاز */
 const _rbHi = VIEWS.round.bind;
 VIEWS.round.bind = function(){ _rbHi(); $$('.pimg img[data-iid]').forEach(async el => { const d = await imgCacheGet(el.dataset.iid); if(d) el.src = d; else fetchImage({id: el.dataset.iid, thumb: el.src}).then(x => { if(x && x !== el.src) el.src = x; }); }); };
+
+/* حذف تصميم (جولة تصميم) – لصاحبه أو لمديرة القسم */
+function deleteDesignRound(id){
+  const r = S.rounds.find(x => String(x.id) === String(id)); if(!r) return;
+  if(!(isMgr() || r.inspector === CUR.name)){ toast('الحذف لصاحب التصميم أو لمديرة القسم'); return; }
+  ask(`حذف التصميم "${esc((r.extra||{}).dname || itemsLabel(r) || '')}" نهائياً؟`, 'حذف', () => {
+    S.rounds = S.rounds.filter(x => x !== r); S.pimgs = (S.pimgs || []).filter(p => String(p.designId) !== String(r.id));
+    if(F && String(F.editId) === String(r.id)) F = null;
+    save(); rerender(); toast('تم حذف التصميم');
+  }, true);
+}
+document.addEventListener('click', e => { const d = e.target.closest('[data-deldesign]'); if(d){ e.stopPropagation(); e.preventDefault(); deleteDesignRound(d.dataset.deldesign); } }, true);
 
 /* ================= EXECUTIVE MANAGEMENT REPORT ================= */
 PARENT.exec = 'rep'; NAV_OF.exec = 'rep'; PAGE.exec = ['التقارير', 'التقرير التنفيذي للإدارة'];
@@ -4378,14 +4424,14 @@ VIEWS.designs = {
         </div></div>`).join('')}</div>
       <datalist id="dlProd">${prods.map(p => `<option value="${esc(p.code)}">${esc(p.name)} – ${esc(p.customer)}</option>`).join('')}</datalist>` : ''}
     <div class="row" style="margin:18px 0 10px;justify-content:space-between"><h2 style="margin:0">التصاميم المحفوظة (${items.length})</h2><input type="search" id="dlSearch" value="${esc(dlibQ)}" placeholder="بحث: كود، منتج، زبون، اسم التصميم" style="max-width:340px"></div>
-    <div class="dlgrid">${items.map((x, i) => `<div class="panel dlc"><img src="${x.im.thumb}" data-dlv="${i}" alt=""><b>${esc(x.name || x.dname || '—')}</b><span class="num">${esc(x.code || 'غير مربوط بكود')}</span><span class="muted">${esc(x.customer || '')} · ${esc(x.date || '')}</span><span class="tag">${x.kind === 'd' ? 'من جولة التصميم' : 'مكتبة التصاميم'}</span>${x.kind === 'p' && isMgr() ? `<button class="btn sm d" data-dld="${esc(x.rec.id)}">حذف</button>` : ''}</div>`).join('') || '<p class="muted">لا توجد تصاميم بعد.</p>'}</div>`;
+    <div class="dlgrid">${items.map((x, i) => `<div class="panel dlc"><img src="${x.im.thumb}" data-dlv="${i}" alt=""><b>${esc(x.name || x.dname || '—')}</b><span class="num">${esc(x.code || 'غير مربوط بكود')}</span><span class="muted">${esc(x.customer || '')} · ${esc(x.date || '')}</span><span class="tag">${x.kind === 'd' ? 'من جولة التصميم' : 'مكتبة التصاميم'}</span>${x.kind === 'p' && (isMgr() || x.rec.by === CUR.name) ? `<button class="btn sm d" data-dld="${esc(x.rec.id)}">حذف</button>` : ''}${x.kind === 'd' && (isMgr() || x.round.inspector === CUR.name) ? `<button class="btn sm d" data-deldesign="${x.round.id}">حذف</button>` : ''}</div>`).join('') || '<p class="muted">لا توجد تصاميم بعد.</p>'}</div>`;
   },
   bind(){
     const items = libItems().filter(x => { const q = dlibQ.trim().toLowerCase(); return !q || [x.code, x.name, x.dname, x.customer].join(' ').toLowerCase().includes(q); });
     $('#dlSearch').oninput = e => { dlibQ = e.target.value; const pos = e.target.selectionStart; rerender(); const el = $('#dlSearch'); el.focus(); el.setSelectionRange(pos, pos); };
     $$('[data-dlv]').forEach(im => im.onclick = () => viewImage(items[+im.dataset.dlv].im));
     $$('[data-dqv]').forEach(im => im.onclick = () => viewImage({full: DQ[+im.dataset.dqv].full, thumb: DQ[+im.dataset.dqv].thumb}));
-    $$('[data-dld]').forEach(b => b.onclick = () => ask('حذف ربط هذا التصميم بالمنتج؟ الصورة تبقى في Drive.', 'حذف', () => { S.pimgs = (S.pimgs || []).filter(p => p.id !== b.dataset.dld); save(); rerender(); }, true));
+    $$('[data-dld]').forEach(b => b.onclick = () => ask('حذف هذا التصميم من المكتبة؟ (الصورة الأصلية تبقى في Drive)', 'حذف', () => { S.pimgs = (S.pimgs || []).filter(p => p.id !== b.dataset.dld); save(); rerender(); }, true));
     $$('[data-dqp]').forEach(b => b.onclick = () => { DQ[+b.dataset.dqp].pick = b.dataset.code; rerender(); });
     $$('[data-dqc]').forEach(el => el.onchange = () => { DQ[+el.dataset.dqc].pick = el.value.trim(); });
     $$('[data-dqx]').forEach(b => b.onclick = () => { DQ.splice(+b.dataset.dqx, 1); rerender(); });
