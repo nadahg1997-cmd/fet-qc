@@ -590,6 +590,43 @@ label.f.autof::after{content:"تلقائي من الصورة – راجعه";fon
 .dhi img,.dhi .noimg{width:54px;height:42px;object-fit:cover;border-radius:6px;flex:none;background:var(--line2);display:grid;place-items:center}
 .dhi span{flex:1;min-width:0}.dhi b{display:block;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.dhi small{color:var(--ink2);font-size:12px}
 .side .foot .ver{display:block;font-size:11px;color:#7F93A5;margin-top:2px}
+/* product image beside ERP info */
+.pbody{display:grid;grid-template-columns:190px 1fr;gap:12px;align-items:start}
+.pimg{display:flex;flex-direction:column;gap:6px;align-items:stretch;border:1px solid var(--line2);border-radius:10px;padding:8px;background:#fff;text-align:center}
+.pimg img{width:100%;height:150px;object-fit:contain;border-radius:6px;cursor:zoom-in;background:#F4F6F8}
+.pimg span{font-size:12px;color:var(--ink2)}
+.pimg .lnk{font-size:12px;color:var(--brand-d);cursor:pointer;text-decoration:underline}
+.pimg.none{justify-content:center;min-height:120px}
+.pimg label.btn{cursor:pointer;justify-content:center}
+@media(max-width:700px){.pbody{grid-template-columns:1fr}}
+.snotes{margin:0 0 12px;background:#FFF8E6;border:1px solid #F3D9A0;border-radius:12px;padding:12px 14px}
+.snotes > b{display:flex;gap:6px;align-items:center;color:#8A5A00;margin-bottom:6px}.snotes > b .li{width:18px;height:18px}
+.sn{display:grid;grid-template-columns:110px 110px 1fr auto;gap:8px;align-items:center;padding:6px 0;border-top:1px dashed #F3D9A0;font-size:14px}
+@media(max-width:700px){.sn{grid-template-columns:1fr 1fr}.sn > span:nth-child(3){grid-column:1/-1}}
+/* bigger product image + standalone viewer */
+.pbody{grid-template-columns:minmax(260px,34%) 1fr!important}
+.pimg img{height:260px!important}
+@media(max-width:700px){.pbody{grid-template-columns:1fr!important}.pimg img{height:220px!important}}
+.modal.imgmode .panel{max-width:min(1400px,98vw)!important;width:98vw;max-height:96vh;display:flex;flex-direction:column}
+.imgview{overflow:auto;max-height:84vh;border-radius:8px;background:#F4F6F8}
+.imgview img{width:100%;height:auto;max-height:82vh;object-fit:contain;cursor:zoom-in}
+.imgview.zoom img{width:auto;max-width:none;max-height:none;cursor:zoom-out}
+.ivbar{margin-top:10px;justify-content:flex-start}
+/* design library */
+.imgadd.wide{width:100%;min-height:120px;flex-direction:row;gap:12px;flex-wrap:wrap}
+.dlq{display:flex;flex-direction:column;gap:12px}
+.dli{display:grid;grid-template-columns:220px 1fr;gap:14px;align-items:start}
+.dli img{width:100%;height:200px;object-fit:contain;background:#F4F6F8;border-radius:8px;cursor:zoom-in}
+.dlf{display:flex;flex-direction:column;gap:6px}.dlf > b{font-size:16px}
+.dls button{display:flex;flex-direction:column;align-items:flex-start;text-align:right;border-radius:10px}.dls small{font-size:11.5px;opacity:.8}
+.dlgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
+.dlc{display:flex;flex-direction:column;gap:4px;padding:10px}
+.dlc img{width:100%;height:190px;object-fit:contain;background:#F4F6F8;border-radius:8px;cursor:zoom-in;margin-bottom:4px}
+.dlc b{font-size:14px}.dlc span{font-size:12.5px}.dlc .tag{align-self:flex-start;background:var(--line2);border-radius:999px;padding:1px 8px;font-size:11px}
+.dlc .btn{align-self:flex-start;margin-top:4px}
+@media(max-width:700px){.dli{grid-template-columns:1fr}}
+#ivPct{min-width:52px;text-align:center;font-weight:700}.ivbar{flex-wrap:wrap;align-items:center}
+.imgview{direction:ltr}
 </style>
 </head>
 <body>
@@ -638,6 +675,7 @@ setTimeout(function(){ if(window.__appLoaded) return; var m=document.getElementB
    [KPI_DEF]    مؤشرات الأداء وأهدافها
    [ERP_NOTES]  ملاحظات ERP التي تظهر للمراقب بجانب كل منتج
    [OCR]        قراءة بطاقة التصميم من الصورة (parseDesignCard)
+   [DESIGNS]    مكتبة التصاميم (رفع وربط صور التصاميم بالمنتجات)
    [IMAGES]     صور البروفا: الحجم الأقصى IMG_MAX وحجم المصغّرة
    [DESIGN]     مرحلة التصميم: بطاقة التصميم وتسميات القرار
    [PF_STAGE]   معلومات المنتج الملوّنة (الأهم) في كل مرحلة
@@ -898,21 +936,24 @@ const STAGES = [
   "freq": "عند كل بروفا وعند كل رول مطبوع نهائي",
   "extra": [
    {
-    "k": "ptype",
-    "l": "نوع الفحص",
-    "t": "sel",
-    "opts": [
-     "بروفا",
-     "نهائي"
-    ]
-   },
-   {
     "k": "roll",
     "l": "رقم الرول",
     "t": "txt"
    }
   ],
   "checks": [
+   {
+    "k": "startnotes",
+    "l": "حل ملاحظات بداية التشغيل",
+    "a": "كل الملاحظات المسجلة في بداية التشغيل محلولة",
+    "r": "ملاحظة واحدة على الأقل لم تُحل",
+    "m": "مراجعة ملاحظات بداية التشغيل لنفس الطلبية (تظهر أعلى البنود)",
+    "c": "رئيسي",
+    "t": "ok",
+    "unit": "",
+    "spec": null,
+    "onlyType": "فحص نهائي"
+   },
    {
     "k": "len",
     "l": "طول العينة",
@@ -1912,7 +1953,7 @@ STAGES.find(s => s.key==='final').extra = [{k:'lot',l:'كمية الطلبية (
 
 const blank = () => ({settings:{inspectors:[],inspector:'',shift:'صباحية',manager:'ندى حجازي',qa:'محمد براء رحمون',reviewer:'Talal Alraee',ceo:'أيهم سكرية',
   weldMin:1.8,weldMax:3,seamMin:2,seamMax:4,devices:JSON.parse(JSON.stringify(DEVICES)),th:JSON.parse(JSON.stringify(TH_LOC))},
-  orders:DEFAULT_ORDERS, ordersDate:'', reports:[], rounds:[], holds:[], handovers:[], mats:[], ncrs:[], complaints:[], audits:[], cals:[], ths:[], aid:[], coas:[]});
+  orders:DEFAULT_ORDERS, ordersDate:'', reports:[], pimgs:[], rounds:[], holds:[], handovers:[], mats:[], ncrs:[], complaints:[], audits:[], cals:[], ths:[], aid:[], coas:[]});
 let S = blank();
 let persistent = typeof window.storage !== 'undefined' && window.storage && typeof window.storage.get === 'function';
 let dirty = false;
@@ -2112,11 +2153,12 @@ function openRound(id){ const r = S.rounds.find(x => String(x.id)===String(id));
 function bindDelRounds(){ $$('[data-edit]').forEach(b => b.onclick = () => openRound(b.dataset.edit)); $$('[data-del]').forEach(b => b.onclick = () => ask('حذف هذه الجولة نهائياً؟','حذف الجولة',() => { S.rounds = S.rounds.filter(r => String(r.id)!==b.dataset.del); save(); rerender(); toast('تم حذف الجولة'); }, true)); }
 
 let F = null, prodDay = '';
-function newRound(k){ const s = stageBy(k); F = {stage:k, type:'جولة', machine: s.machines.length===1 ? s.machines[0] : '', order:'', items:[], mi:0, box:'', samples:(s.sample.match(/^\d+/)||[''])[0], extra:{}, vals:{}, checks:{}, defects:[], source:'نفس المرحلة', cls:null, decision:null, action:'', notes:'', qty:''}; }
+function newRound(k){ const s = stageBy(k); F = {stage:k, type: k==='print' ? 'بدء تشغيل' : 'جولة', machine: s.machines.length===1 ? s.machines[0] : '', order:'', items:[], mi:0, box:'', samples:(s.sample.match(/^\d+/)||[''])[0], extra:{}, vals:{}, checks:{}, defects:[], source:'نفس المرحلة', cls:null, decision:null, action:'', notes:'', qty:''}; }
+const stageChecks = s => s.checks.filter(c => !c.onlyType || c.onlyType === (F && F.type));
 function fSpec(){ return specOfItem((F.items||[])[F.mi||0] || (F.items||[])[0]) || orderBy(F.order); }
 function suggestRound(){
   const s = stageBy(F.stage), o = fSpec(); let c = '';
-  s.checks.forEach(ch => {
+  stageChecks(s).forEach(ch => {
     if(ch.t==='ok' && F.checks[ch.k]==='n' && RANK[ch.c] > RANK[c]) c = ch.c;
     if(ch.t==='num' && evalNum(ch, F.vals[ch.k], o)==='out' && RANK[ch.c||'رئيسي'] > RANK[c]) c = ch.c || 'رئيسي';
   });
@@ -2173,7 +2215,7 @@ VIEWS.round = {
     ${s.key==='design' ? (F.editId ? '' : designHistoryHtml()) + designImagesHtml(F) : ''}
     ${cls==='حرج'&&s.key!=='design'?'<div class="banner bad">عيب حرج: أوقف الآلة الآن، أبلغ رئيس الوردية ومدير ضبط الجودة، واحجز كل الإنتاج منذ آخر فحص سليم. سيُفتح NCR تلقائياً عند الحفظ.</div>':''}
     <div class="panel">
-      ${['design','final'].includes(s.key)?'':`<div class="pick" id="typePick" style="margin-bottom:12px">${['جولة','بدء تشغيل'].map(x=>`<button class="${F.type===x?'on':''}" data-v="${x}">${x==='جولة'?'جولة دورية':'موافقة بدء تشغيل'}</button>`).join('')}</div>`}
+      ${['design','final'].includes(s.key)?'':`<div class="pick" id="typePick" style="margin-bottom:12px">${(s.key==='print' ? [['بدء تشغيل','طباعة بداية التشغيل'],['فحص نهائي','فحص طباعة نهائي']] : [['جولة','جولة دورية'],['بدء تشغيل','موافقة بدء تشغيل']]).map(([x,l])=>`<button class="${F.type===x?'on':''}" data-v="${x}">${l}</button>`).join('')}</div>`}
       <div class="grid">
         <label class="f">${s.key==='design'?'رقم الطلبية (اختياري – إن وُجدت)':F.items&&F.items.length?'إضافة طلبية أخرى (اختياري)':'رقم الطلبية'}<input type="text" inputmode="numeric" list="ordList" id="fOrder" value="${esc(F.order)}" placeholder="اكتب أو اختر"></label>
         ${['design'].includes(s.key)?'':`<label class="f">${s.key==='final'?'رموز الكراتين المفحوصة':'رقم الصندوق / الكرتونة'}<input type="text" id="fBox" value="${esc(F.box)}"></label>`}
@@ -2190,8 +2232,8 @@ VIEWS.round = {
     ${F.type==='بدء تشغيل'?`<div class="panel" style="margin-top:12px">${checkRows([{k:'lineclear',l:'تنظيف الخط من المنتج السابق',a:'لا تيوبات أو أغطية أو كراتين أو لصاقات من المنتج السابق',c:'حرج',t:'ok'},{k:'master',l:'العينة المعتمدة موجودة في المرحلة',a:'موقعة ومرمزة',c:'رئيسي',t:'ok'}], o, F.checks, F.vals)}</div>`:''}
     <h2>بنود الفحص</h2>
     <button class="btn" id="allOk" style="margin-bottom:8px">كل البنود مطابقة ✓</button>
-    <div class="panel">${checkRows(s.checks, o, F.checks, F.vals)}</div>
-    ${s.key==='design' ? '' : `    <h2>العيوب المرصودة</h2>
+    ${typeof printNotesBanner==='function' ? printNotesBanner(F, s) : ''}<div class="panel">${checkRows(stageChecks(s), o, F.checks, F.vals)}</div>
+    ${['design','print'].includes(s.key) ? '' : `    <h2>العيوب المرصودة</h2>
     <div class="panel"><div class="pick" id="defPick">${DEFECTS.map(x=>`<button class="${F.defects.includes(x)?'on':''}" data-v="${x}">${x}</button>`).join('')}</div>
       <div class="grid" style="margin-top:12px">
         <label class="f">مصدر العيب<select id="fSource">${opt(SOURCES, F.source)}</select></label>
@@ -2203,7 +2245,7 @@ VIEWS.round = {
     <div class="grid" style="margin-top:12px">
       ${(dec==='محجور'||dec==='مرفوض')&&s.key!=='design'?`<label class="f">الكمية المحجوزة / المرفوضة<input type="text" id="fQty" value="${esc(F.qty)}" placeholder="مثال: 3 صناديق"></label>`:''}
       <label class="f">الإجراء المتخذ<input type="text" id="fAction" value="${esc(F.action)}"></label>
-      <label class="f">ملاحظات / اسم الصورة<input type="text" id="fNotes" value="${esc(F.notes)}"></label>
+      ${s.key==='print' && F.type==='بدء تشغيل' ? `<label class="f" style="grid-column:1/-1">ملاحظات بداية التشغيل <span class="muted">(تظهر للمراقب في فحص الطباعة النهائي لنفس الطلبية)</span><textarea id="fNotes" rows="3" placeholder="مثال: اللون الأحمر أغمق قليلاً من العينة – تم تعديل الحبر">${esc(F.notes)}</textarea></label>` : `<label class="f">ملاحظات<input type="text" id="fNotes" value="${esc(F.notes)}"></label>`}
     </div>
     ${F.viewOnly ? '' : `<div class="sticky-save"><button class="btn p" id="saveR">${F.editId ? 'حفظ التعديل' : 'حفظ الجولة'}</button></div>`}`;
   },
@@ -2229,7 +2271,7 @@ VIEWS.round = {
     $$('[data-ex]').forEach(el => el.onchange = () => { F.extra[el.dataset.ex] = el.value; if(s.key==='final' || s.key==='design'){ reset(); rerender(); } });
     $$('[data-num]').forEach(el => el.onchange = () => { F.vals[el.dataset.num] = el.value; reset(); rerender(); });
     $$('.tri').forEach(t => t.querySelectorAll('button').forEach(b => b.onclick = () => { F.checks[t.dataset.ck] = b.dataset.v; reset(); rerender(); }));
-    $('#allOk').onclick = () => { s.checks.filter(c=>c.t==='ok').forEach(c => { if(!F.checks[c.k]) F.checks[c.k]='y'; }); reset(); rerender(); };
+    $('#allOk').onclick = () => { stageChecks(s).filter(c=>c.t==='ok').forEach(c => { if(!F.checks[c.k]) F.checks[c.k]='y'; }); reset(); rerender(); };
     $$('#defPick button').forEach(b => b.onclick = () => { const v=b.dataset.v; F.defects = F.defects.includes(v)?F.defects.filter(x=>x!==v):[...F.defects,v]; reset(); rerender(); });
     $('#fSource') && ($('#fSource').onchange = e => F.source = e.target.value);
     $('#fCls') && ($('#fCls').onchange = e => { F.cls = e.target.value; rerender(); });
@@ -2249,7 +2291,7 @@ function saveRound(){
   if(!F.items || !F.items.length){ toast(F.order && ordRows(F.order).length>1 ? 'اختر منتجاً واحداً على الأقل من الطلبية' : 'اكتب رقم الطلبية أولاً'); $('#fOrder').focus(); return; }
   if(s.machines.length>1 && !F.machine){ toast('اختر الآلة'); return; }
   const sg = suggestRound(), o = fSpec(), d = new Date(); const it0 = F.items[0];
-  const checks = s.checks.concat(F.type==='بدء تشغيل'?[{k:'lineclear',l:'تنظيف الخط',t:'ok'},{k:'master',l:'العينة المعتمدة',t:'ok'}]:[]);
+  const checks = stageChecks(s).concat(F.type==='بدء تشغيل'?[{k:'lineclear',l:'تنظيف الخط',t:'ok'},{k:'master',l:'العينة المعتمدة',t:'ok'}]:[]);
   const failed = checks.filter(c => (c.t==='ok' && F.checks[c.k]==='n') || (c.t==='num' && (evalNum(c, F.vals[c.k], o)==='out' || (c.multi && (F.vals[c.k+'_r']||[]).some(v => v!=='' && evalNum(c, v, o)==='out'))))).map(c => c.l.split('(')[0].trim());
   const old = F.editId ? S.rounds.find(x => x.id===F.editId) : null;
   const r = {id:old?old.id:uid(), date:old?old.date:todayStr(d), time:old?old.time:timeStr(d), shift:old?old.shift:S.settings.shift, inspector:old?old.inspector:S.settings.inspector, stage:F.stage, type:F.type, machine:F.machine,
@@ -3546,7 +3588,7 @@ VIEWS.data.bind = function(){
 
 const LUCIDE = {"home": "<path d=\"M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8\" /> <path d=\"M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z\" />", "prod": "<path d=\"M12 16h.01\" /> <path d=\"M16 16h.01\" /> <path d=\"M3 19a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5a.5.5 0 0 0-.769-.422l-4.462 2.844A.5.5 0 0 1 15 10.5v-2a.5.5 0 0 0-.769-.422L9.77 10.922A.5.5 0 0 1 9 10.5V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2z\" /> <path d=\"M8 16h.01\" />", "mat": "<path d=\"M12 22V12\" /> <path d=\"m16 17 2 2 4-4\" /> <path d=\"M21 11.127V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.729l7 4a2 2 0 0 0 2 .001l1.32-.753\" /> <path d=\"M3.29 7 12 12l8.71-5\" /> <path d=\"m7.5 4.27 8.997 5.148\" />", "ncr": "<path d=\"M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z\" /> <path d=\"M12 8v4\" /> <path d=\"M12 16h.01\" />", "hold": "<path d=\"M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z\" /> <path d=\"m3.3 7 8.7 5 8.7-5\" /> <path d=\"M12 22V12\" />", "mon": "<rect width=\"8\" height=\"4\" x=\"8\" y=\"2\" rx=\"1\" ry=\"1\" /> <path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\" /> <path d=\"m9 14 2 2 4-4\" />", "rep": "<path d=\"M3 3v16a2 2 0 0 0 2 2h16\" /> <path d=\"M18 17V9\" /> <path d=\"M13 17V5\" /> <path d=\"M8 17v-3\" />", "team": "<path d=\"M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2\" /> <path d=\"M16 3.128a4 4 0 0 1 0 7.744\" /> <path d=\"M22 21v-2a4 4 0 0 0-3-3.87\" /> <circle cx=\"9\" cy=\"7\" r=\"4\" />", "mgr": "<path d=\"M16 7h6v6\" /> <path d=\"m22 7-8.5 8.5-5-5L2 17\" />", "more": "<rect width=\"7\" height=\"7\" x=\"3\" y=\"3\" rx=\"1\" /> <rect width=\"7\" height=\"7\" x=\"14\" y=\"3\" rx=\"1\" /> <rect width=\"7\" height=\"7\" x=\"14\" y=\"14\" rx=\"1\" /> <rect width=\"7\" height=\"7\" x=\"3\" y=\"14\" rx=\"1\" />", "hand": "<path d=\"M8 3 4 7l4 4\" /> <path d=\"M4 7h16\" /> <path d=\"m16 21 4-4-4-4\" /> <path d=\"M20 17H4\" />", "comp": "<path d=\"M22 17a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 21.286V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2z\" /> <path d=\"M12 15h.01\" /> <path d=\"M12 7v4\" />", "coa": "<path d=\"m15.477 12.89 1.515 8.526a.5.5 0 0 1-.81.47l-3.58-2.687a1 1 0 0 0-1.197 0l-3.586 2.686a.5.5 0 0 1-.81-.469l1.514-8.526\" /> <circle cx=\"12\" cy=\"8\" r=\"6\" />", "sup": "<path d=\"M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2\" /> <path d=\"M15 18H9\" /> <path d=\"M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 17.52 8H14\" /> <circle cx=\"17\" cy=\"18\" r=\"2\" /> <circle cx=\"7\" cy=\"18\" r=\"2\" />", "data": "<ellipse cx=\"12\" cy=\"5\" rx=\"9\" ry=\"3\" /> <path d=\"M3 5V19A9 3 0 0 0 21 19V5\" /> <path d=\"M3 12A9 3 0 0 0 21 12\" />", "bell": "<path d=\"M10.268 21a2 2 0 0 0 3.464 0\" /> <path d=\"M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326\" />", "search": "<path d=\"m21 21-4.34-4.34\" /> <circle cx=\"11\" cy=\"11\" r=\"8\" />", "logout": "<path d=\"m16 17 5-5-5-5\" /> <path d=\"M21 12H9\" /> <path d=\"M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4\" />", "dash": "<rect width=\"7\" height=\"9\" x=\"3\" y=\"3\" rx=\"1\" /> <rect width=\"7\" height=\"5\" x=\"14\" y=\"3\" rx=\"1\" /> <rect width=\"7\" height=\"9\" x=\"14\" y=\"12\" rx=\"1\" /> <rect width=\"7\" height=\"5\" x=\"3\" y=\"16\" rx=\"1\" />", "s_design": "<path d=\"M15.707 21.293a1 1 0 0 1-1.414 0l-1.586-1.586a1 1 0 0 1 0-1.414l5.586-5.586a1 1 0 0 1 1.414 0l1.586 1.586a1 1 0 0 1 0 1.414z\" /> <path d=\"m18 13-1.375-6.874a1 1 0 0 0-.746-.776L3.235 2.028a1 1 0 0 0-1.207 1.207L5.35 15.879a1 1 0 0 0 .776.746L13 18\" /> <path d=\"m2.3 2.3 7.286 7.286\" /> <circle cx=\"11\" cy=\"11\" r=\"2\" />", "s_print": "<path d=\"M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2\" /> <path d=\"M6 9V3a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v6\" /> <rect x=\"6\" y=\"14\" width=\"12\" height=\"8\" rx=\"1\" />", "s_draw": "<ellipse cx=\"12\" cy=\"5\" rx=\"9\" ry=\"3\" /> <path d=\"M3 5v14a9 3 0 0 0 18 0V5\" />", "s_sort": "<path d=\"M2 5h20\" /> <path d=\"M6 12h12\" /> <path d=\"M9 19h6\" />", "s_mix": "<path d=\"M14 2v6a2 2 0 0 0 .245.96l5.51 10.08A2 2 0 0 1 18 22H6a2 2 0 0 1-1.755-2.96l5.51-10.08A2 2 0 0 0 10 8V2\" /> <path d=\"M6.453 15h11.094\" /> <path d=\"M8.5 2h7\" />", "s_inj": "<path d=\"m18 2 4 4\" /> <path d=\"m17 7 3-3\" /> <path d=\"M19 9 8.7 19.3c-1 1-2.5 1-3.4 0l-.6-.6c-1-1-1-2.5 0-3.4L15 5\" /> <path d=\"m9 11 4 4\" /> <path d=\"m5 19-3 3\" /> <path d=\"m14 4 6 6\" />", "s_asm": "<path d=\"M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.106-3.105c.32-.322.863-.22.983.218a6 6 0 0 1-8.259 7.057l-7.91 7.91a1 1 0 0 1-2.999-3l7.91-7.91a6 6 0 0 1 7.057-8.259c.438.12.54.662.219.984z\" />", "s_cap": "<path d=\"M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z\" /> <path d=\"M12 22V12\" /> <polyline points=\"3.29 7 12 12 20.71 7\" /> <path d=\"m7.5 4.27 9 5.15\" />", "s_seal": "<path d=\"M14 13V8.5C14 7 15 7 15 5a3 3 0 0 0-6 0c0 2 1 2 1 3.5V13\" /> <path d=\"M20 15.5a2.5 2.5 0 0 0-2.5-2.5h-11A2.5 2.5 0 0 0 4 15.5V17a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1z\" /> <path d=\"M5 22h14\" />", "s_final": "<path d=\"M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z\" /> <path d=\"m16 9-5.5 5.5L8 12\" />", "thermo": "<path d=\"M14 4v10.54a4 4 0 1 1-4 0V4a2 2 0 0 1 4 0Z\" />", "ruler": "<path d=\"M21.3 15.3a2.4 2.4 0 0 1 0 3.4l-2.6 2.6a2.4 2.4 0 0 1-3.4 0L2.7 8.7a2.41 2.41 0 0 1 0-3.4l2.6-2.6a2.41 2.41 0 0 1 3.4 0Z\" /> <path d=\"m14.5 12.5 2-2\" /> <path d=\"m11.5 9.5 2-2\" /> <path d=\"m8.5 6.5 2-2\" /> <path d=\"m17.5 15.5 2-2\" />", "clean": "<path d=\"M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z\" /> <path d=\"M20 2v4\" /> <path d=\"M22 4h-4\" /> <circle cx=\"4\" cy=\"20\" r=\"2\" />", "plus": "<circle cx=\"12\" cy=\"12\" r=\"10\" /> <path d=\"M8 12h8\" /> <path d=\"M12 8v8\" />", "ok": "<path d=\"M21.801 10A10 10 0 1 1 17 3.335\" /> <path d=\"m9 11 3 3L22 4\" />", "warn": "<path d=\"m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3\" /> <path d=\"M12 9v4\" /> <path d=\"M12 17h.01\" />", "file": "<path d=\"M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z\" /> <path d=\"M14 2v5a1 1 0 0 0 1 1h5\" /> <path d=\"M10 9H8\" /> <path d=\"M16 13H8\" /> <path d=\"M16 17H8\" />", "scan": "<path d=\"M3 7V5a2 2 0 0 1 2-2h2\" /> <path d=\"M17 3h2a2 2 0 0 1 2 2v2\" /> <path d=\"M21 17v2a2 2 0 0 1-2 2h-2\" /> <path d=\"M7 21H5a2 2 0 0 1-2-2v-2\" /> <circle cx=\"12\" cy=\"12\" r=\"3\" /> <path d=\"m16 16-1.9-1.9\" />", "clock": "<circle cx=\"12\" cy=\"12\" r=\"10\" /> <path d=\"M12 6v6l4 2\" />", "alert": "<path d=\"M12 16h.01\" /> <path d=\"M12 8v4\" /> <path d=\"M15.312 2a2 2 0 0 1 1.414.586l4.688 4.688A2 2 0 0 1 22 8.688v6.624a2 2 0 0 1-.586 1.414l-4.688 4.688a2 2 0 0 1-1.414.586H8.688a2 2 0 0 1-1.414-.586l-4.688-4.688A2 2 0 0 1 2 15.312V8.688a2 2 0 0 1 .586-1.414l4.688-4.688A2 2 0 0 1 8.688 2z\" />", "activity": "<path d=\"M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2\" />", "gauge": "<path d=\"m12 14 4-4\" /> <path d=\"M3.34 19a10 10 0 1 1 17.32 0\" />"};
 /* [VERSION] رقم إصدار البرنامج – يظهر أسفل القائمة وفي شاشة الدخول */
-const APP_VERSION = '7.9';
+const APP_VERSION = '8.2';
 let SERVER_VERSION = '';
 async function checkServerVersion(){ if(!GAS_MODE) return; try{ const v = JSON.parse(await rpc('serverVersion', '')); SERVER_VERSION = v.version + (v.ocr ? '' : ' (Drive API غير مفعّل)'); }catch(e){ SERVER_VERSION = /NET/.test(String(e && e.message || e)) ? '' : 'قديم – انشر إصداراً جديداً'; } try{ renderTabs(); }catch(e){} }
 /* [ERRORS] بدل الصفحة الفارغة: رسالة واضحة وزر إعادة تحميل */
@@ -3739,12 +3781,60 @@ VIEWS.round.bind = function(){
 /* ERP product information next to every selected product, highlighted for the current stage */
 const PF = [
   ['customer','الزبون', o => o.customer], ['code','كود المنتج', o => o.product_code], ['dia','القطر', o => o.product_diameter], ['len','الطول', o => o.tube_cylinder_length],
-  ['paper','الورق', o => [o.paper_type, o.roll_thickness, o.roll_color].filter(Boolean).join(' ')], ['print360','طباعة 360', o => o.is360==null||o.is360==='' ? '' : (o.is360==1?'نعم':'لا')],
+  ['ptype','نوع الورق', o => o.paper_type], ['pcolor','لون الورق', o => o.roll_color], ['thick','سماكة الورق (Set)', o => setThickness(o.set)], ['varn','الورنيش (من التصميم)', o => (designFor(o) || {extra:{}}).extra.varn || (((S.pimgs || []).find(p => p.code === o.product_code)) || {}).varn || ''], ['print360','طباعة 360', o => o.is360==null||o.is360==='' ? '' : (o.is360==1?'نعم':'لا')],
   ['foil','حراري (Cold foil)', o => o.cold_foil==null||o.cold_foil==='' ? '' : (o.cold_foil==1?'نعم':'لا')], ['shoulder','لون الكتف', o => o.shoulder_color], ['tooth','السن', o => o.tooth_type],
   ['hole','قطر الفوهة', o => o.hole_diameter], ['cap','الغطاء', o => [o.cap_name, o.cap_code].filter(Boolean).join(' – ')], ['nozzle','النوزل / الملحق', o => o.nozzle_name],
   ['qty','الكمية', o => o.quantity ? Number(o.quantity).toLocaleString('en') : ''], ['total','إجمالي التيوبات', o => o.total_tubes && o.total_tubes != o.quantity ? Number(o.total_tubes).toLocaleString('en') : ''],
   ['colors','عدد الألوان', o => o.colors_number], ['width','عرض الرول', o => o.roll_width], ['printshop','المطبعة', o => o.printshop], ['set','الطقم', o => o.set],
   ['arabic','الاسم العربي', o => o.product_name_arabic], ['seller','البائع', o => o.seller], ['delivery','التسليم', o => o.order_delivery_date], ['erpstage','المرحلة في ERP', o => o.stage]];
+/* [SET] سماكة الورق تُؤخذ من حقل set فقط، مثال: 35-white-ABL-270 / 12MIC-226MM-750m ← 270 / 12 MIC */
+function setThickness(set){ const v = String(set || ''); if(!v) return ''; const x = v.match(/(\d{2,3})\s*\/\s*(\d{1,2})\s*MIC/i); return x ? `${x[1]} / ${x[2]} MIC` : v; }
+/* [PIMGS] صورة المنتج: من صور المنتجات المربوطة، أو من جولة التصميم المرتبطة بالطلبية، أو اقتراح بالتشابه في الاسم */
+const normWords = t => String(t || '').toLowerCase().replace(/[^a-z0-9\u0600-\u06ff]+/g, ' ').split(' ').filter(w => w.length >= 3 && !/^\d+(ml|g|gr)?$/.test(w));
+function designRounds(){ return S.rounds.filter(r => r.stage === 'design' && r.images && r.images.length); }
+function designFor(o){
+  if(!o) return null;
+  const pi = (S.pimgs || []).find(p => p.code && p.code === o.product_code);
+  if(pi && pi.designId){ const d = S.rounds.find(r => r.id === pi.designId); if(d) return d; }
+  return designRounds().filter(r => itemsOf(r).some(i => (i.code && i.code === o.product_code) || (i.order && String(i.order) === String(o.order_number)))).pop() || null;
+}
+function suggestDesign(o){
+  const pw = new Set(normWords(o.product_name)); let best = null, score = 0;
+  designRounds().forEach(r => { const dw = normWords((r.extra || {}).dname || r.product); const n = dw.filter(w => pw.has(w)).length; if(n > score){ score = n; best = r; } });
+  return score >= 2 ? best : null;
+}
+function productImage(o){
+  const pi = (S.pimgs || []).find(p => p.code && p.code === o.product_code);
+  if(pi && pi.imgId) return {thumb: pi.thumb, id: pi.imgId, name: pi.product, src: 'رُفعت للمنتج'};
+  const d = designFor(o); if(d){ const im = d.images[0]; return {...im, src: 'من جولة التصميم', design: d}; }
+  return null;
+}
+function linkDesign(o, d){
+  S.pimgs = S.pimgs || [];
+  const rec = {id: 'P-' + o.product_code, code: o.product_code, product: o.product_name, designId: d.id, imgId: '', thumb: '', by: CUR.name || S.settings.inspector, date: todayStr()};
+  const i = S.pimgs.findIndex(p => p.id === rec.id); if(i >= 0) S.pimgs[i] = rec; else S.pimgs.push(rec); save();
+}
+async function uploadProductImage(o, file){
+  if(!GAS_MODE || navigator.onLine === false){ toast('رفع صورة المنتج يحتاج اتصالاً بالإنترنت'); return; }
+  toast('جارٍ رفع صورة المنتج…');
+  try{
+    const orig = await readAsDataURL(file), full = await hiRes(file, orig), thumb = await resizeImage(orig, IMG_THUMB, .75);
+    const id = JSON.parse(await rpc('saveImage', JSON.stringify({name: (o.product_code || 'product') + '_' + file.name, b64: full.split(',')[1], mime: mimeOf(full)}))).id;
+    imgCacheSet(id, full); S.pimgs = S.pimgs || [];
+    const rec = {id: 'P-' + o.product_code, code: o.product_code, product: o.product_name, designId: '', imgId: id, thumb, by: CUR.name || S.settings.inspector, date: todayStr()};
+    const i = S.pimgs.findIndex(p => p.id === rec.id); if(i >= 0) S.pimgs[i] = rec; else S.pimgs.push(rec);
+    save(); rerender(); toast('تم ربط صورة المنتج');
+  }catch(e){ toast('تعذر رفع الصورة: ' + (e && e.message || e)); }
+}
+function productImageHtml(o, idx){
+  const im = productImage(o);
+  if(im) return `<div class="pimg"><img src="${im.thumb}" data-pimg="${idx}" ${im.id ? `data-iid="${esc(im.id)}"` : ''} alt="صورة المنتج"><span>${esc(im.src)}</span><label class="lnk">تغيير<input type="file" accept="image/*" class="hide" data-pup="${idx}"></label></div>`;
+  const sg = suggestDesign(o);
+  return `<div class="pimg none">${sg ? `<img src="${sg.images[0].thumb}" data-sgv="${sg.id}" alt="تصميم مقترح"><span>تصميم مقترح: ${esc((sg.extra||{}).dname || '')}</span><button class="btn sm" data-sgl="${idx}" data-d="${sg.id}">هذا هو المنتج</button>` : `<span class="muted">لا توجد صورة لهذا المنتج</span><a class="lnk" data-go-lib="1">أو افتح مكتبة التصاميم</a>`}
+    <label class="btn sm">${typeof LI==='function'?LI('plus'):''} رفع صورة المنتج<input type="file" accept="image/*" class="hide" data-pup="${idx}"></label></div>`;
+}
+/* [PF_SHOW] الحقول المعروضة في كل مرحلة (الباقي يظهر في المراحل الأخرى) */
+const PF_SHOW = {print: ['customer','ptype','pcolor','thick','print360','foil','varn','qty','delivery']};
 /* [ERP_NOTES] ملاحظات ERP التي تظهر للمراقب (cost_notes غير مستوردة) */
 const ERP_NOTES = [['quality_notes','ملاحظات الجودة','q'], ['gm_notes','ملاحظات المدير العام','gm'], ['production_notes','ملاحظات الإنتاج',''], ['sales_notes','ملاحظات المبيعات',''],
   ['coordination_notes','ملاحظات التنسيق',''], ['design_notes','ملاحظات التصميم',''], ['customer_notes','ملاحظات الزبون',''], ['stock_notes','ملاحظات المستودع','s']];
@@ -3755,7 +3845,7 @@ function erpNotesHtml(o){
   return `<div class="pnotes">${ns.map(([l,c,v]) => `<div class="pn ${c}"><b>${l}</b><span>${esc(v)}</span></div>`).join('')}</div>`;
 }
 /* [PF_STAGE] */
-const PF_STAGE = {design:['paper','print360','foil','customer','colors'], print:['paper','print360','foil','len','dia','colors','width','printshop'], draw:['dia','len','paper'], sort:['paper','print360','foil'], mix:['shoulder','cap'],
+const PF_STAGE = {design:['ptype','pcolor','print360','foil','customer','colors'], print:['ptype','pcolor','thick','print360','foil','varn'], draw:['dia','len','ptype','thick'], sort:['ptype','pcolor','print360','foil'], mix:['shoulder','cap'],
   inj:['shoulder','tooth','hole','len','dia'], asm:['cap','nozzle'], cap:['cap','qty','customer'], seal:['dia','len'], final:['dia','len','paper','cap','shoulder','hole','qty']};
 function productCards(items, stageKey, mi){
   const rel = new Set(PF_STAGE[stageKey] || []);
@@ -3764,9 +3854,10 @@ function productCards(items, stageKey, mi){
     if(!o) return `<div class="pcard"><div class="ph3"><b>${esc(it.product || it.code || 'منتج')}</b><span>طلبية ${esc(it.order)}</span></div><p class="muted" style="margin:6px 0 0">غير موجود في ملف ERP المحمّل – حمّل ملف الطلبات من "البيانات والإعدادات".</p></div>`;
     const dd = o.order_delivery_date ? daysBetween(todayStr(), o.order_delivery_date) : null;
     const cleanV = v => { const s = String(v ?? '').trim(); return /^((undefined|null|none|nan|-)[\s\-–]*)+$/i.test(s) ? '' : s; };
-    const fields = PF.map(([k,l,f]) => [k,l,cleanV(f(o))]).filter(x => x[2] !== '');
+    const show = PF_SHOW[stageKey];
+    const fields = PF.filter(([k]) => !show || show.includes(k)).map(([k,l,f]) => [k,l,cleanV(f(o))]).filter(x => x[2] !== '');
     return `<div class="pcard ${items.length>1 && i===mi ? 'meas' : ''}"><div class="ph3"><b>${esc(o.product_name || it.product)}</b><span>طلبية ${esc(it.order)}${items.length>1 && i===mi ? ' · القياسات على هذا المنتج' : ''}</span>${dd!=null?`<em class="${dd<0?'r':dd<=3?'w':''}">${dd<0?'متأخرة '+(-dd)+' يوم':'التسليم بعد '+dd+' يوم'}</em>`:''}</div>
-      <div class="pf">${fields.map(([k,l,v]) => `<div class="${rel.has(k)?'rel':''}"><span>${l}</span><b>${esc(v)}</b></div>`).join('')}</div>
+      <div class="pbody">${productImageHtml(o, i)}<div class="pf">${fields.map(([k,l,v]) => `<div class="${rel.has(k)?'rel':''}"><span>${l}</span><b>${esc(v)}</b></div>`).join('')}</div></div>
       ${erpNotesHtml(o)}</div>`;
   }).join('')}<p class="muted" style="margin:4px 0 0;font-size:12.5px">الخانات الملوّنة هي الأهم في مرحلة ${esc(stageBy(stageKey).name)}.</p></div>`;
 }
@@ -3799,6 +3890,33 @@ VIEWS.round.bind = function(){
   const q = $('#dhQ'); if(q) q.oninput = () => { designQ = q.value; const pos = q.selectionStart; rerender(); const n = $('#dhQ'); if(n){ n.focus(); n.setSelectionRange(pos, pos); } };
   $$('[data-open]').forEach(b => b.onclick = () => openRound(b.dataset.open));
 };
+
+/* [PRINT] فحص الطباعة النهائي: عرض ملاحظات بداية التشغيل لنفس الطلبية */
+function printNotesBanner(F, s){
+  if(s.key !== 'print' || F.type !== 'فحص نهائي' || !(F.items || []).length) return '';
+  const orders = F.items.map(i => String(i.order)).filter(Boolean);
+  const starts = S.rounds.filter(r => r.stage === 'print' && r.type === 'بدء تشغيل' && r.id !== F.editId && itemsOf(r).some(i => orders.includes(String(i.order))));
+  const withNotes = starts.filter(r => String(r.notes || '').trim() || r.decision !== 'مقبول');
+  if(!starts.length) return `<div class="banner warn">لم تُسجَّل جولة "طباعة بداية التشغيل" لهذه الطلبية.</div>`;
+  if(!withNotes.length) return `<div class="banner info">لا توجد ملاحظات في بداية التشغيل لهذه الطلبية (${starts.length} جولة).</div>`;
+  return `<div class="snotes"><b>${typeof LI==='function'?LI('warn'):''} ملاحظات بداية التشغيل – تأكد أنها حُلّت قبل اعتماد الطباعة</b>
+    ${withNotes.map(r => `<div class="sn"><span class="num">${esc(r.date)} ${esc(r.time)}</span><span>${esc(r.inspector)}</span><span>${String(r.notes||'').trim() ? esc(r.notes) : 'بدون ملاحظة مكتوبة'}</span><span>${typeof decPill==='function'?decPill(r.decision):esc(r.decision)}</span></div>`).join('')}</div>`;
+}
+/* ربط الصور والرفع من بطاقات المنتج */
+document.addEventListener('click', e => {
+  if(e.target.closest('[data-go-lib]')){ go('designs'); return; }
+  const v = e.target.closest('[data-pimg]'); if(v){ const it = (F.items || [])[+v.dataset.pimg]; const o = it && specOfItem(it); const im = o && productImage(o); if(im) viewImage(im); return; }
+  const sv = e.target.closest('[data-sgv]'); if(sv){ const d = S.rounds.find(r => String(r.id) === sv.dataset.sgv); if(d) viewImage(d.images[0]); return; }
+  const l = e.target.closest('[data-sgl]'); if(l){ const it = (F.items || [])[+l.dataset.sgl]; const o = it && specOfItem(it); const d = S.rounds.find(r => String(r.id) === l.dataset.d); if(o && d){ linkDesign(o, d); rerender(); toast('تم ربط التصميم بالمنتج'); } }
+});
+document.addEventListener('change', e => {
+  const u = e.target.closest('[data-pup]'); if(!u || !u.files || !u.files[0]) return;
+  const it = (F.items || [])[+u.dataset.pup]; const o = it && specOfItem(it); if(o) uploadProductImage(o, u.files[0]);
+});
+
+/* استبدال المصغّرة بالصورة الكاملة المحفوظة على الجهاز */
+const _rbHi = VIEWS.round.bind;
+VIEWS.round.bind = function(){ _rbHi(); $$('.pimg img[data-iid]').forEach(async el => { const d = await imgCacheGet(el.dataset.iid); if(d) el.src = d; else fetchImage({id: el.dataset.iid, thumb: el.src}).then(x => { if(x && x !== el.src) el.src = x; }); }); };
 
 /* ================= EXECUTIVE MANAGEMENT REPORT ================= */
 PARENT.exec = 'rep'; NAV_OF.exec = 'rep'; PAGE.exec = ['التقارير', 'التقرير التنفيذي للإدارة'];
@@ -4057,7 +4175,12 @@ function parseCardSheet(text){
 
 
 /* ================= [IMAGES] صور البروفا في مرحلة التصميم ================= */
-const IMG_MAX = 2000, IMG_THUMB = 260;
+const IMG_MAX = 4000, IMG_THUMB = 480, IMG_KEEP_MB = 12;
+/* [HIRES] الصورة الكاملة تُحفظ بدقتها الأصلية (JPG/PNG حتى 12 MB) لوضوح النصوص وأرقام البانتون */
+const mimeOf = d => (String(d).match(/^data:([^;]+);/) || [])[1] || 'image/jpeg';
+async function hiRes(file, orig){ if(/^image\/(jpeg|png|webp)$/.test(file.type) && file.size <= IMG_KEEP_MB * 1048576) return orig; return resizeImage(orig, IMG_MAX, .92); }
+async function imgCacheGet(id){ try{ return await IDB.get('img:' + id); }catch(e){ return null; } }
+async function imgCacheSet(id, d){ try{ await IDB.set('img:' + id, d); }catch(e){} }
 const readAsDataURL = f => new Promise((res, rej) => { const r = new FileReader(); r.onload = () => res(r.result); r.onerror = rej; r.readAsDataURL(f); });
 async function resizeImage(dataUrl, max, q){
   const img = new Image(); await new Promise((res, rej) => { img.onload = res; img.onerror = rej; img.src = dataUrl; });
@@ -4076,17 +4199,45 @@ function designImagesHtml(F){
 async function fetchImage(im){
   if(im.full) return im.full;
   if(!im.id) return im.thumb;
+  const c = await imgCacheGet(im.id); if(c) return c;
   try{
-    if(GAS_MODE){ const r = JSON.parse(await rpc('getImage', JSON.stringify({id:im.id}))); return `data:${r.mime};base64,${r.b64}`; }
+    if(GAS_MODE){ const r = JSON.parse(await rpc('getImage', JSON.stringify({id:im.id}))); const d = `data:${r.mime};base64,${r.b64}`; imgCacheSet(im.id, d); return d; }
     return `api/image?id=${encodeURIComponent(im.id)}`;
-  }catch(e){ toast('تعذر تحميل الصورة الكاملة – تظهر المصغّرة'); return im.thumb; }
+  }catch(e){ toast('تعذر تحميل الصورة الكاملة – تظهر المصغّرة (تحتاج إنترنت لأول مرة)'); return im.thumb; }
 }
+/* تنزيل الصور الكاملة لمنتجات الطلبات الحالية مسبقاً، لتظهر بدقة عالية حتى دون إنترنت */
+let prefetching = false;
+async function prefetchImages(){
+  if(prefetching || !GAS_MODE || navigator.onLine === false) return; prefetching = true;
+  try{
+    const codes = new Set(S.orders.map(o => o.product_code)), ids = new Set();
+    (S.pimgs || []).forEach(p => { if(p.imgId && codes.has(p.code)) ids.add(p.imgId); });
+    S.rounds.filter(r => r.stage === 'design' && r.images).forEach(r => { if(itemsOf(r).some(i => codes.has(i.code))) r.images.forEach(im => im.id && ids.add(im.id)); });
+    for(const id of ids){ if(await imgCacheGet(id)) continue; try{ const r = JSON.parse(await rpc('getImage', JSON.stringify({id}))); await imgCacheSet(id, `data:${r.mime};base64,${r.b64}`); }catch(e){ break; } }
+  }catch(e){}
+  prefetching = false;
+}
+setTimeout(() => prefetchImages(), 15000); setInterval(() => { if(online) prefetchImages(); }, 10 * 60000);
 async function viewImage(im){
-  $('#modalBody').innerHTML = `<div class="imgview"><div class="muted">جارٍ تحميل الصورة…</div></div><div class="row" style="margin-top:10px"><button class="btn" id="ivClose">إغلاق</button></div>`;
+  $('#modalBody').innerHTML = `<div class="imgview"><div class="muted" style="padding:20px">جارٍ تحميل الصورة بالدقة الكاملة…</div></div>
+    <div class="row ivbar"><button class="btn" id="ivClose">إغلاق</button><button class="btn" id="ivOut" aria-label="تصغير">−</button><span class="num" id="ivPct">ملء</span><button class="btn" id="ivIn" aria-label="تكبير">+</button><button class="btn" id="ivFit">ملء الشاشة</button><button class="btn p" id="ivOpen">${LI('file')} فتح الصورة وحدها</button><span class="muted" id="ivSize"></span></div>`;
   $('#modal').classList.remove('hide'); $('#modal').classList.add('imgmode');
   const close = () => { $('#modal').classList.add('hide'); $('#modal').classList.remove('imgmode'); };
   $('#ivClose').onclick = close;
-  const src = await fetchImage(im); $('.imgview').innerHTML = `<img src="${src}" alt="صورة البروفا">`;
+  const src = await fetchImage(im); $('.imgview').innerHTML = `<img src="${src}" alt="صورة التصميم">`;
+  const img = $('.imgview img'), box = $('.imgview'); let z = 0;
+  const levels = [0, 1, 1.5, 2, 3, 4];
+  const apply = () => { if(!levels[z]){ box.classList.remove('zoom'); img.style.width = ''; $('#ivPct').textContent = 'ملء'; } else { box.classList.add('zoom'); img.style.width = Math.round(img.naturalWidth * levels[z]) + 'px'; $('#ivPct').textContent = Math.round(levels[z] * 100) + '%'; } };
+  img.onload = () => { $('#ivSize').textContent = img.naturalWidth + '×' + img.naturalHeight + ' بكسل'; };
+  if(img.complete) img.onload();
+  $('#ivIn').onclick = () => { z = Math.min(levels.length - 1, z + 1); apply(); };
+  $('#ivOut').onclick = () => { z = Math.max(0, z - 1); apply(); };
+  $('#ivFit').onclick = () => { z = 0; apply(); };
+  img.onclick = ev => { const r = img.getBoundingClientRect(), fx = (ev.clientX - r.left) / r.width, fy = (ev.clientY - r.top) / r.height; z = z ? 0 : 3; apply(); if(z){ box.scrollLeft = fx * img.offsetWidth - box.clientWidth / 2; box.scrollTop = fy * img.offsetHeight - box.clientHeight / 2; } };
+  $('#ivOpen').onclick = async () => {
+    try{ const blob = await (await fetch(src)).blob(); const url = URL.createObjectURL(blob); const w = window.open(url, '_blank'); if(!w){ const a = document.createElement('a'); a.href = url; a.target = '_blank'; a.download = (im.name || 'design') + '.jpg'; a.click(); } }
+    catch(e){ window.open(src, '_blank'); }
+  };
 }
 const _rbImg = VIEWS.round.bind;
 VIEWS.round.bind = function(){
@@ -4095,7 +4246,7 @@ VIEWS.round.bind = function(){
   if(inp) inp.onchange = async () => {
     toast('جارٍ تجهيز الصورة…');
     let first = null;
-    for(const f of inp.files){ try{ const orig = await readAsDataURL(f); const full = await resizeImage(orig, IMG_MAX, .82); const thumb = await resizeImage(full, IMG_THUMB, .6); (F.images = F.images || []).push({key:'i' + uid(), name:f.name, full, thumb}); if(!first) first = {orig, name:f.name}; }catch(e){ toast('تعذر قراءة الصورة: ' + f.name); } }
+    for(const f of inp.files){ try{ const orig = await readAsDataURL(f); const full = await hiRes(f, orig); const thumb = await resizeImage(orig, IMG_THUMB, .75); (F.images = F.images || []).push({key:'i' + uid(), name:f.name, full, thumb}); if(!first) first = {orig, name:f.name}; }catch(e){ toast('تعذر قراءة الصورة: ' + f.name); } }
     rerender(); if(typeof saveDraft === 'function') saveDraft();
     if(first && F.stage === 'design') autoFillDesign(first.orig, first.name);
   };
@@ -4123,7 +4274,8 @@ async function processImageQueue(){
     let q = (await IDB.get('imgq')) || [];
     while(q.length){
       const it = q[0], b64 = it.full.split(',')[1]; let id = '';
-      if(GAS_MODE) id = JSON.parse(await rpc('saveImage', JSON.stringify({name:it.name, b64}))).id;
+      if(GAS_MODE) id = JSON.parse(await rpc('saveImage', JSON.stringify({name:it.name, b64, mime:mimeOf(it.full)}))).id;
+      if(id) imgCacheSet(id, it.full);
       else { const res = await fetch('api/upload', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({user:CUR.name, pin:GAS_PIN, name:it.name, b64})}); if(!res.ok) throw new Error('upload'); id = (await res.json()).id; }
       const rd = S.rounds.find(x => x.id === it.rid); const m = rd && (rd.images || []).find(x => x.key === it.key); if(m){ m.id = id; save(); if(view === 'prod') rerender(); }
       q.shift(); await IDB.set('imgq', q);
@@ -4190,6 +4342,90 @@ async function autoFillDesign(orig, fileName){
   toast(keys.length ? `تمت تعبئة ${keys.length} خانات تلقائياً – راجع الخانات الصفراء${note}` : `لم تُقرأ بيانات جديدة من الصورة${note}`);
 }
 
+/* ================= [DESIGNS] مكتبة التصاميم: رفع صور التصاميم وربطها بالمنتجات دون المرور بمرحلة التصميم ================= */
+ICONS.designs = LI('s_design');
+NAV.find(g => g.g === 'العمليات اليومية').items.splice(1, 0, ['designs', 'مكتبة التصاميم']);
+PAGE.designs = ['العمليات اليومية', 'مكتبة التصاميم'];
+let DQ = [];          // صور مرفوعة بانتظار الربط (على هذا الجهاز فقط)
+let dlibQ = '';
+function erpProducts(){
+  const m = new Map();
+  S.orders.forEach(o => { if(o.product_code && !m.has(o.product_code)) m.set(o.product_code, {code:o.product_code, name:o.product_name || '', customer:o.customer || '', orders:[]}); if(o.product_code) m.get(o.product_code).orders.push(String(o.order_number)); });
+  return [...m.values()];
+}
+function rankProducts(dname, customer){
+  const dw = normWords(dname), cw = normWords(customer);
+  return erpProducts().map(p => { const pw = new Set(normWords(p.name + ' ' + p.customer)); let sc = dw.filter(w => pw.has(w)).length * 2 + cw.filter(w => pw.has(w)).length; return {...p, sc}; })
+    .filter(p => p.sc > 0).sort((a, b) => b.sc - a.sc).slice(0, 6);
+}
+function libItems(){
+  const out = [];
+  (S.pimgs || []).forEach(p => { const d = p.designId ? S.rounds.find(r => r.id === p.designId) : null; const im = p.imgId ? {thumb:p.thumb, id:p.imgId, name:p.product} : d && d.images && d.images[0]; if(im) out.push({kind:'p', code:p.code, name:p.product, dname:p.dname || (d && d.extra && d.extra.dname) || '', customer:p.customer || (d && d.extra && d.extra.customer) || '', im, by:p.by, date:p.date, rec:p}); });
+  designRounds().forEach(r => { if(out.some(x => x.rec && x.rec.designId === r.id)) return; const codes = itemsOf(r).map(i => i.code).filter(Boolean); out.push({kind:'d', code:codes.join('، '), name:itemsOf(r).map(i => i.product).filter(Boolean).join('، '), dname:(r.extra||{}).dname || r.product, customer:(r.extra||{}).customer || r.customer, im:r.images[0], by:r.inspector, date:r.date, round:r}); });
+  return out.sort((a, b) => String(b.date).localeCompare(String(a.date)));
+}
+VIEWS.designs = {
+  html(){
+    const q = dlibQ.trim().toLowerCase(), items = libItems().filter(x => !q || [x.code, x.name, x.dname, x.customer].join(' ').toLowerCase().includes(q));
+    const prods = erpProducts();
+    return `<div class="pagehead"><div><h1 style="margin:0">مكتبة التصاميم</h1><p>ارفع صور تصاميم المنتجات واربطها بكود المنتج، فتظهر للمراقب في كل المراحل عند اختيار الطلبية – حتى لو لم يُفحص التصميم في مرحلة التصميم.</p></div></div>
+    <div class="panel dl-up"><label class="imgadd wide">${LI('plus')}<b>رفع تصاميم</b><small>اختر صورة أو أكثر (بروفات FET أو صور المنتج). يقرأ البرنامج بطاقة التصميم ويقترح المنتج المطابق.</small><input type="file" accept="image/*" multiple id="dlIn" class="hide"></label></div>
+    ${DQ.length ? `<h2>بانتظار الربط (${DQ.length})</h2><div class="dlq">${DQ.map((d, i) => `<div class="panel dli">
+        <img src="${d.thumb}" data-dqv="${i}" alt="">
+        <div class="dlf"><b>${esc(d.dname || d.file)}</b><span class="muted">${esc(d.customer || '')}${d.status ? ' · ' + esc(d.status) : ''}</span>
+          ${d.sugg && d.sugg.length ? `<div class="pick dls">${d.sugg.map((p, k) => `<button class="${d.pick === p.code ? 'on' : ''}" data-dqp="${i}" data-code="${esc(p.code)}"><b>${esc(p.name)}</b><small>${esc(p.code)} · ${esc(p.customer)}</small></button>`).join('')}</div>` : `<p class="muted" style="margin:6px 0">لم يُعثر على منتج مشابه في ملف ERP الحالي – اختره أو اكتب كوده:</p>`}
+          <div class="row"><input type="text" list="dlProd" data-dqc="${i}" value="${esc(d.pick || '')}" placeholder="كود المنتج أو اسمه" style="min-width:240px"><button class="btn p" data-dql="${i}">ربط بالمنتج</button><button class="btn" data-dqx="${i}">إلغاء</button></div>
+        </div></div>`).join('')}</div>
+      <datalist id="dlProd">${prods.map(p => `<option value="${esc(p.code)}">${esc(p.name)} – ${esc(p.customer)}</option>`).join('')}</datalist>` : ''}
+    <div class="row" style="margin:18px 0 10px;justify-content:space-between"><h2 style="margin:0">التصاميم المحفوظة (${items.length})</h2><input type="search" id="dlSearch" value="${esc(dlibQ)}" placeholder="بحث: كود، منتج، زبون، اسم التصميم" style="max-width:340px"></div>
+    <div class="dlgrid">${items.map((x, i) => `<div class="panel dlc"><img src="${x.im.thumb}" data-dlv="${i}" alt=""><b>${esc(x.name || x.dname || '—')}</b><span class="num">${esc(x.code || 'غير مربوط بكود')}</span><span class="muted">${esc(x.customer || '')} · ${esc(x.date || '')}</span><span class="tag">${x.kind === 'd' ? 'من جولة التصميم' : 'مكتبة التصاميم'}</span>${x.kind === 'p' && isMgr() ? `<button class="btn sm d" data-dld="${esc(x.rec.id)}">حذف</button>` : ''}</div>`).join('') || '<p class="muted">لا توجد تصاميم بعد.</p>'}</div>`;
+  },
+  bind(){
+    const items = libItems().filter(x => { const q = dlibQ.trim().toLowerCase(); return !q || [x.code, x.name, x.dname, x.customer].join(' ').toLowerCase().includes(q); });
+    $('#dlSearch').oninput = e => { dlibQ = e.target.value; const pos = e.target.selectionStart; rerender(); const el = $('#dlSearch'); el.focus(); el.setSelectionRange(pos, pos); };
+    $$('[data-dlv]').forEach(im => im.onclick = () => viewImage(items[+im.dataset.dlv].im));
+    $$('[data-dqv]').forEach(im => im.onclick = () => viewImage({full: DQ[+im.dataset.dqv].full, thumb: DQ[+im.dataset.dqv].thumb}));
+    $$('[data-dld]').forEach(b => b.onclick = () => ask('حذف ربط هذا التصميم بالمنتج؟ الصورة تبقى في Drive.', 'حذف', () => { S.pimgs = (S.pimgs || []).filter(p => p.id !== b.dataset.dld); save(); rerender(); }, true));
+    $$('[data-dqp]').forEach(b => b.onclick = () => { DQ[+b.dataset.dqp].pick = b.dataset.code; rerender(); });
+    $$('[data-dqc]').forEach(el => el.onchange = () => { DQ[+el.dataset.dqc].pick = el.value.trim(); });
+    $$('[data-dqx]').forEach(b => b.onclick = () => { DQ.splice(+b.dataset.dqx, 1); rerender(); });
+    $$('[data-dql]').forEach(b => b.onclick = () => linkQueued(+b.dataset.dql));
+    $('#dlIn').onchange = async e => {
+      const files = [...e.target.files]; if(!files.length) return;
+      for(const f of files){
+        try{
+          const orig = await readAsDataURL(f), full = await hiRes(f, orig), thumb = await resizeImage(orig, IMG_THUMB, .75);
+          const d = {file:f.name, full, thumb, dname:'', customer:'', sugg:[], pick:'', status:'جارٍ القراءة…'}; DQ.unshift(d); rerender();
+          let got = {};
+          if(GAS_MODE && navigator.onLine !== false){
+            try{ const sheet = await buildCardSheet(orig); if(sheet) got = parseCardSheet(await ocrText(sheet)); if(!got.dname && !got.customer) got = Object.assign(parseDesignCard(await ocrText(await cropCard(orig)), f.name, []), got); }catch(err){ d.status = 'تعذرت القراءة من الصورة'; }
+          } else d.status = 'دون إنترنت – القراءة من اسم الملف';
+          if(!got.dname && !got.customer) got = Object.assign(parseDesignCard('', f.name, []), got);
+          d.dname = got.dname || f.name.replace(/\.[^.]+$/, ''); d.customer = got.customer || ''; d.extra = got;
+          d.sugg = rankProducts(d.dname, d.customer); d.pick = d.sugg.length && (d.sugg.length === 1 || d.sugg[0].sc > d.sugg[1].sc) ? d.sugg[0].code : '';
+          if(d.status === 'جارٍ القراءة…') d.status = d.sugg.length ? 'اختر المنتج ثم اضغط ربط' : '';
+          if(view === 'designs') rerender();
+        }catch(err){ toast('تعذر قراءة الصورة: ' + f.name); }
+      }
+      e.target.value = '';
+    };
+  }
+};
+async function linkQueued(i){
+  const d = DQ[i]; if(!d) return;
+  const v = String(d.pick || '').trim(); if(!v){ toast('اختر المنتج أو اكتب كوده'); return; }
+  const p = erpProducts().find(x => x.code === v) || erpProducts().find(x => x.name === v) || {code:v, name:d.dname, customer:d.customer};
+  if(!GAS_MODE || navigator.onLine === false){ toast('الربط يحتاج اتصالاً بالإنترنت لرفع الصورة'); return; }
+  toast('جارٍ رفع التصميم وربطه…');
+  try{
+    const id = JSON.parse(await rpc('saveImage', JSON.stringify({name:(p.code || 'design') + '_' + d.file, b64:d.full.split(',')[1], mime:mimeOf(d.full)}))).id;
+    imgCacheSet(id, d.full); S.pimgs = S.pimgs || [];
+    const rec = {id:'P-' + p.code, code:p.code, product:p.name, customer:p.customer || d.customer, dname:d.dname, varn:(d.extra || {}).varn || '', designId:'', imgId:id, thumb:d.thumb, by:CUR.name || S.settings.inspector, date:todayStr()};
+    const k = S.pimgs.findIndex(x => x.id === rec.id); if(k >= 0) S.pimgs[k] = rec; else S.pimgs.push(rec);
+    DQ.splice(i, 1); save(); rerender(); toast(`تم ربط التصميم بالمنتج ${p.code}`);
+  }catch(e){ toast('تعذر الرفع: ' + (e && e.message || e)); }
+}
+
 /* ================= SERVER SYNC (لابتوب القسم) ================= */
 const PWA_API = (typeof window !== 'undefined' && window.PWA_API && /^(https:\/\/|http:\/\/localhost)/.test(window.PWA_API)) ? window.PWA_API : '';
 const GAS_MODE = (typeof google !== 'undefined' && !!(google.script && google.script.run)) || !!PWA_API;
@@ -4252,7 +4488,7 @@ window.addEventListener('online', () => { if(CUR && CUR.role) syncNow(); });
 window.addEventListener('offline', () => { online = false; updateSyncPill(); render(); });
 let serverMode = false, online = true, syncVer = 0, syncing = false, syncTimer = null, lastSync = null, snap = {}, settingsSnap = '';
 const CLIENT = 'c' + Date.now().toString(36) + Math.random().toString(36).slice(2,6);
-const SYNC_COLS = ['rounds','holds','handovers','mats','ncrs','complaints','audits','cals','ths','aid','coas','reports'];
+const SYNC_COLS = ['rounds','holds','handovers','mats','ncrs','complaints','audits','cals','ths','aid','coas','reports','pimgs'];
 const FORM_VIEWS = ['round','matform','ncrform','auditform','compform','data','hand','letter','coaprint'];
 const keyOf = x => String(x.id ?? x.no ?? [x.date,x.time,x.type,x.code,x.loc,x.name,x.from].map(v=>v??'').join('|'));
 const strip = x => { const {_m,_v,_c,...r} = x; return JSON.stringify(r); };
