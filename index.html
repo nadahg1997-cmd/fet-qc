@@ -687,6 +687,28 @@ tr.flag td{background:#FFFBF2}
 .pk{display:grid;grid-template-columns:repeat(6,1fr);gap:6px}.pk div{background:#fff;border:1px solid var(--line2);border-radius:10px;padding:6px 8px;text-align:center}.pk b{display:block;font-size:20px}.pk span{font-size:11.5px;color:var(--ink2)}
 .pspec{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:6px 16px;font-size:13px;color:var(--ink2)}.pspec b{color:var(--ink)}
 @media(max-width:800px){.psum{grid-template-columns:1fr}.pk{grid-template-columns:repeat(3,1fr)}}
+/* materials & monitoring */
+.qtyu{display:grid;grid-template-columns:1fr 110px;gap:6px}
+.trialf{justify-content:center}.trialf span{display:flex;gap:8px;align-items:center;font-weight:700}.trialf input{width:20px;height:20px;min-height:0!important}
+.ck.au{align-items:start}.aun{margin-top:6px;min-height:38px!important;font-size:13.5px!important}.aun.need{border-color:var(--bad)!important;background:var(--bad-l)!important}
+.tri2{grid-template-columns:repeat(2,1fr)!important}
+.actrow{align-items:end;margin-bottom:6px}
+.openacts{margin:12px 0;background:#FFF1E8;border:2px solid #F2B48A;border-radius:12px;padding:10px 12px}
+.openacts > b{display:flex;gap:6px;align-items:center;color:#B85A1C;margin-bottom:6px}.openacts > b .li{width:18px;height:18px}
+.oa{display:grid;grid-template-columns:220px 1fr 220px auto;gap:8px;align-items:center;padding:6px 0;border-top:1px dashed #F2B48A;font-size:14px}.oa .r{color:var(--bad)}
+@media(max-width:800px){.oa{grid-template-columns:1fr}}
+/* PDF print document */
+#printArea{display:none}
+body.printing > *:not(#printArea){display:none!important}
+body.printing #printArea{display:block;background:#fff;padding:20px;max-width:900px;margin:0 auto}
+.pdoc{font-family:Tahoma,Arial,sans-serif;color:#17212B;font-size:12.5px}
+.pdh{display:flex;align-items:center;gap:12px;border-bottom:3px solid #E8772E;padding-bottom:8px;margin-bottom:10px}.pdh img{width:56px}.pdh span{display:block;color:#5B6B7A;font-size:11.5px}.pdh b{font-size:18px}.pdm{margin-inline-start:auto;font-size:11px;color:#5B6B7A;text-align:left}
+.pdoc h3{font-size:14px;margin:12px 0 6px;border-bottom:1px solid #D9DFE5;padding-bottom:3px}
+.pkv,.pt{width:100%;border-collapse:collapse}.pkv th,.pkv td,.pt th,.pt td{border:1px solid #C9D2DA;padding:5px 7px;text-align:right;vertical-align:top}.pkv th{background:#F1F3F5;width:28%}.pt th{background:#F1F3F5}.pt .c{text-align:center}.pt .bad{background:#F9E3E0}
+.pdec{font-size:16px;font-weight:700}
+.pds{width:100%;border-collapse:collapse;margin-top:18px}.pds td{border:1px solid #9AA6B2;height:60px;padding:6px;vertical-align:top;width:33%}
+.pdf-f{text-align:center;color:#8A97A3;font-size:10px;margin-top:10px}
+@media print{body.printing #printArea{padding:0}}
 </style>
 </head>
 <body>
@@ -735,6 +757,9 @@ setTimeout(function(){ if(window.__appLoaded) return; var m=document.getElementB
    [KPI_DEF]    مؤشرات الأداء وأهدافها
    [ERP_NOTES]  ملاحظات ERP التي تظهر للمراقب بجانب كل منتج
    [OCR]        قراءة بطاقة التصميم من الصورة (parseDesignCard)
+   [MAT_SAMPLE] قاعدة عينة كل مادة واردة · [MATLIB] أرشيف أكواد المواد
+   [TH_LOCS] أماكن الحرارة والرطوبة · [CAL_WINDOWS] مواعيد التحقق من أدوات القياس
+   [PDF]        تصدير السجلات إلى PDF
    [UNIT_PAGES] المراحل التي تُفتح فيها كل الآلات بصفحة واحدة (السحب، الحقن، التغطية)
    [STATIONS]   صفحات العمال/المحطات (الفرز، التركيب غير الآلي)
    [STAGE_DEFECTS] عيوب كل مرحلة
@@ -2249,7 +2274,7 @@ VIEWS.prod = {
 function roundsTable(rs, del){
   const canDel = del && isMgr(); del = !!del;
   return `<div class="tw"><table class="t"><thead><tr><th>التاريخ</th><th>الوقت</th><th>الوردية</th><th>المرحلة</th><th>النوع</th><th>الآلة</th><th>الطلبية</th><th>المنتج</th><th>غير المطابق</th><th>القرار</th><th>الحجز / NCR</th>${del?'<th class="noprint"></th>':''}</tr></thead><tbody>
-  ${rs.map(r=>`<tr><td class="num">${r.date}</td><td class="num">${r.time}</td><td>${r.shift}</td><td>${stageBy(r.stage).name}</td><td>${r.type}</td><td>${esc(r.machine)}</td><td class="num">${esc(ordersLabel(r))}</td><td>${r.images&&r.images.length?`<button class="camb" data-rimg="${r.id}" title="صور البروفا">📷 ${r.images.length}</button> `:''}${esc(itemsLabel(r))}${itemsOf(r).length>1?` <span class="pill p-مقبول_بشرط">${itemsOf(r).length} منتجات</span>`:''}</td><td>${esc([...(r.failed||[]),...r.defects].join('، '))} ${clsTag(r.cls)}</td><td>${r.stage==='design'?designPill(r.decision):decPill(r.decision)}${r.editedBy?' <span class="muted" title="عُدّلت">✎</span>':''}</td><td class="num">${esc([r.hold,r.ncr].filter(Boolean).join(' / '))}</td>${del?`<td class="noprint"><div class="row" style="flex-wrap:nowrap"><button class="btn sm" data-edit="${r.id}">فتح</button>${canDel?`<button class="btn sm d" data-del="${r.id}">حذف</button>`:''}</div></td>`:''}</tr>`).join('') || `<tr><td colspan="12" class="muted">لا توجد جولات.</td></tr>`}
+  ${rs.map(r=>`<tr><td class="num">${r.date}</td><td class="num">${r.time}</td><td>${r.shift}</td><td>${stageBy(r.stage).name}</td><td>${r.type}</td><td>${esc(r.machine)}</td><td class="num">${esc(ordersLabel(r))}</td><td>${r.images&&r.images.length?`<button class="camb" data-rimg="${r.id}" title="صور البروفا">📷 ${r.images.length}</button> `:''}${esc(itemsLabel(r))}${itemsOf(r).length>1?` <span class="pill p-مقبول_بشرط">${itemsOf(r).length} منتجات</span>`:''}</td><td>${esc([...(r.failed||[]),...r.defects].join('، '))} ${clsTag(r.cls)}</td><td>${r.stage==='design'?designPill(r.decision):decPill(r.decision)}${r.editedBy?' <span class="muted" title="عُدّلت">✎</span>':''}</td><td class="num">${esc([r.hold,r.ncr].filter(Boolean).join(' / '))}</td>${del?`<td class="noprint"><div class="row" style="flex-wrap:nowrap"><button class="btn sm" data-edit="${r.id}">فتح</button><button class="btn sm" data-pdfr="${r.id}">PDF</button>${canDel?`<button class="btn sm d" data-del="${r.id}">حذف</button>`:''}</div></td>`:''}</tr>`).join('') || `<tr><td colspan="12" class="muted">لا توجد جولات.</td></tr>`}
   </tbody></table></div>`;
 }
 function openRound(id){ const r = S.rounds.find(x => String(x.id)===String(id)); if(!r) return; F = JSON.parse(JSON.stringify(r)); F.editId = r.id; F.items = itemsOf(r); F.mi = r.mi || 0; F.order = ''; F.viewOnly = !(isMgr() || r.inspector === (CUR.name || S.settings.inspector)); go('round', {stage:r.stage}); }
@@ -2452,7 +2477,7 @@ VIEWS.mat = {
     return `<div class="row" style="justify-content:space-between"><h1 style="margin:0">فحص المواد الأولية ومواد التغليف</h1><button class="btn p" id="newMat">فحص مادة جديدة</button></div>
     <p class="muted">الإجراء QC-02 · العينة: الجذر التربيعي لعدد العبوات + 1 (3 إلى 15) · مقبول ≥ 85% · مقبول بشرط 70–84% · مرفوض &lt; 70% أو بند حرج ≤ 2</p>
     <div class="tw"><table class="t"><thead><tr><th>الرقم</th><th>التاريخ</th><th>المادة</th><th>المورد</th><th>الدفعة</th><th>الكمية</th><th>النتيجة</th><th>القرار</th><th>NCR</th></tr></thead><tbody>
-    ${list.map(m=>{ const r = matScore(m); return `<tr class="click" data-id="${m.id}"><td class="num">${m.no}</td><td class="num">${m.date}</td><td>${esc(m.name || matBy(m.type)?.name)}</td><td>${esc(m.supplier)}</td><td class="num">${esc(m.lot)}</td><td class="num">${esc(m.qty)} ${esc(matBy(m.type)?.unit||'')}</td><td class="num">${r?r.score+'%':'—'}</td><td>${decPill(m.decision)}</td><td class="num">${esc(m.ncr||'')}</td></tr>`; }).join('') || '<tr><td colspan="9" class="muted">لم تُسجل فحوص مواد بعد. اضغط "فحص مادة جديدة" عند وصول أي شحنة.</td></tr>'}
+    ${list.map(m=>{ const r = matScore(m); return `<tr class="click" data-id="${m.id}"><td class="num">${m.no}</td><td class="num">${m.date}</td><td>${esc(m.name || matBy(m.type)?.name)}</td><td>${esc(m.supplier)}</td><td class="num">${esc(m.lot)}</td><td class="num">${esc(m.qty)} ${esc(m.unit || matBy(m.type)?.unit||'')}${m.trial?' <span class="pill p-مقبول_بملاحظة">تجربة</span>':''}</td><td class="num">${r?r.score+'%':'—'}</td><td>${decPill(m.decision)} <button class="btn sm noprint" data-pdfm="${m.id}">PDF</button></td><td class="num">${esc(m.ncr||'')}</td></tr>`; }).join('') || '<tr><td colspan="9" class="muted">لم تُسجل فحوص مواد بعد. اضغط "فحص مادة جديدة" عند وصول أي شحنة.</td></tr>'}
     </tbody></table></div>`;
   },
   bind(){ $('#newMat').onclick = () => { newMat(); go('matform', {}); }; $$('tr[data-id]').forEach(tr => tr.onclick = () => go('matform', {id:+tr.dataset.id})); }
@@ -2461,7 +2486,7 @@ VIEWS.matform = {
   html(){
     if(arg && arg.id){ if(!M || M.id !== arg.id) M = JSON.parse(JSON.stringify(S.mats.find(x=>x.id===arg.id))); } else if(!M) newMat();
     const cfg = matBy(M.type); const r = matScore(M); const sug = matSuggest(M); const dec = M.decision ?? sug;
-    const N = +M.pkgs || 0; const smp = N ? (N<=3 ? N : Math.min(15, Math.max(3, Math.ceil(Math.sqrt(N))+1))) : '—';
+    const smpInfo = typeof matSample === 'function' ? matSample(M) : null; const smp = smpInfo ? smpInfo.n : '—';
     const sups = [...new Set(S.mats.map(x=>x.supplier).filter(Boolean))];
     return `<div class="row" style="justify-content:space-between"><h1 style="margin:0">${M.no?`فحص المادة ${M.no}`:'فحص مادة واردة'}</h1><button class="btn" id="back">رجوع</button></div>
     <h2>نوع المادة</h2>
@@ -2469,14 +2494,17 @@ VIEWS.matform = {
     ${cfg?`<div class="panel" style="margin-top:12px"><div class="grid">
       <label class="f">المورد<input type="text" list="supList" id="mSup" value="${esc(M.supplier)}"></label>
       <label class="f">رقم الفاتورة<input type="text" id="mInv" value="${esc(M.invoice)}"></label>
-      <label class="f">كود المادة<input type="text" id="mCode" value="${esc(M.code)}"></label>
-      <label class="f">اسم المادة / المواصفة<input type="text" id="mName" value="${esc(M.name)}"></label>
+      <label class="f">كود المادة<input type="text" id="mCode" list="mlCodes" value="${esc(M.code)}" placeholder="اكتب الكود أو اختر"></label>
+      <label class="f">اسم المادة / المواصفة<input type="text" id="mName" list="mlNames" value="${esc(M.name)}" placeholder="اكتب الاسم أو اختر"></label>
       <label class="f">رقم الدفعة (Lot)<input type="text" id="mLot" value="${esc(M.lot)}"></label>
-      <label class="f">الكمية المستلمة (${cfg.unit})<input type="number" id="mQty" value="${esc(M.qty)}"></label>
-      <label class="f">عدد العبوات N<input type="number" id="mPkgs" value="${esc(M.pkgs)}"></label>
+      <label class="f">تاريخ الاستلام<input type="date" id="mRecv" value="${esc(M.recvDate || todayStr())}"></label>
+      <label class="f">الكمية المستلمة<div class="qtyu"><input type="number" id="mQty" value="${esc(M.qty)}"><select id="mUnit">${opt(MAT_UNITS, M.unit || cfg.unit)}</select></div></label>
+      <label class="f">عدد العبوات / الطرود N<input type="number" id="mPkgs" value="${esc(M.pkgs)}" placeholder="${MAT_PKG_UNITS.includes(M.unit || cfg.unit) ? 'يساوي الكمية' : 'عدد الأكياس / الكراتين'}"></label>
+      <label class="f trialf"><span><input type="checkbox" id="mTrial" ${M.trial ? 'checked' : ''}> دفعة تجربة</span><small class="muted">كمية قليلة لتقييم المادة قبل شراء كميات كبيرة</small></label>
+      <div class="f"><span class="muted">تاريخ الفحص</span><b class="num">${M.date ? esc(M.date) + ' ' + esc(M.time || '') : 'يُسجَّل تلقائياً عند الحفظ'}</b></div>
       <label class="f">شهادة تحليل المورد CoA<select id="mCoa"><option value=""></option>${opt(['نعم','لا','غير مطلوبة'], M.coa)}</select></label>
-    </div><datalist id="supList">${sups.map(x=>`<option>${esc(x)}</option>`).join('')}</datalist>
-    <div class="info" style="background:var(--steel)"><span>العبوات المطلوب فحصها: <b class="num">${smp}</b></span><span>النموذج: ${cfg.form}</span>${CRIT_MAT.includes(M.type)?'<span>مادة حرجة: شهادة التحليل مطلوبة</span>':''}</div></div>
+    </div><datalist id="supList">${sups.map(x=>`<option>${esc(x)}</option>`).join('')}</datalist>${typeof matLibLists === 'function' ? matLibLists(M.type) : ''}
+    <div class="info" style="background:var(--steel)"><span>العبوات المطلوب فحصها: <b class="num">${smp}</b>${smpInfo && smpInfo.each ? ` · ${esc(smpInfo.each)}` : ''}</span>${smpInfo && smpInfo.note ? `<span>${esc(smpInfo.note)}</span>` : ''}${M.trial ? '<span class="pill p-مقبول_بملاحظة">دفعة تجربة</span>' : ''}<span>النموذج: ${cfg.form}</span>${CRIT_MAT.includes(M.type)?'<span>مادة حرجة: شهادة التحليل مطلوبة</span>':''}</div></div>
     <h2>التقييم (1 مرفوض · 2 ضعيف · 3 مقبول · 4 جيد · 5 ممتاز)</h2>
     ${cfg.groups.map(g=>`<div class="panel" style="margin-bottom:10px"><div class="row" style="justify-content:space-between"><b>${g.n}</b><span class="muted num">الوزن ${g.w}%</span></div>
       ${g.items.map(it=>`<div class="ck"><div class="lb">${esc(it[1])}${it[2]?clsTag('حرج'):''}</div><div class="score" data-sc="${it[0]}">${[1,2,3,4,5].map(n=>`<button class="${+M.scores[it[0]]===n?'on s'+n:''}" data-v="${n}">${n}</button>`).join('')}</div></div>`).join('')}</div>`).join('')}
@@ -2495,7 +2523,13 @@ VIEWS.matform = {
     $('#back').onclick = () => go('mat');
     $$('#mType button').forEach(b => b.onclick = () => { M.type = b.dataset.v; M.scores = {}; M.decision = null; rerender(); });
     if(!matBy(M.type)) return;
-    [['mSup','supplier'],['mInv','invoice'],['mCode','code'],['mName','name'],['mLot','lot'],['mQty','qty'],['mNotes','notes'],['mCond','condition']].forEach(([id,f]) => { const el = $('#'+id); if(el) el.oninput = e => M[f] = e.target.value; });
+    [['mSup','supplier'],['mInv','invoice'],['mLot','lot'],['mNotes','notes'],['mCond','condition']].forEach(([id,f]) => { const el = $('#'+id); if(el) el.oninput = e => M[f] = e.target.value; });
+    $('#mCode').onchange = e => { M.code = e.target.value.trim(); const x = typeof matLibFind === 'function' && matLibFind(M.type, 'code', M.code); if(x && !String(M.name||'').trim()) M.name = x.name; else if(x) M.name = x.name; rerender(); };
+    $('#mName').onchange = e => { M.name = e.target.value.trim(); const x = typeof matLibFind === 'function' && matLibFind(M.type, 'name', M.name); if(x) M.code = x.code; rerender(); };
+    $('#mRecv').onchange = e => M.recvDate = e.target.value;
+    $('#mQty').onchange = e => { M.qty = e.target.value; rerender(); };
+    $('#mUnit').onchange = e => { M.unit = e.target.value; rerender(); };
+    $('#mTrial').onchange = e => { M.trial = e.target.checked; rerender(); };
     $('#mPkgs').onchange = e => { M.pkgs = e.target.value; rerender(); };
     $('#mCoa').onchange = e => { M.coa = e.target.value; M.decision = null; rerender(); };
     $$('.score').forEach(sc => sc.querySelectorAll('button').forEach(b => b.onclick = () => { M.scores[sc.dataset.sc] = +b.dataset.v; M.decision = null; rerender(); }));
@@ -2504,7 +2538,8 @@ VIEWS.matform = {
       if(!M.supplier){ toast('اكتب اسم المورد'); return; }
       const dec = M.decision ?? matSuggest(M); if(!dec){ toast('قيّم بنود الفحص أولاً'); return; }
       M.decision = dec; const r = matScore(M); M.score = r ? r.score : '';
-      if(!M.id){ M.id = uid(); M.no = seqNo('M', S.mats); M.date = todayStr(); M.inspector = S.settings.inspector; S.mats.push(M); }
+      M.recvDate = M.recvDate || todayStr(); M.unit = M.unit || matBy(M.type).unit; const smI = typeof matSample === 'function' ? matSample(M) : null; if(smI) M.sampleN = smI.n;
+      if(!M.id){ M.id = uid(); M.no = seqNo('M', S.mats); M.date = todayStr(); M.time = timeStr(); M.inspector = S.settings.inspector; S.mats.push(M); }
       else { const i = S.mats.findIndex(x=>x.id===M.id); S.mats[i] = M; }
       if(dec==='مرفوض' && !M.ncr){ M.ncr = createNCR({source:'مادة واردة', dept:`المورد: ${M.supplier}`, desc:`رفض ${M.name||matBy(M.type).name} – دفعة ${M.lot} – النتيجة ${M.score}% ${M.notes?'– '+M.notes:''}`, requirement:matBy(M.type).form, qty:`${M.qty} ${matBy(M.type).unit}`, cls:'رئيسي', correction:'إرجاع للمورد'}); }
       save(); toast(`تم حفظ الفحص ${M.no}${M.ncr?' – '+M.ncr:''}`); M = null; go('mat');
@@ -3706,7 +3741,7 @@ VIEWS.data.bind = function(){
 
 const LUCIDE = {"home": "<path d=\"M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8\" /> <path d=\"M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z\" />", "prod": "<path d=\"M12 16h.01\" /> <path d=\"M16 16h.01\" /> <path d=\"M3 19a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5a.5.5 0 0 0-.769-.422l-4.462 2.844A.5.5 0 0 1 15 10.5v-2a.5.5 0 0 0-.769-.422L9.77 10.922A.5.5 0 0 1 9 10.5V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2z\" /> <path d=\"M8 16h.01\" />", "mat": "<path d=\"M12 22V12\" /> <path d=\"m16 17 2 2 4-4\" /> <path d=\"M21 11.127V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.729l7 4a2 2 0 0 0 2 .001l1.32-.753\" /> <path d=\"M3.29 7 12 12l8.71-5\" /> <path d=\"m7.5 4.27 8.997 5.148\" />", "ncr": "<path d=\"M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z\" /> <path d=\"M12 8v4\" /> <path d=\"M12 16h.01\" />", "hold": "<path d=\"M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z\" /> <path d=\"m3.3 7 8.7 5 8.7-5\" /> <path d=\"M12 22V12\" />", "mon": "<rect width=\"8\" height=\"4\" x=\"8\" y=\"2\" rx=\"1\" ry=\"1\" /> <path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\" /> <path d=\"m9 14 2 2 4-4\" />", "rep": "<path d=\"M3 3v16a2 2 0 0 0 2 2h16\" /> <path d=\"M18 17V9\" /> <path d=\"M13 17V5\" /> <path d=\"M8 17v-3\" />", "team": "<path d=\"M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2\" /> <path d=\"M16 3.128a4 4 0 0 1 0 7.744\" /> <path d=\"M22 21v-2a4 4 0 0 0-3-3.87\" /> <circle cx=\"9\" cy=\"7\" r=\"4\" />", "mgr": "<path d=\"M16 7h6v6\" /> <path d=\"m22 7-8.5 8.5-5-5L2 17\" />", "more": "<rect width=\"7\" height=\"7\" x=\"3\" y=\"3\" rx=\"1\" /> <rect width=\"7\" height=\"7\" x=\"14\" y=\"3\" rx=\"1\" /> <rect width=\"7\" height=\"7\" x=\"14\" y=\"14\" rx=\"1\" /> <rect width=\"7\" height=\"7\" x=\"3\" y=\"14\" rx=\"1\" />", "hand": "<path d=\"M8 3 4 7l4 4\" /> <path d=\"M4 7h16\" /> <path d=\"m16 21 4-4-4-4\" /> <path d=\"M20 17H4\" />", "comp": "<path d=\"M22 17a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 21.286V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2z\" /> <path d=\"M12 15h.01\" /> <path d=\"M12 7v4\" />", "coa": "<path d=\"m15.477 12.89 1.515 8.526a.5.5 0 0 1-.81.47l-3.58-2.687a1 1 0 0 0-1.197 0l-3.586 2.686a.5.5 0 0 1-.81-.469l1.514-8.526\" /> <circle cx=\"12\" cy=\"8\" r=\"6\" />", "sup": "<path d=\"M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2\" /> <path d=\"M15 18H9\" /> <path d=\"M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 17.52 8H14\" /> <circle cx=\"17\" cy=\"18\" r=\"2\" /> <circle cx=\"7\" cy=\"18\" r=\"2\" />", "data": "<ellipse cx=\"12\" cy=\"5\" rx=\"9\" ry=\"3\" /> <path d=\"M3 5V19A9 3 0 0 0 21 19V5\" /> <path d=\"M3 12A9 3 0 0 0 21 12\" />", "bell": "<path d=\"M10.268 21a2 2 0 0 0 3.464 0\" /> <path d=\"M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326\" />", "search": "<path d=\"m21 21-4.34-4.34\" /> <circle cx=\"11\" cy=\"11\" r=\"8\" />", "logout": "<path d=\"m16 17 5-5-5-5\" /> <path d=\"M21 12H9\" /> <path d=\"M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4\" />", "dash": "<rect width=\"7\" height=\"9\" x=\"3\" y=\"3\" rx=\"1\" /> <rect width=\"7\" height=\"5\" x=\"14\" y=\"3\" rx=\"1\" /> <rect width=\"7\" height=\"9\" x=\"14\" y=\"12\" rx=\"1\" /> <rect width=\"7\" height=\"5\" x=\"3\" y=\"16\" rx=\"1\" />", "s_design": "<path d=\"M15.707 21.293a1 1 0 0 1-1.414 0l-1.586-1.586a1 1 0 0 1 0-1.414l5.586-5.586a1 1 0 0 1 1.414 0l1.586 1.586a1 1 0 0 1 0 1.414z\" /> <path d=\"m18 13-1.375-6.874a1 1 0 0 0-.746-.776L3.235 2.028a1 1 0 0 0-1.207 1.207L5.35 15.879a1 1 0 0 0 .776.746L13 18\" /> <path d=\"m2.3 2.3 7.286 7.286\" /> <circle cx=\"11\" cy=\"11\" r=\"2\" />", "s_print": "<path d=\"M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2\" /> <path d=\"M6 9V3a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v6\" /> <rect x=\"6\" y=\"14\" width=\"12\" height=\"8\" rx=\"1\" />", "s_draw": "<ellipse cx=\"12\" cy=\"5\" rx=\"9\" ry=\"3\" /> <path d=\"M3 5v14a9 3 0 0 0 18 0V5\" />", "s_sort": "<path d=\"M2 5h20\" /> <path d=\"M6 12h12\" /> <path d=\"M9 19h6\" />", "s_mix": "<path d=\"M14 2v6a2 2 0 0 0 .245.96l5.51 10.08A2 2 0 0 1 18 22H6a2 2 0 0 1-1.755-2.96l5.51-10.08A2 2 0 0 0 10 8V2\" /> <path d=\"M6.453 15h11.094\" /> <path d=\"M8.5 2h7\" />", "s_inj": "<path d=\"m18 2 4 4\" /> <path d=\"m17 7 3-3\" /> <path d=\"M19 9 8.7 19.3c-1 1-2.5 1-3.4 0l-.6-.6c-1-1-1-2.5 0-3.4L15 5\" /> <path d=\"m9 11 4 4\" /> <path d=\"m5 19-3 3\" /> <path d=\"m14 4 6 6\" />", "s_asm": "<path d=\"M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.106-3.105c.32-.322.863-.22.983.218a6 6 0 0 1-8.259 7.057l-7.91 7.91a1 1 0 0 1-2.999-3l7.91-7.91a6 6 0 0 1 7.057-8.259c.438.12.54.662.219.984z\" />", "s_cap": "<path d=\"M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z\" /> <path d=\"M12 22V12\" /> <polyline points=\"3.29 7 12 12 20.71 7\" /> <path d=\"m7.5 4.27 9 5.15\" />", "s_seal": "<path d=\"M14 13V8.5C14 7 15 7 15 5a3 3 0 0 0-6 0c0 2 1 2 1 3.5V13\" /> <path d=\"M20 15.5a2.5 2.5 0 0 0-2.5-2.5h-11A2.5 2.5 0 0 0 4 15.5V17a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1z\" /> <path d=\"M5 22h14\" />", "s_final": "<path d=\"M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z\" /> <path d=\"m16 9-5.5 5.5L8 12\" />", "thermo": "<path d=\"M14 4v10.54a4 4 0 1 1-4 0V4a2 2 0 0 1 4 0Z\" />", "ruler": "<path d=\"M21.3 15.3a2.4 2.4 0 0 1 0 3.4l-2.6 2.6a2.4 2.4 0 0 1-3.4 0L2.7 8.7a2.41 2.41 0 0 1 0-3.4l2.6-2.6a2.41 2.41 0 0 1 3.4 0Z\" /> <path d=\"m14.5 12.5 2-2\" /> <path d=\"m11.5 9.5 2-2\" /> <path d=\"m8.5 6.5 2-2\" /> <path d=\"m17.5 15.5 2-2\" />", "clean": "<path d=\"M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z\" /> <path d=\"M20 2v4\" /> <path d=\"M22 4h-4\" /> <circle cx=\"4\" cy=\"20\" r=\"2\" />", "plus": "<circle cx=\"12\" cy=\"12\" r=\"10\" /> <path d=\"M8 12h8\" /> <path d=\"M12 8v8\" />", "ok": "<path d=\"M21.801 10A10 10 0 1 1 17 3.335\" /> <path d=\"m9 11 3 3L22 4\" />", "warn": "<path d=\"m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3\" /> <path d=\"M12 9v4\" /> <path d=\"M12 17h.01\" />", "file": "<path d=\"M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z\" /> <path d=\"M14 2v5a1 1 0 0 0 1 1h5\" /> <path d=\"M10 9H8\" /> <path d=\"M16 13H8\" /> <path d=\"M16 17H8\" />", "scan": "<path d=\"M3 7V5a2 2 0 0 1 2-2h2\" /> <path d=\"M17 3h2a2 2 0 0 1 2 2v2\" /> <path d=\"M21 17v2a2 2 0 0 1-2 2h-2\" /> <path d=\"M7 21H5a2 2 0 0 1-2-2v-2\" /> <circle cx=\"12\" cy=\"12\" r=\"3\" /> <path d=\"m16 16-1.9-1.9\" />", "clock": "<circle cx=\"12\" cy=\"12\" r=\"10\" /> <path d=\"M12 6v6l4 2\" />", "alert": "<path d=\"M12 16h.01\" /> <path d=\"M12 8v4\" /> <path d=\"M15.312 2a2 2 0 0 1 1.414.586l4.688 4.688A2 2 0 0 1 22 8.688v6.624a2 2 0 0 1-.586 1.414l-4.688 4.688a2 2 0 0 1-1.414.586H8.688a2 2 0 0 1-1.414-.586l-4.688-4.688A2 2 0 0 1 2 15.312V8.688a2 2 0 0 1 .586-1.414l4.688-4.688A2 2 0 0 1 8.688 2z\" />", "activity": "<path d=\"M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2\" />", "gauge": "<path d=\"m12 14 4-4\" /> <path d=\"M3.34 19a10 10 0 1 1 17.32 0\" />"};
 /* [VERSION] رقم إصدار البرنامج – يظهر أسفل القائمة وفي شاشة الدخول */
-const APP_VERSION = '9.2';
+const APP_VERSION = '9.3';
 let SERVER_VERSION = '';
 async function checkServerVersion(){ if(!GAS_MODE) return; try{ const v = JSON.parse(await rpc('serverVersion', '')); SERVER_VERSION = v.version + (v.ocr ? '' : ' (Drive API غير مفعّل)'); }catch(e){ SERVER_VERSION = /NET/.test(String(e && e.message || e)) ? '' : 'قديم – انشر إصداراً جديداً'; } try{ renderTabs(); }catch(e){} }
 /* [ERRORS] بدل الصفحة الفارغة: رسالة واضحة وزر إعادة تحميل */
@@ -5025,6 +5060,230 @@ VIEWS.exec.html = function(){
   }catch(e){}
   return h;
 };
+
+/* ================= [MATS] المواد الواردة: أرشيف الأكواد، الوحدة، العينة الآلية، دفعة التجربة ================= */
+(function(){ const i = MATERIALS.findIndex(m => m.key === 'printed'); if(i >= 0) MATERIALS.splice(i, 1); })();
+const MAT_UNITS = ['كغ','قطعة','رول','كرتونة','كيس','طرد','صندوق','متر','بالة'];
+const MAT_PKG_UNITS = ['رول','كرتونة','كيس','طرد','صندوق','بالة'];
+/* [MAT_SAMPLE] قاعدة العينة لكل مادة (QC-02): عدد العبوات = الجذر التربيعي لعدد العبوات + 1 (3 إلى 15)، وما يؤخذ من كل عبوة */
+const MAT_SAMPLE = {caps:'10 قطع من كل كرتونة', bags:'5 أكياس من كل طرد', wrap:'متر واحد من بداية كل رول', granules:'100 غ من كل كيس',
+  cartons:'5 كراتين من كل طرد', rolls:'عينة متر واحد من كل رول مسحوب', tape:'رول واحد من كل كرتونة', boxes:'صندوق واحد من كل طرد', foil:'عينة متر واحد من كل رول'};
+function matSample(M){
+  const cfg = matBy(M.type); if(!cfg) return null;
+  const unit = M.unit || cfg.unit, N = +M.pkgs || (MAT_PKG_UNITS.includes(unit) ? +M.qty : 0) || 0;
+  if(!N) return {n:'—', each:MAT_SAMPLE[M.type] || '', note: M.qty ? 'اكتب عدد العبوات أو اختر وحدة عبوة (رول، كرتونة، كيس…) لحساب العينة' : ''};
+  const n = M.trial ? Math.min(N, 15) : (N <= 3 ? N : Math.min(15, Math.max(3, Math.ceil(Math.sqrt(N)) + 1)));
+  return {n, N, each:MAT_SAMPLE[M.type] || '', note: M.trial ? 'دفعة تجربة: تُفحص كل العبوات (حتى 15)' : `من ${N} عبوة`};
+}
+/* [MATLIB] أرشيف أسماء وأكواد المواد لكل نوع (يُحفظ في الإعدادات ويُزامن لكل الأجهزة) */
+function matLib(type){ S.settings.matlib = S.settings.matlib || {}; return S.settings.matlib[type] = S.settings.matlib[type] || []; }
+function matLibFind(type, field, v){ v = String(v || '').trim().toLowerCase(); if(!v) return null; return matLib(type).find(x => String(x[field] || '').trim().toLowerCase() === v) || null; }
+function matLibLists(type){ const l = matLib(type); return `<datalist id="mlCodes">${l.map(x => `<option value="${esc(x.code)}">${esc(x.name)}</option>`).join('')}</datalist><datalist id="mlNames">${l.map(x => `<option value="${esc(x.name)}">${esc(x.code)}</option>`).join('')}</datalist>`; }
+let mlType = null;
+VIEWS.matlib = {
+  html(){
+    mlType = mlType || MATERIALS[0].key; const l = matLib(mlType);
+    return `<div class="pagehead"><div><h1 style="margin:0">أرشيف المواد</h1><p>أسماء وأكواد كل مادة. عند فحص مادة: اكتب الكود فيظهر الاسم، أو اكتب الاسم فيظهر الكود.</p></div><button class="btn" id="mlBack">رجوع</button></div>
+      <div class="pick" id="mlT">${MATERIALS.map(m => `<button class="${mlType===m.key?'on':''}" data-v="${m.key}">${m.name} <small class="muted">(${matLib(m.key).length})</small></button>`).join('')}</div>
+      <div class="panel" style="margin-top:12px"><div class="grid"><label class="f">كود المادة<input type="text" id="mlCode"></label><label class="f">اسم المادة / المواصفة<input type="text" id="mlName"></label></div>
+        <div class="row" style="margin-top:8px"><button class="btn p" id="mlAdd">إضافة للأرشيف</button><label class="btn">${LI('file')} استيراد من Excel (عمود الكود ثم الاسم)<input type="file" id="mlXls" accept=".xlsx,.xls,.csv" class="hide"></label></div>
+        <details style="margin-top:10px"><summary>لصق عدة مواد دفعة واحدة</summary><textarea id="mlPaste" rows="5" placeholder="كل سطر: الكود، الاسم&#10;مثال: CAP-28-W، غطاء 28 أبيض"></textarea><button class="btn" id="mlPasteGo" style="margin-top:6px">إضافة الأسطر</button></details></div>
+      <div class="tw" style="margin-top:12px"><table class="t"><thead><tr><th>#</th><th>الكود</th><th>الاسم</th><th></th></tr></thead><tbody>
+      ${l.map((x, i) => `<tr><td class="num">${i + 1}</td><td class="num"><b>${esc(x.code)}</b></td><td>${esc(x.name)}</td><td>${isMgr() || true ? `<button class="btn sm d" data-mld="${i}">حذف</button>` : ''}</td></tr>`).join('') || '<tr><td colspan="4" class="muted">لا توجد مواد في الأرشيف لهذا النوع.</td></tr>'}</tbody></table></div>`;
+  },
+  bind(){
+    $('#mlBack').onclick = () => go('mat');
+    $$('#mlT button').forEach(b => b.onclick = () => { mlType = b.dataset.v; rerender(); });
+    const add = (code, name) => { code = String(code || '').trim(); name = String(name || '').trim(); if(!code && !name) return 0; const l = matLib(mlType); const i = l.findIndex(x => code && x.code === code); if(i >= 0) l[i] = {code, name}; else l.push({code, name}); return 1; };
+    $('#mlAdd').onclick = () => { if(add($('#mlCode').value, $('#mlName').value)){ save(); rerender(); toast('أُضيفت للأرشيف'); } else toast('اكتب الكود أو الاسم'); };
+    $('#mlPasteGo').onclick = () => { let n = 0; $('#mlPaste').value.split('\n').forEach(line => { const p = line.split(/[،,\t;]/); if(p.length >= 2) n += add(p[0], p.slice(1).join(' ')); }); save(); rerender(); toast(`أُضيفت ${n} مادة`); };
+    $('#mlXls').onchange = async e => { const f = e.target.files[0]; if(!f || typeof XLSX === 'undefined') return; const wb = XLSX.read(await f.arrayBuffer()); const rows = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], {header:1}); let n = 0; rows.forEach((r, i) => { if(i === 0 && /كود|code/i.test(String(r[0]))) return; n += add(r[0], r[1]); }); save(); rerender(); toast(`استُوردت ${n} مادة`); };
+    $$('[data-mld]').forEach(b => b.onclick = () => ask('حذف هذه المادة من الأرشيف؟', 'حذف', () => { matLib(mlType).splice(+b.dataset.mld, 1); save(); rerender(); }, true));
+  }
+};
+PARENT.matlib = 'mat'; NAV_OF.matlib = 'mat'; PAGE.matlib = ['العمليات اليومية', 'أرشيف المواد'];
+const _matHtmlLib = VIEWS.mat.html, _matBindLib = VIEWS.mat.bind;
+VIEWS.mat.html = function(){ return _matHtmlLib().replace('<button class="btn p" id="newMat">فحص مادة جديدة</button>', '<div class="row"><button class="btn" id="goLib">أرشيف المواد</button><button class="btn p" id="newMat">فحص مادة جديدة</button></div>'); };
+VIEWS.mat.bind = function(){ _matBindLib(); $('#goLib') && ($('#goLib').onclick = () => go('matlib')); };
+
+/* ================= [MON] المراقبات العامة ================= */
+/* [TH_LOCS] أماكن الحرارة والرطوبة، ومواعيد القراءة */
+const TH_DEFAULT = [{name:'مستودع الأحبار', tmin:15, tmax:30, hmax:65}, {name:'مستودع السحب', tmin:18, tmax:30, hmax:65}, {name:'مستودع الحقن', tmin:18, tmax:30, hmax:65}, {name:'مستودع التغطية والتعبئة', tmin:18, tmax:30, hmax:65}];
+const TH_SLOTS = [['صباح', 10], ['مساء', 18]];
+function migrateTH(){ const cur = S.settings.th || []; if(!cur.length || cur.some(l => l.name === 'المطبعة') || cur.length > 4){ S.settings.th = TH_DEFAULT.map(x => ({...x})); } }
+const thSlotNow = () => { const h = new Date().getHours(); return h >= 18 ? 'مساء' : 'صباح'; };
+/* [CAL_WINDOWS] التحقق من أدوات القياس: بداية الشهر (الأيام 1–5) ونهاية الشهر (آخر 5 أيام) */
+function calWindow(d){ d = d || new Date(); const last = new Date(d.getFullYear(), d.getMonth() + 1, 0).getDate(), day = d.getDate(); const ym = todayStr(d).slice(0, 7);
+  return day <= 5 ? {key: ym + '-start', label:'بداية الشهر', open:true} : day > last - 5 ? {key: ym + '-end', label:'نهاية الشهر', open:true} : {key: day <= 15 ? ym + '-start' : ym + '-end', label: day <= 15 ? 'بداية الشهر' : 'نهاية الشهر', open:false}; }
+function maintNCR(desc, req){ return createNCR({source:'مراقبات عامة', dept:'الصيانة', desc, requirement:req, cls:'رئيسي', correction:'إبلاغ قسم الصيانة للإصلاح'}); }
+const openAuditActions = () => S.audits.flatMap(a => (a.actions || []).map((x, i) => ({a, x, i}))).filter(o => !o.x.done && String(o.x.what || '').trim());
+
+let A2 = null;
+VIEWS.auditform = {
+  html(){
+    const a = AUDITS.find(x => x.key === arg.type);
+    if(!A2 || A2.type !== a.key) A2 = {type:a.key, res:{}, notes:{}, actions:[{what:'', who:'', due:''}], gnote:''};
+    let i = 0;
+    return `<div class="row" style="justify-content:space-between"><h1 style="margin:0">${a.name}</h1><button class="btn" id="back">رجوع</button></div><p class="muted">${a.form} · الوردية ${S.settings.shift}</p>
+    <button class="btn" id="allOk" style="margin-bottom:8px">كل البنود صح ✓</button>
+    ${a.groups.map(([g, items]) => `<h2>${g}</h2><div class="panel">${items.map(([n, crit]) => { const k = 'i' + (i++); return `<div class="ck au"><div><div class="lb">${esc(n)}</div><div class="ac">${esc(crit)}</div>
+      <input type="text" class="aun ${A2.res[k]==='n'?'need':''}" data-note="${k}" value="${esc(A2.notes[k]||'')}" placeholder="${A2.res[k]==='n' ? 'وصف المشكلة (مطلوب)' : 'ملاحظة (اختياري)'}"></div>
+      <div class="tri tri2" data-ck="${k}"><button class="y ${A2.res[k]==='y'?'on':''}" data-v="y" aria-label="صح">✓</button><button class="n ${A2.res[k]==='n'?'on':''}" data-v="n" aria-label="خطأ">✗</button></div></div>`; }).join('')}</div>`).join('')}
+    <h2>ملاحظات عامة</h2><div class="panel"><textarea id="aGNote" rows="2" placeholder="ملاحظات عامة على المراقبة">${esc(A2.gnote)}</textarea></div>
+    <h2>الإجراءات التصحيحية <span class="muted">(يبقى التذكير قائماً حتى يُسجَّل "تم الإصلاح")</span></h2>
+    <div class="panel">${A2.actions.map((x, k) => `<div class="grid actrow"><label class="f">الإجراء ${k + 1}<input type="text" data-aw="${k}" value="${esc(x.what)}" placeholder="مثال: تنظيف مصارف الأرضية"></label><label class="f">المسؤول<input type="text" data-ah="${k}" value="${esc(x.who)}"></label><label class="f">الموعد<input type="date" data-ad="${k}" value="${esc(x.due)}"></label>${k ? `<button class="btn sm d" data-ax="${k}">حذف</button>` : ''}</div>`).join('')}
+      <button class="btn sm" id="aAddAct">${LI('plus')} إضافة إجراء</button></div>
+    <div class="sticky-save"><button class="btn p" id="saveAu">حفظ المراقبة</button></div>`;
+  },
+  bind(){
+    const a = AUDITS.find(x => x.key === arg.type); const items = a.groups.flatMap(g => g[1]);
+    $('#back').onclick = () => { A2 = null; go('mon'); };
+    $$('.tri2').forEach(t => t.querySelectorAll('button').forEach(b => b.onclick = () => { A2.res[t.dataset.ck] = b.dataset.v; rerender(); }));
+    $$('[data-note]').forEach(el => el.oninput = () => A2.notes[el.dataset.note] = el.value);
+    $('#allOk').onclick = () => { items.forEach((_, i) => { if(!A2.res['i' + i]) A2.res['i' + i] = 'y'; }); rerender(); };
+    $('#aGNote').oninput = e => A2.gnote = e.target.value;
+    $$('[data-aw]').forEach(el => el.oninput = () => A2.actions[+el.dataset.aw].what = el.value);
+    $$('[data-ah]').forEach(el => el.oninput = () => A2.actions[+el.dataset.ah].who = el.value);
+    $$('[data-ad]').forEach(el => el.onchange = () => A2.actions[+el.dataset.ad].due = el.value);
+    $$('[data-ax]').forEach(b => b.onclick = () => { A2.actions.splice(+b.dataset.ax, 1); rerender(); });
+    $('#aAddAct').onclick = () => { A2.actions.push({what:'', who:'', due:''}); rerender(); };
+    $('#saveAu').onclick = () => {
+      const unset = items.filter((_, i) => !A2.res['i' + i]).length; if(unset){ toast(`حدّد صح أو خطأ لكل البنود (${unset} بند)`); return; }
+      const miss = items.map((_, i) => 'i' + i).filter(k => A2.res[k] === 'n' && !String(A2.notes[k]||'').trim()); if(miss.length){ toast('اكتب وصف المشكلة لكل بند خطأ'); return; }
+      const failed = items.map((it, i) => A2.res['i' + i] === 'n' ? it[0] + (A2.notes['i' + i] ? ` (${A2.notes['i' + i]})` : '') : null).filter(Boolean);
+      const actions = A2.actions.filter(x => String(x.what).trim()).map(x => ({...x, done:false}));
+      if(failed.length && !actions.length){ toast('أضف إجراءً تصحيحياً واحداً على الأقل للبنود الخطأ'); return; }
+      const rec = {id:uid(), date:todayStr(), time:timeStr(), shift:S.settings.shift, inspector:S.settings.inspector, type:a.key, res:{...A2.res}, notes:{...A2.notes}, gnote:A2.gnote, failed, actions, action:actions.map(x => x.what).join('، '), fixed: actions.length ? 'لا' : ''};
+      S.audits.push(rec);
+      const prev = S.audits.filter(x => x.type === a.key).slice(-2, -1)[0];
+      if(failed.length && prev && (prev.failed||[]).length && failed.some(f => prev.failed.some(p => p.split(' (')[0] === f.split(' (')[0]))){ createNCR({source:'مراقبات عامة', dept:a.name, desc:`مخالفة متكررة: ${failed.join('، ')}`, requirement:a.form, cls:'ثانوي'}); toast('مخالفة متكررة – فُتح NCR'); }
+      else toast(failed.length ? `حُفظت المراقبة – ${failed.length} بند خطأ، ${actions.length} إجراء مفتوح` : 'حُفظت المراقبة');
+      save(); A2 = null; monTab = 'audit'; go('mon');
+    };
+  }
+};
+function closeAuditAction(aid, i){ const a = S.audits.find(x => String(x.id) === String(aid)); if(!a) return; const x = a.actions[i]; x.done = true; x.doneDate = todayStr(); x.doneTime = timeStr(); x.doneBy = S.settings.inspector; a.fixed = a.actions.every(y => y.done) ? 'نعم' : 'لا'; save(); rerender(); toast('سُجّل: تم الإصلاح'); }
+
+const _monHtml = VIEWS.mon.html, _monBind = VIEWS.mon.bind;
+VIEWS.mon.html = function(){
+  migrateTH();
+  const t = todayStr(), tabs = `<div class="pick" id="mt">${[['audit','النظافة والتفتيش'],['cal','التحقق من أدوات القياس'],['th','الحرارة والرطوبة'],['aid','الإسعافات الأولية']].map(([k,l]) => `<button class="${monTab===k?'on':''}" data-v="${k}">${l}</button>`).join('')}</div>`;
+  if(monTab === 'audit'){
+    const open = openAuditActions();
+    return `<h1>المراقبات العامة</h1>${tabs}
+      ${open.length ? `<div class="openacts"><b>${LI('warn')} إجراءات تصحيحية لم تُغلق (${open.length})</b>${open.map(o => `<div class="oa"><span><b>${esc(AUDITS.find(x => x.key === o.a.type)?.name || '')}</b> · ${esc(o.a.date)}</span><span>${esc(o.x.what)}</span><span class="muted">${esc(o.x.who || '')}${o.x.due ? ' · موعد ' + esc(o.x.due) : ''}${o.x.due && o.x.due < t ? ' <b class="r">متأخر</b>' : ''}</span><button class="btn sm p" data-fix="${o.a.id}|${o.i}">تم الإصلاح</button></div>`).join('')}</div>` : ''}
+      <div class="mods" style="margin-top:12px">${AUDITS.map(a => { const last = S.audits.filter(x => x.type === a.key).map(x => x.date).sort().pop(); const due = !last || daysBetween(last, t) >= 7; return `<button class="mod ${due?'due':''}" data-a="${a.key}">${ICONS.mon}<b>${a.name}</b><span>${a.form} · ${last ? 'آخر مراقبة ' + last : 'لم تُسجل بعد'}</span></button>`; }).join('')}</div>
+      <h2>آخر المراقبات</h2><div class="tw"><table class="t"><thead><tr><th>التاريخ</th><th>النوع</th><th>المراقب</th><th>البنود الخطأ</th><th>الإجراءات</th><th>الملاحظات</th><th></th></tr></thead><tbody>
+      ${S.audits.slice(-25).reverse().map(x => `<tr><td class="num">${x.date} ${x.time||''}</td><td>${esc(AUDITS.find(a => a.key === x.type)?.name || '')}</td><td>${esc(x.inspector)}</td><td>${esc((x.failed||[]).join('، ')) || '<span class="muted">لا يوجد</span>'}</td>
+        <td>${(x.actions||[]).length ? x.actions.map(y => `<div>${y.done ? '✅' : '⏳'} ${esc(y.what)}${y.done ? ` <small class="muted">(${esc(y.doneDate||'')})</small>` : ''}</div>`).join('') : esc(x.action||'')}</td><td>${esc(x.gnote||'')}</td><td><button class="btn sm" data-pdfa="${x.id}">PDF</button></td></tr>`).join('') || '<tr><td colspan="7" class="muted">لا توجد مراقبات.</td></tr>'}</tbody></table></div>`;
+  }
+  if(monTab === 'cal'){
+    const w = calWindow(), devs = S.settings.devices, done = S.cals.filter(c => c.win === w.key);
+    return `<h1>المراقبات العامة</h1>${tabs}
+      <p class="muted">التحقق من أدوات القياس مرتين شهرياً: <b>بداية الشهر</b> (الأيام 1–5) و<b>نهاية الشهر</b> (آخر 5 أيام) بالقطعة المرجعية أو الأوزان المعيارية (QC-01-F07). القراءة خارج الحد تفتح حالة عدم مطابقة لقسم الصيانة.</p>
+      <div class="banner ${w.open && done.length < devs.length ? 'warn' : 'info'}">الفترة الحالية: <b>${w.label}</b> ${w.open ? '(مفتوحة الآن)' : '(خارج نافذة التحقق)'} · سُجّل ${done.length} من ${devs.length} أداة</div>
+      <div class="panel">${devs.map((d, i) => { const last = S.cals.filter(c => c.code === d.code).pop(); const thisW = done.find(c => c.code === d.code); return `<div class="ck"><div><div class="lb">${esc(d.code)} – ${esc(d.name)} ${thisW ? (thisW.ok ? '<span class="pill p-مقبول">تم ✓</span>' : '<span class="pill p-مرفوض">خارج الحد</span>') : ''}</div><div class="ac num">المرجع ${d.ref===''?'—':d.ref} ${d.unit} ± ${d.tol} · آخر تحقق: ${last ? `${last.date} ${last.ok?'✓':'✗'}` : '—'}</div>
+        <input type="text" class="aun" data-caln="${i}" placeholder="ملاحظة على الجهاز (اختياري)"></div><div class="numin"><input type="number" step="any" class="num" data-cal="${i}" placeholder="${d.unit}"></div></div>`; }).join('')}</div>
+      <div class="sticky-save"><button class="btn p" id="saveCal2">حفظ قراءات ${w.label}</button></div>
+      <h2>آخر القراءات</h2><div class="tw"><table class="t"><thead><tr><th>التاريخ</th><th>الفترة</th><th>الأداة</th><th>المرجع</th><th>القراءة</th><th>النتيجة</th><th>ملاحظة</th><th>المنفذ</th></tr></thead><tbody>
+      ${S.cals.slice(-30).reverse().map(c => `<tr><td class="num">${c.date}</td><td>${esc(c.winLabel || c.shift || '')}</td><td>${esc(c.code)} ${esc(c.name)}</td><td class="num">${c.ref}</td><td class="num">${c.reading}</td><td>${c.ok ? '<span class="pill p-مقبول">مطابق</span>' : '<span class="pill p-مرفوض">خارج الحد</span>'}${c.ncr ? '<div class="muted">' + esc(c.ncr) + '</div>' : ''}</td><td>${esc(c.note||'')}</td><td>${esc(c.by||'')}</td></tr>`).join('') || '<tr><td colspan="8" class="muted">لا توجد قراءات.</td></tr>'}</tbody></table></div>`;
+  }
+  if(monTab === 'th'){
+    const locs = S.settings.th, slot = thSlotNow(), done = S.ths.filter(x => x.date === t && x.slot === slot);
+    return `<h1>المراقبات العامة</h1>${tabs}
+      <p class="muted">قراءتان يومياً: <b>الساعة 10:00 صباحاً</b> و<b>الساعة 6:00 مساءً</b> (QC-01-F08). القراءة خارج الحد تفتح حالة عدم مطابقة لقسم الصيانة.</p>
+      <div class="banner ${done.length < locs.length ? 'warn' : 'info'}">قراءة ${slot === 'صباح' ? '10:00 صباحاً' : '6:00 مساءً'} اليوم: سُجّل ${done.length} من ${locs.length} أماكن</div>
+      <div class="panel">${locs.map((l, i) => `<div class="ck"><div><div class="lb">${esc(l.name)}</div><div class="ac num">الحرارة ${l.tmin}–${l.tmax}° · الرطوبة ≤ ${l.hmax}%</div><input type="text" class="aun" data-thn="${i}" placeholder="ملاحظة على الجهاز / المكان (اختياري)"></div><div class="numin"><input type="number" step="any" class="num" data-tt="${i}" placeholder="°م"><input type="number" step="any" class="num" data-th="${i}" placeholder="%"></div></div>`).join('')}</div>
+      <div class="sticky-save"><button class="btn p" id="saveTH2">حفظ قراءة ${slot === 'صباح' ? '10:00' : '18:00'}</button></div>
+      <h2>آخر القراءات</h2><div class="tw"><table class="t"><thead><tr><th>التاريخ</th><th>القراءة</th><th>المكان</th><th>الحرارة</th><th>الرطوبة</th><th>الحالة</th><th>ملاحظة</th><th>المنفذ</th></tr></thead><tbody>
+      ${S.ths.slice(-30).reverse().map(x => `<tr><td class="num">${x.date} ${x.time||''}</td><td>${esc(x.slot ? (x.slot === 'صباح' ? '10:00' : '18:00') : x.shift || '')}</td><td>${esc(x.loc)}</td><td class="num">${x.t ?? ''}</td><td class="num">${x.h ?? ''}</td><td>${x.ok ? '<span class="pill p-مقبول">ضمن الحد</span>' : '<span class="pill p-مرفوض">خارج الحد</span>'}${x.ncr ? '<div class="muted">' + esc(x.ncr) + '</div>' : ''}</td><td>${esc(x.note||'')}</td><td>${esc(x.by||'')}</td></tr>`).join('') || '<tr><td colspan="8" class="muted">لا توجد قراءات.</td></tr>'}</tbody></table></div>`;
+  }
+  return _monHtml();
+};
+VIEWS.mon.bind = function(){
+  if(!['audit','cal','th'].includes(monTab)) return _monBind();
+  $$('#mt button').forEach(b => b.onclick = () => { monTab = b.dataset.v; render(); });
+  $$('[data-a]').forEach(b => b.onclick = () => go('auditform', {type:b.dataset.a}));
+  $$('[data-fix]').forEach(b => b.onclick = () => { const [id, i] = b.dataset.fix.split('|'); ask('تأكيد: تم إصلاح هذا الإجراء؟', 'تم الإصلاح', () => closeAuditAction(id, +i)); });
+  $$('[data-pdfa]').forEach(b => b.onclick = () => typeof pdfAudit === 'function' && pdfAudit(b.dataset.pdfa));
+  const base = () => ({date:todayStr(), time:timeStr(), shift:S.settings.shift, by:S.settings.inspector});
+  $('#saveCal2') && ($('#saveCal2').onclick = () => {
+    const w = calWindow(); let n = 0; const bad = [];
+    $$('[data-cal]').forEach(el => { if(el.value === '') return; const i = +el.dataset.cal, d = S.settings.devices[i], v = parseFloat(el.value), ok = d.ref === '' ? true : Math.abs(v - d.ref) <= d.tol; const note = ($(`[data-caln="${i}"]`) || {}).value || '';
+      const rec = {id:uid(), ...base(), win:w.key, winLabel:w.label, code:d.code, name:d.name, ref:d.ref, reading:v, ok, note}; S.cals.push(rec); n++; if(!ok) bad.push(rec); });
+    if(!n){ toast('أدخل قراءة أداة واحدة على الأقل'); return; }
+    if(bad.length){ const no = maintNCR(`أدوات قياس خارج الحد (${w.label}): ${bad.map(b => `${b.code} قراءة ${b.reading} والمرجع ${b.ref}`).join('، ')} – سُحبت من الاستخدام`, 'QC-01-F07'); bad.forEach(b => b.ncr = no); }
+    save(); render(); toast(bad.length ? `خارج الحد: ${bad.map(b => b.code).join('، ')} – فُتحت حالة عدم مطابقة للصيانة` : `تم حفظ ${n} قراءة (${w.label})`);
+  });
+  $('#saveTH2') && ($('#saveTH2').onclick = () => {
+    const slot = thSlotNow(); let n = 0; const bad = [];
+    S.settings.th.forEach((l, i) => { const tv = $(`[data-tt="${i}"]`).value, hv = $(`[data-th="${i}"]`).value; if(tv === '' && hv === '') return; const tt = tv === '' ? null : +tv, h = hv === '' ? null : +hv; const ok = (tt == null || (tt >= l.tmin && tt <= l.tmax)) && (h == null || h <= l.hmax);
+      const rec = {id:uid(), ...base(), slot, loc:l.name, t:tt, h, ok, note:($(`[data-thn="${i}"]`) || {}).value || ''}; S.ths.push(rec); n++; if(!ok) bad.push(rec); });
+    if(!n){ toast('أدخل قراءة واحدة على الأقل'); return; }
+    if(bad.length){ const no = maintNCR(`حرارة/رطوبة خارج الحد (${slot === 'صباح' ? '10:00' : '18:00'}): ${bad.map(b => `${b.loc} ${b.t ?? '—'}° / ${b.h ?? '—'}%`).join('، ')}`, 'QC-01-F08'); bad.forEach(b => b.ncr = no); }
+    save(); render(); toast(bad.length ? `خارج الحد: ${bad.map(b => b.loc).join('، ')} – فُتحت حالة عدم مطابقة للصيانة` : `تم حفظ ${n} قراءة`);
+  });
+};
+/* التذكيرات: الإجراءات المفتوحة دائماً، التحقق بداية ونهاية الشهر، الحرارة 10:00 و18:00 */
+const _todosMon = todos;
+todos = function(){
+  migrateTH();
+  const L = _todosMon().filter(x => !(x[2] === 'mon' && (x[3] === 'th' || x[3] === 'cal')));
+  const t = todayStr(), now = new Date(), h = now.getHours();
+  TH_SLOTS.forEach(([slot, hr]) => { if(h >= hr && !(slot === 'صباح' && h >= 18) && !S.ths.some(x => x.date === t && x.slot === slot)) L.unshift(['warn', `قراءة الحرارة والرطوبة الساعة ${hr === 10 ? '10:00 صباحاً' : '6:00 مساءً'} لم تُسجّل`, 'mon', 'th']); });
+  const w = calWindow(); if(w.open){ const done = new Set(S.cals.filter(c => c.win === w.key).map(c => c.code)); const miss = S.settings.devices.filter(d => !done.has(d.code)).length; if(miss) L.unshift(['warn', `التحقق من أدوات القياس (${w.label}): ${miss} أداة لم تُسجّل`, 'mon', 'cal']); }
+  openAuditActions().forEach(o => L.unshift([o.x.due && o.x.due < t ? 'bad' : 'warn', `إجراء تصحيحي لم يُغلق: ${o.x.what} (${AUDITS.find(a => a.key === o.a.type)?.name || ''})`, 'mon', 'audit']));
+  return L;
+};
+
+/* ================= [PDF] تصدير أي تقرير أو سجل إلى PDF (من نافذة الطباعة: "حفظ بتنسيق PDF") ================= */
+function printDoc(title, body){
+  let el = document.getElementById('printArea'); if(!el){ el = document.createElement('div'); el.id = 'printArea'; document.body.appendChild(el); }
+  el.innerHTML = `<div class="pdoc"><div class="pdh"><img src="${LOGO}" alt=""><div><span>F.E.T Packaging – قسم ضبط الجودة</span><b>${esc(title)}</b></div><div class="pdm">تاريخ الطباعة ${todayStr()} ${timeStr()}<br>${esc(CUR.name || S.settings.inspector || '')}</div></div>${body}
+    <table class="pds"><tr><td><b>المراقب</b><br><br></td><td><b>مدير ضبط الجودة</b><br>${esc(S.settings.manager || '')}</td><td><b>التوقيع والتاريخ</b><br><br></td></tr></table><div class="pdf-f">نظام ضبط الجودة · F.E.T Packaging · ${esc(title)}</div></div>`;
+  document.body.classList.add('printing');
+  setTimeout(() => window.print(), 80);
+}
+window.addEventListener('afterprint', () => document.body.classList.remove('printing'));
+const kv = rows => `<table class="pkv">${rows.filter(r => r[1] !== '' && r[1] != null).map(([k, v]) => `<tr><th>${esc(k)}</th><td>${v}</td></tr>`).join('')}</table>`;
+function pdfRound(id){
+  const r = S.rounds.find(x => String(x.id) === String(id)); if(!r) return;
+  const s = stageBy(r.stage), it = itemsOf(r), o = it[0] ? specOfItem(it[0]) : null;
+  const chk = (s.checks || []).filter(c => r.checks && r.checks[c.k] !== undefined || (r.vals && r.vals[c.k] !== undefined));
+  const body = `<h3>معلومات الجولة</h3>${kv([['المرحلة', esc(s.name) + (r.type && r.type !== 'جولة' ? ' – ' + esc(r.type) : '')], ['التاريخ والوقت', esc(r.date + ' ' + r.time)], ['الوردية', esc(r.shift)], ['المراقب', esc(r.inspector)],
+      ['الآلة / المحطة', esc(r.machine && r.machine !== '—' ? r.machine : '')], ['العامل', esc(r.worker || (r.extra||{}).worker || '')], ['الطلبية', esc(ordersLabel(r))], ['المنتج', esc(itemsLabel(r))], ['الزبون', esc((o && o.customer) || (it[0]||{}).customer || '')],
+      ['رقم الصندوق', esc(r.box || '')], ['رقم الرول', esc((r.extra||{}).roll || '')], ['الحجز / NCR', esc([r.hold, r.ncr].filter(Boolean).join(' / '))]])}
+    <h3>بنود الفحص</h3><table class="pt"><thead><tr><th>البند</th><th>حد القبول</th><th>النتيجة</th></tr></thead><tbody>${s.checks.map(c => { const v = c.t === 'num' ? (r.vals||{})[c.k] : sym((r.checks||{})[c.k]); return v === undefined || v === '' ? '' : `<tr><td>${esc(c.l)}</td><td>${esc(c.a || '')}</td><td class="c ${(r.checks||{})[c.k]==='n' ? 'bad' : ''}"><b>${esc(v)}</b></td></tr>`; }).join('')}</tbody></table>
+    ${(r.defects||[]).length || (r.failed||[]).length ? `<h3>العيوب والبنود غير المطابقة</h3><p>${esc([...(r.failed||[]), ...(r.defects||[])].join('، '))} ${r.cls ? '· التصنيف: ' + esc(r.cls) : ''}</p>` : ''}
+    ${(r.cartonsInsp||[]).length ? `<h3>الكراتين المعاينة</h3><table class="pt"><thead><tr><th>#</th><th>رقم الكرتونة</th><th>المشاكل المكتشفة</th></tr></thead><tbody>${r.cartonsInsp.map((c, i) => `<tr><td>${i + 1}</td><td>${esc(c.no)}</td><td>${esc(c.issues || 'سليمة')}</td></tr>`).join('')}</tbody></table>` : ''}
+    ${r.extra && (r.extra.cartons || r.extra.cartBad) ? kv([['الكراتين الكاملة النظامية', esc(r.extra.cartons || '')], ['كراتين فيها مشاكل', esc(r.extra.cartBad || '')], ['المشكلة', esc(r.extra.cartBadNote || '')]]) : ''}
+    <h3>القرار</h3><p class="pdec">${esc(r.stage === 'design' ? (DESIGN_DEC[r.decision] || r.decision) : r.decision)}</p>${r.action ? `<p><b>الإجراء:</b> ${esc(r.action)}</p>` : ''}${r.notes ? `<p><b>ملاحظات:</b> ${esc(r.notes)}</p>` : ''}`;
+  printDoc(`جولة ${s.name} – ${r.date} ${r.time}`, body);
+}
+function pdfMat(id){
+  const m = S.mats.find(x => String(x.id) === String(id)); if(!m) return; const cfg = matBy(m.type) || {groups:[]}, r = matScore(m);
+  const body = `<h3>بيانات المادة</h3>${kv([['رقم الفحص', esc(m.no)], ['المادة', esc(cfg.name || '')], ['الاسم / الكود', esc([m.name, m.code].filter(Boolean).join(' – '))], ['المورد', esc(m.supplier)], ['رقم الفاتورة', esc(m.invoice || '')], ['رقم الدفعة', esc(m.lot || '')],
+      ['تاريخ الاستلام', esc(m.recvDate || '')], ['تاريخ الفحص', esc((m.date || '') + ' ' + (m.time || ''))], ['الكمية المستلمة', esc((m.qty || '') + ' ' + (m.unit || cfg.unit || ''))], ['عدد العبوات / العينة', esc((m.pkgs || '—') + ' / ' + (m.sampleN || '—'))], ['دفعة تجربة', m.trial ? 'نعم' : ''], ['شهادة CoA', esc(m.coa || '')], ['المراقب', esc(m.inspector || '')]])}
+    ${cfg.groups.map(g => `<h3>${esc(g.n)} <small>(الوزن ${g.w}%)</small></h3><table class="pt"><tbody>${g.items.map(it => `<tr><td>${esc(it[1])}${it[2] ? ' <b>(حرج)</b>' : ''}</td><td class="c"><b>${(m.scores||{})[it[0]] || '—'}</b> / 5</td></tr>`).join('')}</tbody></table>`).join('')}
+    <h3>النتيجة والقرار</h3><p class="pdec">${r ? r.score + '%' : '—'} · ${esc(m.decision || '')}</p>${m.condition ? `<p><b>شرط الاستخدام:</b> ${esc(m.condition)}</p>` : ''}${m.notes ? `<p><b>ملاحظات:</b> ${esc(m.notes)}</p>` : ''}${m.ncr ? `<p><b>NCR:</b> ${esc(m.ncr)}</p>` : ''}`;
+  printDoc(`فحص مادة واردة ${m.no} – ${cfg.name || ''}`, body);
+}
+function pdfAudit(id){
+  const x = S.audits.find(a => String(a.id) === String(id)); if(!x) return; const a = AUDITS.find(y => y.key === x.type); let i = 0;
+  const body = `${kv([['المراقبة', esc(a.name)], ['النموذج', esc(a.form)], ['التاريخ والوقت', esc(x.date + ' ' + (x.time || ''))], ['الوردية', esc(x.shift)], ['المراقب', esc(x.inspector)]])}
+    ${a.groups.map(([g, items]) => `<h3>${esc(g)}</h3><table class="pt"><thead><tr><th>البند</th><th>النتيجة</th><th>ملاحظة</th></tr></thead><tbody>${items.map(([n]) => { const k = 'i' + (i++); const v = (x.res||{})[k]; return `<tr><td>${esc(n)}</td><td class="c ${v==='n'?'bad':''}"><b>${v === 'y' ? '✓ صح' : v === 'n' ? '✗ خطأ' : '—'}</b></td><td>${esc((x.notes||{})[k] || '')}</td></tr>`; }).join('')}</tbody></table>`).join('')}
+    ${(x.actions||[]).length ? `<h3>الإجراءات التصحيحية</h3><table class="pt"><thead><tr><th>الإجراء</th><th>المسؤول</th><th>الموعد</th><th>الحالة</th></tr></thead><tbody>${x.actions.map(y => `<tr><td>${esc(y.what)}</td><td>${esc(y.who||'')}</td><td>${esc(y.due||'')}</td><td>${y.done ? `تم الإصلاح ${esc(y.doneDate||'')}` : 'مفتوح'}</td></tr>`).join('')}</tbody></table>` : ''}${x.gnote ? `<p><b>ملاحظات عامة:</b> ${esc(x.gnote)}</p>` : ''}`;
+  printDoc(`${a.name} – ${x.date}`, body);
+}
+document.addEventListener('click', e => {
+  const r = e.target.closest('[data-pdfr]'); if(r){ e.stopPropagation(); pdfRound(r.dataset.pdfr); return; }
+  const m = e.target.closest('[data-pdfm]'); if(m){ e.stopPropagation(); pdfMat(m.dataset.pdfm); return; }
+}, true);
+/* زر PDF في الجولة المفتوحة وفحص المادة */
+const _rbPdf = VIEWS.round.bind;
+VIEWS.round.bind = function(){ _rbPdf(); if(F && F.editId && !$('#pdfThis')){ const b = document.createElement('button'); b.className = 'btn'; b.id = 'pdfThis'; b.textContent = 'تصدير PDF'; b.onclick = () => pdfRound(F.editId); const back = $('#back'); if(back && back.parentNode) back.parentNode.insertBefore(b, back); } };
+const _mfPdf = VIEWS.matform.bind;
+VIEWS.matform.bind = function(){ _mfPdf(); if(M && M.id && $('#saveM') && !$('#pdfMat')){ const b = document.createElement('button'); b.className = 'btn'; b.id = 'pdfMat'; b.textContent = 'تصدير PDF'; b.onclick = () => pdfMat(M.id); $('#saveM').parentNode.appendChild(b); } };
 
 /* ================= SERVER SYNC (لابتوب القسم) ================= */
 const PWA_API = (typeof window !== 'undefined' && window.PWA_API && /^(https:\/\/|http:\/\/localhost)/.test(window.PWA_API)) ? window.PWA_API : '';
