@@ -714,6 +714,42 @@ body.printing #printArea{display:block;background:#fff;padding:20px;max-width:90
 .typebadge{font-size:14px;font-weight:700;border-radius:999px;padding:4px 12px;background:#E8F1FB;color:#1D4E89;border:1px solid #9EC1EC}
 .typebadge.fin{background:#EAF7EF;color:var(--ok);border-color:#9FD4B5}
 #typePick button{min-height:52px;font-size:16px;font-weight:700}
+/* read-only management account */
+body.ro .sticky-save,body.ro #saveM,body.ro #delM,body.ro .btn.d,body.ro [data-del],body.ro [data-fix],body.ro #newMat,body.ro #goLib,body.ro .imgadd,body.ro [data-pup],body.ro .dhdel,body.ro #smAdd,body.ro #allOk,body.ro #aAddAct,body.ro #saveCal2,body.ro #saveTH2{display:none!important}
+#main.rov input,#main.rov select,#main.rov textarea,#main.rov .tri button,#main.rov .dec button,#main.rov .pick button,#main.rov .score button{pointer-events:none!important}
+#main.rov input,#main.rov select,#main.rov textarea{background:#F4F6F8!important}
+.robanner{margin-bottom:12px}
+.ordpick{display:flex;flex-direction:column;gap:6px;max-height:60vh;overflow:auto}
+.opk{display:grid;grid-template-columns:90px 1fr;grid-template-rows:auto auto;gap:0 10px;text-align:right;border:1px solid var(--line);border-radius:10px;background:#fff;padding:8px 12px;cursor:pointer}
+.opk b{grid-row:1/3;font-size:17px;align-self:center}.opk small{color:var(--ink2);font-size:12px}.opk:hover{border-color:var(--brand);background:var(--brand-l)}
+.aper{margin:10px 0}.aper > b{display:block;margin-bottom:6px}.aweek{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;justify-content:space-between}
+.pwk{margin-top:12px}.pwh{display:flex;gap:10px;align-items:center;margin-bottom:8px}.pwh b{font-size:16px}
+.pnotes2{margin:12px 0;background:#FFF8E6;border:2px solid #F3D9A0;border-radius:12px;padding:10px 12px}
+.pnotes2 > b{display:flex;gap:6px;align-items:center;color:#8A5A00;margin-bottom:4px}.pnotes2 > b .li{width:18px;height:18px}
+.pnotes2 .bwr{border-top-color:#F3D9A0}.pnotes2 details{margin-top:6px}.pnotes2 summary{cursor:pointer;color:var(--ink2);font-size:13px}
+.pnotes2.ok{background:#F2F9F5;border-color:#BFE3CF;color:var(--ok);display:flex;gap:6px;align-items:center;font-size:13.5px}.pnotes2.ok .li{width:16px;height:16px}
+.dmach .pnotes2 .bwr{grid-template-columns:1fr auto}.dmach .pnotes2 .bwr>span:nth-child(2),.dmach .pnotes2 .bwr>span:nth-child(3){grid-column:1/-1}
+.adddef{display:flex;gap:6px;margin-top:8px;max-width:520px}.adddef input{flex:1;min-height:38px!important}
+.sig4{grid-template-columns:repeat(3,1fr) 140px!important}.siglogo{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px}.siglogo img{width:64px}.siglogo span{font-size:11px;color:var(--ink2)}
+.drep .sg td.lg{text-align:center;width:18%}.drep .sg td.lg img{width:60px;display:block;margin:0 auto 2px}
+.pds .pdlogo{text-align:center;width:16%}.pds .pdlogo img{width:56px}
+.shsum h3{margin:16px 0 8px;font-size:16px}.shh{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}.shh b{font-size:18px;display:block}.shh span{color:var(--ink2);font-size:13px}
+.shsum .r{color:var(--bad)}
+.rimg{float:left;margin:0 0 10px 14px;text-align:center;border:1px solid #D9DFE5;border-radius:10px;padding:6px;background:#fff}.rimg img{width:220px;max-height:260px;object-fit:contain;display:block}.rimg span{font-size:11px;color:#5B6B7A}
+.curshift .rh{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:baseline;margin-bottom:8px}.curshift .rh b{font-size:16px}
+/* motivation banner */
+.motive{background:linear-gradient(135deg,#17212B 0%,#2A3B4C 100%);color:#fff;border-radius:16px;padding:14px 18px;margin-bottom:16px;display:flex;flex-direction:column;gap:8px}
+.motive .mq{font-size:16px;font-weight:700;color:#FFD9B8}.motive .ml{font-size:15px}.motive .ml b{color:#fff;font-size:18px}
+.mdue{display:flex;flex-direction:column;gap:6px}.mdue > b{color:#FFB37A}.mdue > div{display:flex;flex-wrap:wrap;gap:6px}
+.mdb{background:#E8772E;color:#fff;border:0;border-radius:999px;padding:6px 14px;font-weight:700;font-size:13px;cursor:pointer;animation:pulse 2.2s infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(232,119,46,.55)}50%{box-shadow:0 0 0 8px rgba(232,119,46,0)}}
+.mok{color:#9FE0BC;font-weight:700}
+/* report editing */
+.repbar{display:flex;flex-wrap:wrap;gap:8px 14px;justify-content:space-between;align-items:center;background:#F4F6F8;border:1px solid var(--line);border-radius:12px;padding:8px 12px;margin:10px 0}
+.repbar > span{font-size:13px;color:var(--ink2);display:flex;gap:6px;align-items:center}.repbar .li{width:16px;height:16px}
+.editing{outline:3px dashed var(--brand);outline-offset:6px;background:#FFFDF8}
+.mgrnote{margin:14px 0;padding:10px 12px;border-right:4px solid #E8772E;background:#FFF8F1;border-radius:6px}
+.mwsec{margin-top:14px}.mwsec .cr{color:#B83227;font-weight:700}.mwsec .cg{color:#1F7A5A}
 </style>
 </head>
 <body>
@@ -764,6 +800,11 @@ setTimeout(function(){ if(window.__appLoaded) return; var m=document.getElementB
    [OCR]        قراءة بطاقة التصميم من الصورة (parseDesignCard)
    [MAT_SAMPLE] قاعدة عينة كل مادة واردة · [MATLIB] أرشيف أكواد المواد
    [TH_LOCS] أماكن الحرارة والرطوبة · [CAL_WINDOWS] مواعيد التحقق من أدوات القياس
+   [ORDER_SEARCH] البحث برقم الطلبية أو اسم المنتج · [AUDIT_WEEK] المراقبات الأسبوعية
+   [MOTIVATION] العبارات التشجيعية · [REPORT_ACCESS] من يرى التقارير · [REPORT_EDIT] تعديل التقارير وحفظها
+   [SHIFT_SUM]  ملخص نهاية الوردية · [CUSTOM_DEFECTS] المشاكل المضافة من المراقبين
+   [PEOPLE]     ملخص مخالفات العمال وتوقفات الآلات
+   [VIEWER]     حساب الإدارة للمشاهدة فقط
    [ARCHIVE]    أرشيف الجولات لكل مرحلة
    [PDF]        تصدير السجلات إلى PDF
    [UNIT_PAGES] المراحل التي تُفتح فيها كل الآلات بصفحة واحدة (السحب، الحقن، التغطية)
@@ -2095,7 +2136,7 @@ STAGES.find(s => s.key==='final').extra = [{k:'cartons',l:'عدد الكراتي
 
 const blank = () => ({settings:{inspectors:[],inspector:'',shift:'صباحية',manager:'ندى حجازي',qa:'محمد براء رحمون',reviewer:'Talal Alraee',ceo:'أيهم سكرية',
   weldMin:1.8,weldMax:3,seamMin:2,seamMax:4,devices:JSON.parse(JSON.stringify(DEVICES)),th:JSON.parse(JSON.stringify(TH_LOC))},
-  orders:DEFAULT_ORDERS, ordersDate:'', reports:[], pimgs:[], stops:[], rounds:[], holds:[], handovers:[], mats:[], ncrs:[], complaints:[], audits:[], cals:[], ths:[], aid:[], coas:[]});
+  orders:DEFAULT_ORDERS, ordersDate:'', reports:[], pimgs:[], stops:[], shiftsums:[], savedreps:[], rounds:[], holds:[], handovers:[], mats:[], ncrs:[], complaints:[], audits:[], cals:[], ths:[], aid:[], coas:[]});
 let S = blank();
 let persistent = typeof window.storage !== 'undefined' && window.storage && typeof window.storage.get === 'function';
 let dirty = false;
@@ -2360,7 +2401,7 @@ VIEWS.round = {
     <div class="panel">
       ${s.key!=='print'?'':`<div class="pick" id="typePick" style="margin-bottom:12px">${(s.key==='print' ? [['بدء تشغيل','طباعة بداية التشغيل'],['فحص نهائي','فحص طباعة نهائي']] : [['جولة','جولة دورية'],['بدء تشغيل','موافقة بدء تشغيل']]).map(([x,l])=>`<button class="${F.type===x?'on':''}" data-v="${x}">${l}</button>`).join('')}</div>`}
       <div class="grid">
-        ${s.key==='mix' ? '' : `<label class="f">${s.key==='design'?'رقم الطلبية (اختياري – إن وُجدت)':'رقم الطلبية'}<input type="text" inputmode="numeric" list="ordList" id="fOrder" value="${esc(F.order || ((F.items||[])[0]||{}).order || '')}" placeholder="اكتب أو اختر"></label>`}
+        ${s.key==='mix' ? '' : `<label class="f">${s.key==='design'?'رقم الطلبية (اختياري – إن وُجدت)':'رقم الطلبية'}<input type="text" inputmode="numeric" list="ordList" id="fOrder" value="${esc(F.order || ((F.items||[])[0]||{}).order || '')}" placeholder="رقم الطلبية أو اسم المنتج"></label>`}
         
         ${s.key==='design'?'':`<label class="f">عدد العينات<input type="number" id="fSamples" value="${esc(F.samples)}"></label>`}${extra}
       </div>
@@ -2375,9 +2416,9 @@ VIEWS.round = {
     ${F.type==='بدء تشغيل' && s.key!=='print'?`<div class="panel" style="margin-top:12px">${checkRows([{k:'lineclear',l:'تنظيف الخط من المنتج السابق',a:'لا تيوبات أو أغطية أو كراتين أو لصاقات من المنتج السابق',c:'حرج',t:'ok'},{k:'master',l:'العينة المعتمدة موجودة في المرحلة',a:'موقعة ومرمزة',c:'رئيسي',t:'ok'}], o, F.checks, F.vals)}</div>`:''}
     <h2>بنود الفحص</h2>
     <button class="btn" id="allOk" style="margin-bottom:8px">كل البنود مطابقة ✓</button>
-    ${(stageBy(F.stage).extra||[]).some(e => e.k==='roll') ? `<div id="rollWarn">${typeof rollNotesHtml==='function' && F.extra.roll ? rollNotesHtml(((F.items||[])[0]||{}).order || '', F.extra.roll, F.editId) : ''}</div>` : ''}${s.key!=='design' && typeof boxSummaryHtml==='function' && (F.items||[]).length ? boxSummaryHtml(F.items[0].order) : ''}${s.key==='print' && typeof repeatPanel==='function' ? repeatPanel(F) : ''}${typeof printNotesBanner==='function' ? printNotesBanner(F, s) : ''}<div class="panel">${checkRows(stageChecks(s), o, F.checks, F.vals)}</div>
+    ${(stageBy(F.stage).extra||[]).some(e => e.k==='roll') ? `<div id="rollWarn">${typeof rollNotesHtml==='function' && F.extra.roll ? rollNotesHtml(((F.items||[])[0]||{}).order || '', F.extra.roll, F.editId, F.items) : ''}</div>` : ''}${!['design','final','check'].includes(s.key) && typeof productNotesHtml==='function' && (F.items||[]).length ? productNotesHtml(F.items, F.editId) : ''}${s.key!=='design' && typeof boxSummaryHtml==='function' && (F.items||[]).length ? boxSummaryHtml(F.items[0].order) : ''}${s.key==='print' && typeof repeatPanel==='function' ? repeatPanel(F) : ''}${typeof printNotesBanner==='function' ? printNotesBanner(F, s) : ''}<div class="panel">${checkRows(stageChecks(s), o, F.checks, F.vals)}</div>
     ${['design','print'].includes(s.key) ? '' : `    <h2>العيوب المرصودة</h2>
-    <div class="panel"><div class="pick" id="defPick">${defectsFor(s.key).map(x=>`<button class="${F.defects.includes(x)?'on':''}" data-v="${x}">${x}</button>`).join('')}</div>
+    <div class="panel"><div class="pick" id="defPick">${defectsFor(s.key).map(x=>`<button class="${F.defects.includes(x)?'on':''}" data-v="${x}">${x}</button>`).join('')}</div>${typeof addDefectHtml==='function' ? addDefectHtml(s.key, 'F') : ''}
       <div class="grid" style="margin-top:12px">
         <label class="f">مصدر العيب<select id="fSource">${opt(SOURCES, F.source)}</select></label>
         <label class="f">التصنيف ${sg.cls?`(مقترح: ${sg.cls})`:''}<select id="fCls"><option value="">لا يوجد</option>${opt(['ثانوي','رئيسي','حرج'], cls)}</select></label>
@@ -2387,7 +2428,7 @@ VIEWS.round = {
     <div class="dec">${DECISIONS.map(d=>`<button data-d="${d}" class="${dec===d?'on':''} ${sg.dec===d?'sug':''}">${s.key==='design'?DESIGN_DEC[d]:d}</button>`).join('')}</div>
     <div class="grid" style="margin-top:12px">
       ${(dec==='محجور'||dec==='مرفوض')&&s.key!=='design'?`<label class="f">الكمية المحجوزة / المرفوضة<input type="text" id="fQty" value="${esc(F.qty)}" placeholder="مثال: 3 صناديق"></label>`:''}
-      ${['design','print','mix','final','check'].includes(s.key)?'':`<label class="f boxf">${s.key==='final'?'رموز الكراتين المفحوصة':'رقم الصندوق / الكرتونة'} <span class="req">*</span><input type="text" id="fBox" value="${esc(F.box)}" placeholder="اكتب الرقم قبل الحفظ"></label><div id="boxWarn" style="grid-column:1/-1">${typeof boxNotesHtml==='function' ? boxNotesHtml(((F.items||[])[0]||{}).order || '', F.box) : ''}</div>`}
+      ${['design','print','mix','final','check'].includes(s.key)?'':`<label class="f boxf">${s.key==='final'?'رموز الكراتين المفحوصة':'رقم الصندوق / الكرتونة'} <span class="req">*</span><input type="text" id="fBox" value="${esc(F.box)}" placeholder="اكتب الرقم قبل الحفظ"></label><div id="boxWarn" style="grid-column:1/-1">${typeof boxNotesHtml==='function' ? boxNotesHtml(((F.items||[])[0]||{}).order || '', F.box, F.items) : ''}</div>`}
       <label class="f">الإجراء المتخذ<input type="text" id="fAction" value="${esc(F.action)}"></label>
       ${s.key==='print' && F.type==='بدء تشغيل' ? `<label class="f" style="grid-column:1/-1">ملاحظات بداية التشغيل <span class="muted">(تظهر للمراقب في فحص الطباعة النهائي لنفس الطلبية)</span><textarea id="fNotes" rows="3" placeholder="مثال: اللون الأحمر أغمق قليلاً من العينة – تم تعديل الحبر">${esc(F.notes)}</textarea></label>` : `<label class="f">ملاحظات <span class="muted">(تبقى على الصندوق وتظهر للمراقبين في المراحل التالية)</span><input type="text" id="fNotes" value="${esc(F.notes)}"></label>`}
     </div>
@@ -2401,7 +2442,7 @@ VIEWS.round = {
     $('#typePick') && $$('#typePick button').forEach(b => b.onclick = () => { if(F.type === b.dataset.v) return; if(F.editId){ toast('لا يمكن تغيير نوع جولة محفوظة'); return; } PRINT_FORMS[F.type] = F; const nt = b.dataset.v; if(PRINT_FORMS[nt]) F = PRINT_FORMS[nt]; else { newRound(F.stage); F.type = nt; } rerender(); });
     $('#machPick') && $$('#machPick button').forEach(b => b.onclick = () => { F.machine = b.dataset.v; rerender(); });
     $('#fOrder') && ($('#fOrder').onchange = e => {
-      F.order = e.target.value.trim(); reset(); F.items = (F.items || []).filter(i => String(i.order) === F.order); F.mi = 0;
+      const _o = orderFromInput(e.target); if(_o === null) return; F.order = _o; reset(); F.items = (F.items || []).filter(i => String(i.order) === F.order); F.mi = 0;
       const rows = ordRows(F.order);
       if(F.order && rows.length===0 && !F.items.some(i => String(i.order)===F.order)) F.items.push({order:F.order, code:'', product:'', customer:''});
       if(rows.length===1 && !F.items.some(i => String(i.order)===F.order && i.code===rows[0].product_code)) F.items.push({order:F.order, code:rows[0].product_code||'', product:rows[0].product_name||'', customer:rows[0].customer||''});
@@ -2412,10 +2453,10 @@ VIEWS.round = {
     $('#pickAll') && ($('#pickAll').onclick = () => { ordRows(F.order).forEach(x => { if(!F.items.some(t => String(t.order)===String(x.order_number) && t.code===x.product_code)) F.items.push({order:String(x.order_number), code:x.product_code||'', product:x.product_name||'', customer:x.customer||''}); }); reset(); rerender(); });
     $$('[data-rm]').forEach(b => b.onclick = () => { F.items.splice(+b.dataset.rm,1); F.mi = 0; reset(); rerender(); });
     $('#fMi') && ($('#fMi').onchange = e => { F.mi = +e.target.value; reset(); rerender(); });
-    $('#fBox') && ($('#fBox').oninput = e => { F.box = e.target.value; const bw = $('#boxWarn'); if(bw && typeof boxNotesHtml==='function') bw.innerHTML = boxNotesHtml(((F.items||[])[0]||{}).order || '', F.box); });
+    $('#fBox') && ($('#fBox').oninput = e => { F.box = e.target.value; const bw = $('#boxWarn'); if(bw && typeof boxNotesHtml==='function') bw.innerHTML = boxNotesHtml(((F.items||[])[0]||{}).order || '', F.box, F.items); });
     $('#fSamples') && ($('#fSamples').oninput = e => F.samples = e.target.value);
     $$('[data-ex]').forEach(el => el.onchange = () => { F.extra[el.dataset.ex] = el.value; if(['final','design','print'].includes(s.key)){ reset(); rerender(); } });
-    $$('[data-ex="roll"]').forEach(el => el.oninput = () => { F.extra.roll = el.value; const rw = $('#rollWarn'); if(rw && typeof rollNotesHtml==='function') rw.innerHTML = rollNotesHtml(((F.items||[])[0]||{}).order || '', el.value, F.editId); });
+    $$('[data-ex="roll"]').forEach(el => el.oninput = () => { F.extra.roll = el.value; const rw = $('#rollWarn'); if(rw && typeof rollNotesHtml==='function') rw.innerHTML = rollNotesHtml(((F.items||[])[0]||{}).order || '', el.value, F.editId, F.items); });
     $$('[data-num]').forEach(el => el.onchange = () => { F.vals[el.dataset.num] = el.value; reset(); rerender(); });
     $$('.tri').forEach(t => t.querySelectorAll('button').forEach(b => b.onclick = () => { F.checks[t.dataset.ck] = b.dataset.v; reset(); rerender(); }));
     $('#allOk').onclick = () => { stageChecks(s).filter(c=>c.t==='ok').forEach(c => { if(!F.checks[c.k]) F.checks[c.k]='y'; }); reset(); rerender(); };
@@ -2997,7 +3038,7 @@ VIEWS.data = {
       <p class="muted" style="margin:0">${S.rounds.length} جولة · ${S.mats.length} فحص مادة · ${S.ncrs.length} NCR · ${S.holds.length} حجز · ${S.complaints.length} شكوى · ${S.audits.length} مراقبة</p></div>
     <div class="panel" style="display:grid;gap:10px;margin-top:12px"><h2 style="margin:0">الأسماء</h2>
       <label class="f">المراقبون (اسم في كل سطر)<textarea id="insp">${esc(st.inspectors.join('\n'))}</textarea></label>
-      <div class="grid"><label class="f">مدير ضبط الجودة<input type="text" id="sMgr" value="${esc(st.manager)}"></label><label class="f">المراجع في شهادة COA<input type="text" id="sRev" value="${esc(st.reviewer)}"></label><label class="f">المدير التنفيذي<input type="text" id="sCeo" value="${esc(st.ceo)}"></label><label class="f">مدير ضمان الجودة<input type="text" id="sQa" value="${esc(st.qa||'')}"></label></div></div>
+      <div class="grid"><label class="f">مدير ضبط الجودة<input type="text" id="sMgr" value="${esc(st.manager)}"></label><label class="f">المراجع في شهادة COA<input type="text" id="sRev" value="${esc(st.reviewer)}"></label><label class="f">المدير التنفيذي<input type="text" id="sCeo" value="${esc(st.ceo)}"></label><label class="f">المدير العام<input type="text" id="sQa" value="${esc(st.gm||'')}"></label></div></div>
     <div class="panel" style="display:grid;gap:10px;margin-top:12px"><h2 style="margin:0">حدود القياس (مصفوفة المواصفات)</h2>
       <div class="grid"><label class="f">اللحام الداخلي أثناء الإنتاج – أدنى<input type="number" step="any" id="wMin" value="${st.weldMin}"></label><label class="f">أعلى<input type="number" step="any" id="wMax" value="${st.weldMax}"></label>
       <label class="f">Side seam في المنتج النهائي وCOA – أدنى<input type="number" step="any" id="sMin" value="${st.seamMin}"></label><label class="f">أعلى<input type="number" step="any" id="sMax" value="${st.seamMax}"></label></div>
@@ -3042,7 +3083,7 @@ VIEWS.data = {
     $('#saveSet').onclick = () => {
       const v = $('#insp').value.split('\n').map(x=>x.trim()).filter(Boolean); if(!v.length){ toast('اكتب اسم مراقب واحد على الأقل'); return; }
       st.inspectors = v; if(!v.includes(st.inspector)) st.inspector = v[0];
-      st.manager = $('#sMgr').value; st.reviewer = $('#sRev').value; st.ceo = $('#sCeo').value; st.qa = $('#sQa').value;
+      st.manager = $('#sMgr').value; st.reviewer = $('#sRev').value; st.ceo = $('#sCeo').value; st.gm = $('#sQa').value;
       st.weldMin = +$('#wMin').value; st.weldMax = +$('#wMax').value; st.seamMin = +$('#sMin').value; st.seamMax = +$('#sMax').value;
       st.devices = st.devices.filter(d => d.code); st.th = st.th.filter(l => l.name);
       save(); renderHeader(); toast('تم حفظ الإعدادات');
@@ -3223,7 +3264,7 @@ VIEWS.rep = {
         ${up.map(o=>{ const d = daysBetween(rep.to, o.order_delivery_date); const rr = S.rounds.filter(r=>hasOrder(r, o.order_number)); const fr = rr.filter(r=>r.stage==='final').pop(); const q = fr ? (fr.decision==='مقبول'||fr.decision==='مقبول بملاحظة' ? decPill('مقبول').replace('مقبول','محرر') : decPill('محجور')) : S.holds.some(h=>String(h.order)===String(o.order_number)&&h.status!=='مغلق') ? decPill('محجور') : rr.length ? 'تحت المراقبة' : '<span class="muted">لم يبدأ</span>'; return `<tr><td class="num">${esc(o.order_number)}</td><td>${esc(o.customer)}</td><td>${esc(o.product_name)}</td><td>${esc(o.stage)}</td><td class="num">${esc(o.order_delivery_date)}</td><td class="num" style="${d<0?'color:var(--bad);font-weight:700':d<=3?'color:var(--warn);font-weight:700':''}">${d}</td><td>${q}</td></tr>`; }).join('') || '<tr><td colspan="7" class="muted">لا توجد طلبات قريبة التسليم في ملف ERP المحمّل.</td></tr>'}</tbody></table></div>
 
       <div class="rsec"><h3><i>10</i>ملاحظات مدير ضبط الجودة والقرارات المطلوبة</h3><textarea class="notes" placeholder="اكتب الملاحظات قبل الطباعة"></textarea></div>
-      <div class="sig"><div><b>إعداد</b>${esc(S.settings.manager)}<br><span class="muted">مدير ضبط الجودة</span></div><div><b>مراجعة</b>${esc(S.settings.qa||'محمد براء رحمون')}<br><span class="muted">مدير ضمان الجودة</span></div><div><b>اعتماد</b>${esc(S.settings.ceo)}<br><span class="muted">المدير التنفيذي</span></div></div>
+      <div class="sig sig4"><div><b>إعداد</b>${esc(S.settings.manager)}<br><span class="muted">مدير قسم ضبط الجودة</span></div><div><b>اعتماد</b>${esc(S.settings.ceo)}<br><span class="muted">المدير التنفيذي</span></div><div><b>اطّلاع</b>${esc(S.settings.gm||'')}<br><span class="muted">المدير العام</span></div><div class="siglogo"><img src="${LOGO}" alt="F.E.T"><span>F.E.T Packaging</span></div></div>
     </div>`;
   },
   bind(){
@@ -3237,6 +3278,8 @@ VIEWS.rep = {
 
 /* ================= USERS, TEAM & MANAGEMENT DASHBOARD ================= */
 const isMgr = () => !serverMode || (CUR && CUR.role === 'manager');
+const isViewer = () => serverMode && CUR && CUR.role === 'viewer';
+const canSeeAll = () => isMgr() || isViewer();
 ICONS.team = IC('<circle cx="9" cy="8" r="3.2"/><circle cx="17" cy="9" r="2.6"/><path d="M3 20c0-3.3 2.7-5.5 6-5.5s6 2.2 6 5.5M14.5 14.8c3.3-.6 6.5 1.3 6.5 4.7"/>');
 ICONS.mgr = IC('<path d="M3 20h18M5 16l4-5 4 3 6-8"/><circle cx="19" cy="6" r="1.6"/>');
 NAV_LABEL.team = 'أداء المراقبين'; NAV_LABEL.mgr = 'لوحة الإدارة';
@@ -3247,11 +3290,11 @@ const _rt = renderTabs;
 renderTabs = function(){
   _rt();
   const side = $('#side'); if(!side) return;
-  const extra = [['team'], ...(isMgr() ? [['mgr']] : [])];
+  const extra = [['team'], ...(canSeeAll() ? [['mgr']] : [])];
   const ref = side.querySelector('button.nv[data-v="rep"]');
   extra.reverse().forEach(([k]) => { const b = document.createElement('button'); b.className = 'nv' + (view===k ? ' on' : ''); b.dataset.v = k; b.innerHTML = `${ICONS[k]}<span>${NAV_LABEL[k]}</span>`; b.onclick = () => go(k); ref.after(b); });
   if(['team','mgr'].includes(view)) side.querySelectorAll('button.nv[data-v="more"]').forEach(b => b.classList.remove('on'));
-  const foot = side.querySelector('.foot'); if(foot && serverMode && CUR.name) foot.innerHTML = `${esc(CUR.name)}<br>${CUR.role==='manager'?'مدير القسم':'مراقب جودة'} – الوردية ${esc(S.settings.shift)}<br><span style="opacity:.7">الإصدار 6.2</span>`;
+  const foot = side.querySelector('.foot'); if(foot && serverMode && CUR.name) foot.innerHTML = `${esc(CUR.name)}<br>${CUR.role==='manager'?'مدير القسم':CUR.role==='viewer'?'الإدارة – مشاهدة فقط':'مراقب جودة'} – الوردية ${esc(S.settings.shift)}<br><span style="opacity:.7">الإصدار 6.2</span>`;
 };
 /* header: user chip instead of free inspector choice */
 const _rh = renderHeader;
@@ -3260,7 +3303,7 @@ renderHeader = function(){
   const chip = $('#userChip');
   if(serverMode && CUR.name){
     $('#inspSel').classList.add('hide'); chip.classList.remove('hide');
-    chip.innerHTML = `<b>${esc(CUR.name)}</b><span>${CUR.role==='manager'?'مدير القسم':'مراقب'}</span><button id="logout" title="تسجيل الخروج">خروج</button>`;
+    chip.innerHTML = `<b>${esc(CUR.name)}</b><span>${CUR.role==='manager'?'مدير القسم':CUR.role==='viewer'?'الإدارة · مشاهدة فقط':'مراقب'}</span><button id="logout" title="تسجيل الخروج">خروج</button>`;
     $('#logout').onclick = () => ask('تسجيل الخروج من هذا الجهاز؟', 'خروج', () => { GAS_PIN = ''; CUR = {name:'', role:''}; IDB.del('session'); IDB.del('draft'); try{ history.replaceState(null,'',location.pathname+location.search.replace(/([?&])(pin|u)=[^&]*/g,'')); }catch(e){} setTimeout(() => location.reload(), 300); });
   } else if(chip) chip.classList.add('hide');
 };
@@ -3421,7 +3464,7 @@ VIEWS.team = {
 let mgrP = 'm';
 VIEWS.mgr = {
   html(){
-    if(!isMgr()) return '<p class="muted">لوحة الإدارة متاحة لمدير القسم فقط.</p>';
+    if(!canSeeAll()) return '<p class="muted">لوحة الإدارة متاحة لمدير القسم فقط.</p>';
     const t = todayStr(); let cur, prev, label, subs = [];
     if(mgrP==='w'){ cur = [addDays(t,-6), t]; prev = [addDays(t,-13), addDays(t,-7)]; label = 'آخر 7 أيام مقارنة بالأسبوع الذي قبله'; for(let i=7;i>=0;i--) subs.push([addDays(t,-6-7*i), addDays(t,-7*i)]); }
     else if(mgrP==='m'){ cur = periodOf('m'); const d = new Date(t); prev = [todayStr(new Date(d.getFullYear(), d.getMonth()-1, 1)), todayStr(new Date(d.getFullYear(), d.getMonth()-1, Math.min(d.getDate(), new Date(d.getFullYear(), d.getMonth(), 0).getDate())))]; label = 'هذا الشهر حتى اليوم مقارنة بنفس الفترة من الشهر السابق'; for(let i=7;i>=0;i--) subs.push([todayStr(new Date(d.getFullYear(), d.getMonth()-i, 1)), todayStr(new Date(d.getFullYear(), d.getMonth()-i+1, 0))]); }
@@ -3478,6 +3521,7 @@ VIEWS.home.html = function(){
 };
 VIEWS.home.bind = function(){ _homeBind(); $('#toMgr') && ($('#toMgr').onclick = () => go('mgr')); };
 
+var RC_LOGO = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAHAAAAB9CAYAAAB6fueVAAAPoElEQVR42u2de1BV1dvHP/vc4QRICppomYH+avKGleEN754cgcFXaVJGC8vyktNM0dhojGZjppn6czQvL6m8miaGZcorpVxKRUTNGi94eYfxUgaj6OF2zuFc1vsHsn/wU1Jux/C3vv84bM++rc9az3qevZ79bEUIIZBqtdLIJpAApSRAKQlQApSSAKUkQKmGSdeovYpO4y7Yh0fRyRZsFgnQGdE/NwUMvi0PUFw7ievHj3BrTLLtm4WfG3zaoOvxXyjeAIhGBwYzaIyy8ZsFoAf0vqAocg6UToyUBCglAUpJgDIObB73WApQQNG0LoBCUdCY2qJB+Y/H5xEuhKO8OmBvFQCFB40pANPr36OY/CXAm1ew/08cOMqbfSTqWtBooPgEgNFPWlCT/+0WaW1OjPBIeC3cDtILlWGElAQoJQFKgFIS4B3S+8gWbuF2aJk4UFHwuKpw5ixH0clVe2G7Be6qRi3YPqBAXgGXHWfO5y3x9Kj1SVFAb2qRYL4FH2Yr1WkCUtKJkZIAJUApCVBKApTyohfKg1lOup8F07/rdf29AGoQRn90uLwWCgohEM7Kv463FMDgh8aLAarwuBEuRysCKDxoTH4YX9+DYvLeirznxv9h3xoPVZV37/HCg8bojzFhN4pvoNeuy33tFI6vE8DlaD0pFSig+LbxbkqFKYB7Pe1QENWpHj5t/lbX9fd0Yrw919zv+f6u1yW9UBlGSEmAUhKglAQoATbN7UKuB9aSvuWyEloopUKDcDlw5nyO0Bqb3hn0RgzPv+rVDiFKi3D+tgPcribHcKK8uPpNrdaUUiFup1Q0uZql8IBPG/Q9J6B4FeAfOA98Ci57k5+eKIq29aZUNPmSm1DBoWmTiwbFYAaNtsUeREsnRkoClAClJEApCfA/Vt4vN9jQpRXheUBv+orGn9uLXqvXASoNDQk87urCet6/0EaGEQKcNoSXqnPovDryTGaMr/8viimgYQ2iaFC8XCxB0/4fmGZmoz4WvF85SnH+9xhctjKvjETvjkAFFN9HvQ6jcQS1KI1Ju9DovDb6HowT87BXb/Ly/UkvVIYRUhKglAQoAUpJgPelhz3NQu8LXgwjvBcHKgq4XLhylkODKlc0/qMYTYoGyv7E9etO8DQwpcJlr36RRXnYnsSggMvZ8MoVNR/F6Dm+wR/FaBLA0mu3UypsoGgbdJvVdWEeOoCNNKEPKqVC0VSPeI1GplRISYBSEqAEKCUBSrV+L7TVSDRvOkfrq1LRyvFp9GgM5mYJIzxCgKuK1vPhj4dA2uB/oFVTKpom17UzVH2d0CzvWUiA9+0daJutkkVLfr1GOjFesceySoWUBCgBSkmAUhKgVGsEeJ8VL/S+97GO+gCqZ7S6KhXNyu72Nyh+Wg6GR/76t5Ul4HbWv/ir3C6+8NNyxL2O1ZxRRNmfra1KRTOPPpcD58//vOdDEUVR7pHOoOBxOfH8/E+ENz9IomhQWl+ViuYdhc1WYkRppuoZcg6UkgClJEAJUEoClPK2Fyo81XHNw/62rdcCxcanbjQKoDD6o/gEV1fhU2T7NwdAxeRfHcc2NCoSjakH6XFBVSVCfp6z+UJdFDA+0uCUi8YBlJJOjJQEKCUBSoBSEqCUBCgBSkmAUhKglAQoAUpJgFISoHdlt9uprKxsldeurgf+/vvv2O12AgMD8Xg82Gw2AFwuFzabje7du6PVVpeccjqdnD59mnbt2mE2m6mqqqKqqgoAh8OByWSiU6dO6kk8Hg8FBQX4+vqi1WoxGAwYDAZ1P4/Hg8PhoGPHjjzyyL8Sbl0uFwUFBQQHB6PX69VrMplMtGnTBo2maf0vLy+PrKws0tLSiImJYe7cuc3ewEIIsrKyMBqN9O/fv1FrfvcF8NKlSyxbtoysrCyeeuopJk2ahKIoXLt2je3bt5OVlcWTTz4JgNvt5ueff2bv3r0cPXqUIUOGEBkZCUBmZiYnT57k1KlT+PlVFzcvLCzEYrEQHR1NWFgYOTk5ZGdnq/uVl5ezdOlSEhMT6zSiy+UiIyOD5cuXY7PZSEhIwO1289VXX9GnTx9WrlxJt27dGn3zTz/9NFu2bCE/P58xY8a0yAi5ceMGMTExKIrCpUuXCAwMbPYeoiojI0MAYuTIkbU3ixUrVoilS5eKf9eCBQsEIBYuXKhuu3Xrlhg/frz4448/1G2ffPKJSEpKUv9euHDhHftt3ry5zm9qa+DAgQIQR44cUY8HiGHDhgmbzSaaoo8++kgAYv78+aIlZLVaRWhoqBg8eHCTr/VuqpNSUXt4u91u1WROmzaNwsLCu5qHmt/WKCAggGXLltUxhRaLRR29tX9fe7+JEydy5syZO87hcrkwGo2qea65nkWLFnH48GEqKysxmapfHikrK0Ov16t//7vKysowGAzq8WrM+/3q5s2b9Y4gp9OJ3W5XrU6N/P39OXfuHBUVFRgMhjr/5/F41GnAZrPh4+PT4PPq7gZEURQV3okTJwgLC+OZZ56p98ZqX9iaNWuYPHlyHYC9e/e+ty3X6ejZs2e98wig3mzNvOnj44Ner6e4uJjVq1eTmZmJwWAgOjqaWbNmqfdQXl7O6tWrSU9PR6/XM3ToUGbMmFGnUWo6b1paGr/88gvt27fnlVdeoW3btmRkZLBnzx6ys7N59tlnefXVVxk1ahSKoiCEYPv27Wzbto2SkhJGjx5NeHg4aWlpTJ8+nePHj1NcXExeXh4pKSkArF+/HqvVitlsJjw8nFWrVnHt2jXmz5+vmluAjIwMUlNTOXbsGAMHDmTo0KEcO3aM8PBwJkyYUL8XWlpayokTJzh69Cgff/wx5eXlf9n4e/bsITExkZkzZ5KcnNxiHtetW7coLi5mxowZVFRUMHPmTDQaDX379iU7O5udO3fSq1cv3nnnHfbs2QOA1WolJiaGkydPkpqaynPPPUdSUhKbN2+u647f7hxnz54lPz8fi8WCv78/u3fvxmKxEBISwv79+9m/fz8vv/wyVqsVgC1bthAfH8+sWbPYsWMHW7duZdy4cYSFhREWFqaeLzMzE41Gg5+fH507d2bx4sVs2bKFTZs20aNHD86dO8fkyZO5fv06ADk5OURFRREUFMSPP/5IUVER48eP5/r163Tp0qX+MEJRFEpKSjhw4AA5OTlUVlY2yNtriEm671jn9vnffPNNXnzxRa5cucL69etJSkqipKSEhIQEkpOTad++vWoe8/PzVYuQmZlJVFQUwcHBfPjhhxQUFDBt2rQ7zNTs2bMpLi5m165dhIaGotfrMRqNLFq0iDlz5hAcHMyoUaOw2+2qVcjLy0Or1TJ06FA6duzIhAkTcDqdzJ49m4CAAMLCwvD398dgMCCEQK/XExsbi5+fH3a7nQ0bNrBkyRJmzpxJWVkZly9fBiA9PR2n00nPnj0JCgqiT58+AISGhvL888/f3YTWmKuuXbuSmJgIQJcuXe75IeOxY8fywQcfALBjx44mu/f1dYq1a9cSERGBn5+fCqpz584sWLCAjRs3kpqayjfffFPHrGdnZwPQvXt3AMxmM2FhYXecY8OGDZSVlfHWW2/VmYtGjx5N3759Wbx4MSUlJZw5c6bOlNGlSxdcLhfffvstgwYNIj09nY4dO951nq+Rw+HA4XAQHR1NQED1d6Rqppyaex0xYgRffPEFubm5jBgxgqtXr6LT6ejVq9e9A3m3262eODY2lvbt26smrCbeq63a2+Li4tDpdBw7dkx1QsrKypoF5KOPPkq7du3qOCFFRUUMGjSI9evXM3HiROLi4urMaTUNcvz48b889tSpU4mIiCA5OZndu3er2/fu3Uu3bt0oKCggMTGR4cOHq84UQHR0NFFRUaSkpDBhwgRGjRrF999/f4czU9+8X5/lioiIYMyYMVitViwWC2azmb1792KxWOp3YmofsMYBqNm2b98+4uPjmThxIitXrkRRFPR6PYD6b422b9/OhQsXCA8PJyYmhvPnz3Pw4EG1I9S3X303WQPjbkHw2rVrOXjwIJ9++ilPPPEELperjtkdNmwY+/fvZ+fOnUyaNAmz2Yzdbsdut9OmTRv1/jp16kRcXBwjRoxgypQp/Prrr4SEhDBr1ixKS0uZO3cuQUFB/PTTT+h0OrUTpaSkYDAYWLJkCRqNhg4dOtTpYLVHa8391pjTmja+W5usWLGCixcvsmnTJsxmM0FBQXUcwzviwNOnT4uXXnpJAKJt27YiMTFRXLly5Y6Yb/jw4cJut4sdO3aIAQMGCEAMHDhQzJs3T8ybN0+8++67QlEU8fXXXwubzSZ8fHwEIH777TchhBAXL15U47r+/fuLvLw84fF47hrjuN1usXnzZhEcHCwAMWbMGJGWlibcbrf6m507dwqTySTCw8PFnDlzRHx8vPD39xcWi0WcOnVK3Lp1S8TExAhA9OvXT7z//vsiLi5O7Nu3T5SUlIixY8cKQERFRQmbzSY+++wzAYgBAwaIc+fOifj4eAGIIUOGiKSkJBEZGSm0Wq3YsGGD8Hg8YtWqVQIQOp1OGI1G4evrK8aNG6fGwampqUKr1QqtVit2794tqqqqxLZt2wQgIiIixI0bN8T169dFZGSkAMSSJUtEeXm5yMnJERqNRgDCZDIJo9EoXnjhBZGRkVGnvdTE3kOHDnHo0CGCg4NxOBwUFhYSExNDRESEaj7XrFmDxWKhV69erF27FkVR8PX1rfMoraqqCkVRmD59OkajkfT0dP78808SEhJQFIXc3Fxyc3Np27YtVquVkJAQYmNj7zpvOhwOkpOT0ev1GAwGrFYrBoOB1157rU4vz8zM5MCBA/j4+PDee+9x5MgRsrOzGT16NBEREbjdbnbt2sXx48fR6XRMmTKF0NBQ8vPzyc3NJSAgAKvVyoABA+jRoweff/45paWl9O7dm7Fjx7Jx40auXr2qWpSUlBSKiop4++23mTp1KmazmccffxyAo0ePkpGRwRtvvMGaNWvYuHFjnXuLjY3lu+++U8ObyMhI3G43OTk5BAYGUlFRweDBgzl//jybNm0iPDwcj8dDUVERX375JYGBgVy4cEGdOxFSjdbly5dFYGCgOHv2rLrN6XSK6Oho0aNHD2G32xt13NLSUqHT6cSiRYvqbJ8zZ44AxI0bN9RtcjWiCfL19aWiooJ169apFshms1FYWMi4cePqWImGquYBQklJifqk5/Lly4wcORJf33/VC5DvRjRxpWHr1q0kJSXRv39/+vXrx+HDhwkJCSEpKQl//8aXmfzhhx+YMWMGXbt2JSoqiiNHjuDxeFi3bl2d40qAzaCbN29is9lwOp0YjUY6dOjQLMctKyujoqICh8OBXq/nscceu8MT/398ClRNWsJL8AAAAABJRU5ErkJggg==';
 /* ===== Daily final report core – shared by the app and the Google Drive server ===== */
 var RC_STAGES = [['design','التصميم'],['print','الطباعة'],['draw','السحب'],['sort','الفرز'],['mix','الخلط'],['inj','الحقن'],['asm','التركيب غير الآلي'],['cap','التغطية والتعبئة'],['seal','التختيم'],['check','التشييك'],['final','فحص المنتج النهائي']];
 function rcPct(a, b) { return b ? Math.round(a * 100 / b) : 0; }
@@ -3546,7 +3590,9 @@ function computeDaily(D, date, by) {
       mats: mats.length, matRej: mats.filter(function (m) { return m.decision === 'مرفوض'; }).length, ncrNew: ncrNew.length, ncrOpen: openN.length, ncrLate: lateN.length, holdsOpen: openH.length, comps: comps.length,
       audits: auds.length, auditFails: auds.reduce(function (a, x) { return a + (x.failed || []).length; }, 0), cals: cals.length, calBad: cals.filter(function (c) { return !c.ok; }).length, ths: ths.length, thBad: ths.filter(function (x) { return !x.ok; }).length },
     stages: stages, defects: defects, products: products, inspectors: Object.keys(insp).map(function (k) { return insp[k]; }), problems: problems.slice(0, 80),
-    mats: mats, ncrNew: ncrNew, ncrLate: lateN, holdsOpen: openH, comps: comps, due: due, stops: stops, boxes: boxes, notes: '' };
+    mats: mats, ncrNew: ncrNew, ncrLate: lateN, holdsOpen: openH, comps: comps, due: due, stops: stops, boxes: boxes, manager: D.manager || '', machines: (function () { var m = {}; rs.forEach(function (r) { if (!r.machine || r.machine === '—' || /^(عامل فرز|محطة تركيب)/.test(r.machine)) return; var k = r.stage + '|' + r.machine; m[k] = m[k] || { stage: rcStageName(r.stage), machine: r.machine, n: 0, iss: 0, stops: [] }; m[k].n++; if (r.decision !== 'مقبول') m[k].iss++; }); (D.stops || []).filter(function (z) { return z.date === date; }).forEach(function (z) { var k = z.stage + '|' + z.machine; m[k] = m[k] || { stage: rcStageName(z.stage), machine: z.machine, n: 0, iss: 0, stops: [] }; m[k].stops.push((z.reasonLabel || z.reason) + (z.detail ? ' (' + z.detail + ')' : '') + ' ' + z.time); }); return Object.keys(m).map(function (k) { return m[k]; }); })(),
+    workers: (function () { var w = {}; rs.forEach(function (r) { String(r.worker || (r.extra || {}).worker || '').split(/[،,\/]+/).map(function (x) { return x.trim(); }).filter(Boolean).forEach(function (n) { w[n] = w[n] || { name: n, n: 0, viol: 0, stages: {} }; w[n].n++; w[n].stages[rcStageName(r.stage)] = 1; if (r.decision !== 'مقبول' || (r.defects || []).length) w[n].viol++; }); }); return Object.keys(w).map(function (k) { var x = w[k]; x.stages = Object.keys(x.stages).join('، '); return x; }).sort(function (a, b) { return b.viol - a.viol; }); })(),
+    notes: '' };
 }
 
 function renderDaily(s, opts) {
@@ -3576,7 +3622,8 @@ function renderDaily(s, opts) {
     s.products.map(function (p) { return '<tr><td>' + e(p.product) + '<div class="mu">' + e(p.customer) + '</div></td><td>' + e(p.code) + '</td><td>' + e(p.orders) + '</td><td class="sm">' + e(p.stages) + '</td><td>' + p.n + '</td><td class="' + (p.issues ? 'cw' : '') + '">' + p.issues + '</td><td class="' + (p.crit ? 'cr' : '') + '">' + p.crit + '</td><td>' + (p.final === '—' ? '—' : pill(p.final)) + '</td></tr>'; }).join('') + '</tbody></table>' : '<p class="mu">لا توجد منتجات مفحوصة.</p>');
   h += sec(6, 'المشاكل المرصودة') + (s.problems.length ? '<table class="t"><thead><tr><th>الوقت</th><th>المرحلة والآلة</th><th>الطلبية والمنتج</th><th>غير المطابق</th><th>القرار</th><th>الإجراء</th><th>المراقب</th></tr></thead><tbody>' +
     s.problems.map(function (r) { return '<tr><td>' + e(r.time) + '<div class="mu">' + e(r.shift) + '</div></td><td>' + e(r.stage) + '<div class="mu">' + e(r.machine) + '</div></td><td>' + e(r.order) + '<div class="mu">' + e(r.product) + '</div></td><td>' + e(r.notok) + (r.cls ? ' <span class="pl ' + (r.cls === 'حرج' ? 'r' : 'o') + '">' + e(r.cls) + '</span>' : '') + '</td><td>' + pill(r.decision) + (r.hold ? '<div class="mu">' + e(r.hold) + '</div>' : '') + '</td><td>' + e(r.action) + (r.ncr ? '<div class="mu">' + e(r.ncr) + '</div>' : '') + '</td><td class="sm">' + e(r.inspector) + '</td></tr>'; }).join('') + '</tbody></table>' : '<p class="mu">لا توجد مشاكل.</p>');
-  h += sec(7, 'المراقبون') + '<table class="t"><thead><tr><th>المراقب</th><th>الجولات</th><th>صباحي</th><th>مسائي</th><th>مشاكل اكتشفها</th><th>عيوب حرجة</th></tr></thead><tbody>' + (s.inspectors.length ? s.inspectors.map(function (i) { return '<tr><td><b>' + e(i.name) + '</b></td><td>' + i.n + '</td><td>' + i.m + '</td><td>' + i.e + '</td><td>' + i.issues + '</td><td>' + i.crit + '</td></tr>'; }).join('') : '<tr><td colspan="6" class="mu">لا يوجد نشاط.</td></tr>') + '</tbody></table>';
+  var MGR = s.manager || '';
+  h += sec(7, 'فريق الجودة') + '<table class="t"><thead><tr><th>الاسم والصفة</th><th>الجولات</th><th>صباحي</th><th>مسائي</th><th>مشاكل اكتشفها</th><th>عيوب حرجة</th></tr></thead><tbody>' + (s.inspectors.length ? s.inspectors.map(function (i) { return '<tr><td><b>' + e(i.name) + '</b><div class="mu">' + (i.name === MGR ? 'مدير القسم' : 'مراقب جودة') + '</div></td><td>' + i.n + '</td><td>' + i.m + '</td><td>' + i.e + '</td><td>' + i.issues + '</td><td>' + i.crit + '</td></tr>'; }).join('') : '<tr><td colspan="6" class="mu">لا يوجد نشاط.</td></tr>') + '</tbody></table>';
   h += sec(8, 'المواد الواردة') + (s.mats.length ? '<table class="t"><thead><tr><th>الرقم</th><th>المادة</th><th>المورد</th><th>الدفعة</th><th>النتيجة</th><th>القرار</th></tr></thead><tbody>' + s.mats.map(function (m) { return '<tr><td>' + e(m.no) + '</td><td>' + e(m.name) + '</td><td>' + e(m.supplier) + '</td><td>' + e(m.lot) + '</td><td>' + e(m.score) + '%</td><td>' + pill(m.decision) + '</td></tr>'; }).join('') + '</tbody></table>' : '<p class="mu">لم تُفحص مواد واردة.</p>');
   h += sec(9, 'البنود المفتوحة') + '<table class="t"><thead><tr><th>البند</th><th>الرقم</th><th>التاريخ</th><th>التفاصيل</th></tr></thead><tbody>' +
     s.holdsOpen.map(function (x) { return '<tr><td>محجوز' + (x.age >= 2 ? ' <span class="pl r">' + x.age + ' يوم</span>' : '') + '</td><td>' + e(x.no) + '</td><td>' + e(x.date) + '</td><td>' + e(x.stage) + ' – ' + e(x.order) + ' – ' + e(x.desc) + ' ' + e(x.qty) + '</td></tr>'; }).join('') +
@@ -3589,10 +3636,13 @@ function renderDaily(s, opts) {
   var bx = s.boxes || { byStage: [], flagged: [] };
   h += sec(11, 'الصناديق والأكياس') + (bx.byStage.length ? '<table class="t"><thead><tr><th>المرحلة</th><th>مقبول</th><th>مقبول بملاحظة</th><th>محجور</th><th>مرفوض</th></tr></thead><tbody>' + bx.byStage.map(function (x) { return '<tr><td><b>' + x.name + '</b></td><td>' + x.ok + '</td><td class="' + (x.note ? 'cw' : '') + '">' + x.note + '</td><td class="' + (x.held ? 'cw' : '') + '">' + x.held + '</td><td class="' + (x.rej ? 'cr' : '') + '">' + x.rej + '</td></tr>'; }).join('') + '</tbody></table>' +
     (bx.flagged.length ? '<table class="t" style="margin-top:8px"><thead><tr><th>الصندوق</th><th>المرحلة / الآلة</th><th>الطلبية</th><th>القرار</th><th>العيوب والملاحظات</th><th>المراقب</th></tr></thead><tbody>' + bx.flagged.map(function (x) { return '<tr><td><b>' + e(x.box) + '</b>' + (x.roll ? '<div class="mu">رول ' + e(x.roll) + '</div>' : '') + '</td><td>' + e(x.stage) + (x.machine && x.machine !== '—' ? ' – ' + e(x.machine) : '') + (x.worker ? '<div class="mu">عامل الفرز: ' + e(x.worker) + '</div>' : '') + '</td><td>' + e(x.order) + '</td><td>' + pill(x.decision) + '</td><td>' + e(x.defects) + (x.notes ? '<div>' + e(x.notes) + '</div>' : '') + '</td><td class="sm">' + e(x.inspector) + ' ' + e(x.time) + '</td></tr>'; }).join('') + '</tbody></table>' : '') : '<p class="mu">لم تُسجّل أرقام صناديق اليوم.</p>');
+  var mcs = s.machines || [], wks = s.workers || [];
+  h += sec('12أ', 'حالة الآلات') + (mcs.length ? '<table class="t"><thead><tr><th>المرحلة</th><th>الآلة</th><th>الحالة</th><th>جولات</th><th>بمشاكل</th><th>التوقفات</th></tr></thead><tbody>' + mcs.map(function (x) { return '<tr><td>' + e(x.stage) + '</td><td><b>' + e(x.machine) + '</b></td><td class="' + (x.stops.length ? 'cr' : '') + '">' + (x.stops.length ? 'توقفت ' + x.stops.length + ' مرة' : 'عملت دون توقف') + '</td><td>' + x.n + '</td><td>' + (x.iss || '') + '</td><td class="sm">' + x.stops.map(e).join('<br>') + '</td></tr>'; }).join('') + '</tbody></table>' : '<p class="mu">لا توجد آلات مسجّلة اليوم.</p>');
+  h += sec('12ب', 'أداء العمال') + (wks.length ? '<table class="t"><thead><tr><th>العامل</th><th>المراحل</th><th>جولات</th><th>مخالفات</th><th>نسبة المخالفات</th></tr></thead><tbody>' + wks.map(function (x) { return '<tr><td><b>' + e(x.name) + '</b></td><td>' + e(x.stages) + '</td><td>' + x.n + '</td><td class="' + (x.viol ? 'cw' : '') + '">' + (x.viol || '') + '</td><td>' + (x.n ? Math.round(x.viol * 100 / x.n) + '%' : '—') + '</td></tr>'; }).join('') + '</tbody></table>' : '<p class="mu">لم تُسجّل أسماء عمال اليوم.</p>');
   var stp = s.stops || [];
   h += sec(12, 'توقف الآلات') + (stp.length ? '<table class="t"><thead><tr><th>الوقت</th><th>الوردية</th><th>المرحلة / الآلة</th><th>السبب</th><th>التفاصيل</th><th>المراقب</th></tr></thead><tbody>' + stp.map(function (x) { return '<tr><td>' + e(x.time) + '</td><td>' + e(x.shift) + '</td><td>' + e(x.stage) + ' – ' + e(x.machine) + '</td><td><b>' + e(x.reason) + '</b></td><td>' + e(x.detail) + '</td><td class="sm">' + e(x.inspector) + '</td></tr>'; }).join('') + '</tbody></table>' : '<p class="mu">لم تُسجّل توقفات للآلات.</p>');
   h += sec(13, 'ملاحظات وقرارات مدير القسم') + '<div class="nt">' + (s.notes ? e(s.notes).replace(/\n/g, '<br>') : '&nbsp;') + '</div>';
-  h += '<table class="sg"><tr><td><b>إعداد</b>' + e(opts.manager || 'ندى حجازي') + '<span>مدير ضبط الجودة</span></td><td><b>مراجعة</b>' + e(opts.qa || 'محمد براء رحمون') + '<span>مدير ضمان الجودة</span></td><td><b>اعتماد</b>' + e(opts.ceo || 'أيهم سكرية') + '<span>المدير التنفيذي</span></td></tr></table>';
+  h += '<table class="sg"><tr><td><b>إعداد واعتماد القسم</b>' + e(opts.manager || 'ندى حجازي') + '<span>مدير قسم ضبط الجودة</span></td><td><b>اطّلاع واعتماد</b>' + e(opts.ceo || 'أيهم سكرية') + '<span>المدير التنفيذي</span></td><td class="lg"><img src="' + RC_LOGO + '" alt="F.E.T"><span>F.E.T Packaging</span></td></tr></table>';
   h += '<div class="ft">QC-01-F20 · Issue 6.0 · F.E.T Packaging – تقرير مولّد آلياً من نظام ضبط الجودة</div></div>';
   return h;
 }
@@ -3610,13 +3660,13 @@ var DAILY_CSS = '.drep{font-family:"IBM Plex Sans Arabic",Tahoma,Arial,sans-seri
   '.drep .db{height:12px;background:#EEF1F4;border-radius:3px}.drep .db i{display:block;height:12px;background:#E8772E;border-radius:3px}' +
   '.drep .lgd{font-size:11px;color:#5B6B7A;margin-top:4px}.drep .lgd i{display:inline-block;width:9px;height:9px;margin:0 8px 0 3px;vertical-align:-1px}' +
   '.drep .pl{display:inline-block;border-radius:10px;padding:1px 8px;font-size:11px;font-weight:700;background:#EEF1F4}.drep .pl.g{background:#E3F2EB;color:#1F7A5A}.drep .pl.y{background:#FCEFD6;color:#8A5A00}.drep .pl.o{background:#FBF0DA;color:#A86B12}.drep .pl.r{background:#F9E3E0;color:#B83227}' +
-  '.drep .nt{border:1px dashed #9AA6B2;border-radius:6px;min-height:60px;padding:10px;line-height:1.8}.drep .sg{margin-top:18px}.drep .sg td{border:1px solid #9AA6B2;padding:8px;height:70px;vertical-align:top;width:33%}.drep .sg b{display:block}.drep .sg span{display:block;color:#5B6B7A;font-size:11px}' +
+  '.drep .nt{border:1px dashed #9AA6B2;border-radius:6px;min-height:60px;padding:10px;line-height:1.8}.drep .sg{margin-top:18px}.drep .sg td{border:1px solid #9AA6B2;padding:8px;height:70px;vertical-align:top;width:33%}.drep .sg b{display:block}.drep .sg span{display:block;color:#5B6B7A;font-size:11px}.drep .sg td.lg{text-align:center;width:18%}.drep .sg td.lg img{width:60px;display:block;margin:0 auto 2px}' +
   '.drep .ft{margin-top:14px;text-align:center;color:#8A97A3;font-size:10.5px;border-top:1px solid #E1E6EB;padding-top:6px}';
 
 /* ================= FINAL DAILY REPORTS · PRODUCT REPORT · FRESH START ================= */
 PARENT.daily = 'rep'; PARENT.product = 'rep';
 function repTabs(cur){
-  const items = [['rep','تقرير الفترة'], ...(isMgr() ? [['daily','التقارير اليومية النهائية']] : []), ['product','تقرير منتج']];
+  const items = [['rep','تقرير الفترة'], ...(canSeeAll() ? [['daily','التقارير اليومية النهائية']] : []), ['product','تقرير منتج']];
   return `<div class="pick noprint subnav">${items.map(([k,l]) => `<button class="${cur===k?'on':''}" data-rt="${k}">${l}</button>`).join('')}</div>`;
 }
 function bindRepTabs(){ $$('[data-rt]').forEach(b => b.onclick = () => go(b.dataset.rt)); }
@@ -3624,7 +3674,7 @@ const _repHtml = VIEWS.rep.html, _repBind = VIEWS.rep.bind;
 VIEWS.rep.html = function(){ return repTabs('rep') + _repHtml(); };
 VIEWS.rep.bind = function(){ _repBind(); bindRepTabs(); };
 const DCSS = `<style>${DAILY_CSS}</style>`;
-function dataArrays(){ return {rounds:S.rounds, holds:S.holds, ncrs:S.ncrs, mats:S.mats.map(m => ({...m, name: m.name || (matBy(m.type)||{}).name})), complaints:S.complaints, audits:S.audits, cals:S.cals, ths:S.ths, stops:S.stops||[], orders:S.orders, settings:S.settings}; }
+function dataArrays(){ return {rounds:S.rounds, holds:S.holds, ncrs:S.ncrs, mats:S.mats.map(m => ({...m, name: m.name || (matBy(m.type)||{}).name})), complaints:S.complaints, audits:S.audits, cals:S.cals, ths:S.ths, stops:S.stops||[], manager:S.settings.manager, orders:S.orders, settings:S.settings}; }
 function makeDaily(date){
   const snap = computeDaily(dataArrays(), date, CUR.name || S.settings.manager);
   const old = S.reports.find(r => r.id === snap.id);
@@ -3646,13 +3696,13 @@ function autoDaily(){
 let dailyOpen = null;
 VIEWS.daily = {
   html(){
-    if(!isMgr()) return repTabs('daily') + '<p class="muted">التقارير اليومية النهائية متاحة لمدير القسم.</p>';
+    if(!canSeeAll()) return repTabs('daily') + '<p class="muted">التقارير اليومية النهائية متاحة لمدير القسم.</p>';
     if(dailyOpen){
       const s = S.reports.find(r => r.id === dailyOpen);
       if(s) return repTabs('daily') + `<div class="row noprint" style="justify-content:space-between;margin:10px 0 16px"><button class="btn" id="dBack">كل التقارير</button><div class="row">
         <button class="btn" id="dRegen">إعادة التوليد</button>${GAS_MODE?'<button class="btn k" id="dPdf">حفظ PDF في Drive</button>':''}<button class="btn p" id="dPrint">طباعة أو حفظ PDF</button></div></div>
         <div class="panel noprint" style="margin-bottom:16px"><label class="f">ملاحظات وقرارات مدير القسم (تظهر في التقرير)<textarea id="dNotes">${esc(s.notes||'')}</textarea></label><button class="btn k" id="dSaveN" style="margin-top:10px">حفظ الملاحظات</button></div>
-        <div class="rep">${renderDaily(s, {logo:LOGO, manager:S.settings.manager, qa:S.settings.qa, ceo:S.settings.ceo})}</div>${DCSS}`;
+        <div class="rep">${renderDaily(s, {logo:LOGO, manager:S.settings.manager, ceo:S.settings.ceo})}</div>${DCSS}`;
     }
     const t = todayStr(), list = S.reports.slice().sort((a,b) => b.date.localeCompare(a.date));
     const missing = []; for(let i = 1; i <= 30; i++){ const d = addDays(t,-i); if(!list.some(r => r.date===d) && S.rounds.some(r => r.date===d)) missing.push(d); }
@@ -3760,7 +3810,7 @@ VIEWS.data.bind = function(){
 
 const LUCIDE = {"home": "<path d=\"M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8\" /> <path d=\"M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z\" />", "prod": "<path d=\"M12 16h.01\" /> <path d=\"M16 16h.01\" /> <path d=\"M3 19a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5a.5.5 0 0 0-.769-.422l-4.462 2.844A.5.5 0 0 1 15 10.5v-2a.5.5 0 0 0-.769-.422L9.77 10.922A.5.5 0 0 1 9 10.5V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2z\" /> <path d=\"M8 16h.01\" />", "mat": "<path d=\"M12 22V12\" /> <path d=\"m16 17 2 2 4-4\" /> <path d=\"M21 11.127V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.729l7 4a2 2 0 0 0 2 .001l1.32-.753\" /> <path d=\"M3.29 7 12 12l8.71-5\" /> <path d=\"m7.5 4.27 8.997 5.148\" />", "ncr": "<path d=\"M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z\" /> <path d=\"M12 8v4\" /> <path d=\"M12 16h.01\" />", "hold": "<path d=\"M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z\" /> <path d=\"m3.3 7 8.7 5 8.7-5\" /> <path d=\"M12 22V12\" />", "mon": "<rect width=\"8\" height=\"4\" x=\"8\" y=\"2\" rx=\"1\" ry=\"1\" /> <path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\" /> <path d=\"m9 14 2 2 4-4\" />", "rep": "<path d=\"M3 3v16a2 2 0 0 0 2 2h16\" /> <path d=\"M18 17V9\" /> <path d=\"M13 17V5\" /> <path d=\"M8 17v-3\" />", "team": "<path d=\"M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2\" /> <path d=\"M16 3.128a4 4 0 0 1 0 7.744\" /> <path d=\"M22 21v-2a4 4 0 0 0-3-3.87\" /> <circle cx=\"9\" cy=\"7\" r=\"4\" />", "mgr": "<path d=\"M16 7h6v6\" /> <path d=\"m22 7-8.5 8.5-5-5L2 17\" />", "more": "<rect width=\"7\" height=\"7\" x=\"3\" y=\"3\" rx=\"1\" /> <rect width=\"7\" height=\"7\" x=\"14\" y=\"3\" rx=\"1\" /> <rect width=\"7\" height=\"7\" x=\"14\" y=\"14\" rx=\"1\" /> <rect width=\"7\" height=\"7\" x=\"3\" y=\"14\" rx=\"1\" />", "hand": "<path d=\"M8 3 4 7l4 4\" /> <path d=\"M4 7h16\" /> <path d=\"m16 21 4-4-4-4\" /> <path d=\"M20 17H4\" />", "comp": "<path d=\"M22 17a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 21.286V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2z\" /> <path d=\"M12 15h.01\" /> <path d=\"M12 7v4\" />", "coa": "<path d=\"m15.477 12.89 1.515 8.526a.5.5 0 0 1-.81.47l-3.58-2.687a1 1 0 0 0-1.197 0l-3.586 2.686a.5.5 0 0 1-.81-.469l1.514-8.526\" /> <circle cx=\"12\" cy=\"8\" r=\"6\" />", "sup": "<path d=\"M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2\" /> <path d=\"M15 18H9\" /> <path d=\"M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 17.52 8H14\" /> <circle cx=\"17\" cy=\"18\" r=\"2\" /> <circle cx=\"7\" cy=\"18\" r=\"2\" />", "data": "<ellipse cx=\"12\" cy=\"5\" rx=\"9\" ry=\"3\" /> <path d=\"M3 5V19A9 3 0 0 0 21 19V5\" /> <path d=\"M3 12A9 3 0 0 0 21 12\" />", "bell": "<path d=\"M10.268 21a2 2 0 0 0 3.464 0\" /> <path d=\"M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326\" />", "search": "<path d=\"m21 21-4.34-4.34\" /> <circle cx=\"11\" cy=\"11\" r=\"8\" />", "logout": "<path d=\"m16 17 5-5-5-5\" /> <path d=\"M21 12H9\" /> <path d=\"M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4\" />", "dash": "<rect width=\"7\" height=\"9\" x=\"3\" y=\"3\" rx=\"1\" /> <rect width=\"7\" height=\"5\" x=\"14\" y=\"3\" rx=\"1\" /> <rect width=\"7\" height=\"9\" x=\"14\" y=\"12\" rx=\"1\" /> <rect width=\"7\" height=\"5\" x=\"3\" y=\"16\" rx=\"1\" />", "s_design": "<path d=\"M15.707 21.293a1 1 0 0 1-1.414 0l-1.586-1.586a1 1 0 0 1 0-1.414l5.586-5.586a1 1 0 0 1 1.414 0l1.586 1.586a1 1 0 0 1 0 1.414z\" /> <path d=\"m18 13-1.375-6.874a1 1 0 0 0-.746-.776L3.235 2.028a1 1 0 0 0-1.207 1.207L5.35 15.879a1 1 0 0 0 .776.746L13 18\" /> <path d=\"m2.3 2.3 7.286 7.286\" /> <circle cx=\"11\" cy=\"11\" r=\"2\" />", "s_print": "<path d=\"M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2\" /> <path d=\"M6 9V3a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v6\" /> <rect x=\"6\" y=\"14\" width=\"12\" height=\"8\" rx=\"1\" />", "s_draw": "<ellipse cx=\"12\" cy=\"5\" rx=\"9\" ry=\"3\" /> <path d=\"M3 5v14a9 3 0 0 0 18 0V5\" />", "s_sort": "<path d=\"M2 5h20\" /> <path d=\"M6 12h12\" /> <path d=\"M9 19h6\" />", "s_mix": "<path d=\"M14 2v6a2 2 0 0 0 .245.96l5.51 10.08A2 2 0 0 1 18 22H6a2 2 0 0 1-1.755-2.96l5.51-10.08A2 2 0 0 0 10 8V2\" /> <path d=\"M6.453 15h11.094\" /> <path d=\"M8.5 2h7\" />", "s_inj": "<path d=\"m18 2 4 4\" /> <path d=\"m17 7 3-3\" /> <path d=\"M19 9 8.7 19.3c-1 1-2.5 1-3.4 0l-.6-.6c-1-1-1-2.5 0-3.4L15 5\" /> <path d=\"m9 11 4 4\" /> <path d=\"m5 19-3 3\" /> <path d=\"m14 4 6 6\" />", "s_asm": "<path d=\"M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.106-3.105c.32-.322.863-.22.983.218a6 6 0 0 1-8.259 7.057l-7.91 7.91a1 1 0 0 1-2.999-3l7.91-7.91a6 6 0 0 1 7.057-8.259c.438.12.54.662.219.984z\" />", "s_cap": "<path d=\"M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z\" /> <path d=\"M12 22V12\" /> <polyline points=\"3.29 7 12 12 20.71 7\" /> <path d=\"m7.5 4.27 9 5.15\" />", "s_seal": "<path d=\"M14 13V8.5C14 7 15 7 15 5a3 3 0 0 0-6 0c0 2 1 2 1 3.5V13\" /> <path d=\"M20 15.5a2.5 2.5 0 0 0-2.5-2.5h-11A2.5 2.5 0 0 0 4 15.5V17a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1z\" /> <path d=\"M5 22h14\" />", "s_final": "<path d=\"M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z\" /> <path d=\"m16 9-5.5 5.5L8 12\" />", "thermo": "<path d=\"M14 4v10.54a4 4 0 1 1-4 0V4a2 2 0 0 1 4 0Z\" />", "ruler": "<path d=\"M21.3 15.3a2.4 2.4 0 0 1 0 3.4l-2.6 2.6a2.4 2.4 0 0 1-3.4 0L2.7 8.7a2.41 2.41 0 0 1 0-3.4l2.6-2.6a2.41 2.41 0 0 1 3.4 0Z\" /> <path d=\"m14.5 12.5 2-2\" /> <path d=\"m11.5 9.5 2-2\" /> <path d=\"m8.5 6.5 2-2\" /> <path d=\"m17.5 15.5 2-2\" />", "clean": "<path d=\"M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z\" /> <path d=\"M20 2v4\" /> <path d=\"M22 4h-4\" /> <circle cx=\"4\" cy=\"20\" r=\"2\" />", "plus": "<circle cx=\"12\" cy=\"12\" r=\"10\" /> <path d=\"M8 12h8\" /> <path d=\"M12 8v8\" />", "ok": "<path d=\"M21.801 10A10 10 0 1 1 17 3.335\" /> <path d=\"m9 11 3 3L22 4\" />", "warn": "<path d=\"m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3\" /> <path d=\"M12 9v4\" /> <path d=\"M12 17h.01\" />", "file": "<path d=\"M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z\" /> <path d=\"M14 2v5a1 1 0 0 0 1 1h5\" /> <path d=\"M10 9H8\" /> <path d=\"M16 13H8\" /> <path d=\"M16 17H8\" />", "scan": "<path d=\"M3 7V5a2 2 0 0 1 2-2h2\" /> <path d=\"M17 3h2a2 2 0 0 1 2 2v2\" /> <path d=\"M21 17v2a2 2 0 0 1-2 2h-2\" /> <path d=\"M7 21H5a2 2 0 0 1-2-2v-2\" /> <circle cx=\"12\" cy=\"12\" r=\"3\" /> <path d=\"m16 16-1.9-1.9\" />", "clock": "<circle cx=\"12\" cy=\"12\" r=\"10\" /> <path d=\"M12 6v6l4 2\" />", "alert": "<path d=\"M12 16h.01\" /> <path d=\"M12 8v4\" /> <path d=\"M15.312 2a2 2 0 0 1 1.414.586l4.688 4.688A2 2 0 0 1 22 8.688v6.624a2 2 0 0 1-.586 1.414l-4.688 4.688a2 2 0 0 1-1.414.586H8.688a2 2 0 0 1-1.414-.586l-4.688-4.688A2 2 0 0 1 2 15.312V8.688a2 2 0 0 1 .586-1.414l4.688-4.688A2 2 0 0 1 8.688 2z\" />", "activity": "<path d=\"M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2\" />", "gauge": "<path d=\"m12 14 4-4\" /> <path d=\"M3.34 19a10 10 0 1 1 17.32 0\" />"};
 /* [VERSION] رقم إصدار البرنامج – يظهر أسفل القائمة وفي شاشة الدخول */
-const APP_VERSION = '9.7';
+const APP_VERSION = '10.4';
 let SERVER_VERSION = '';
 async function checkServerVersion(){ if(!GAS_MODE) return; try{ const v = JSON.parse(await rpc('serverVersion', '')); SERVER_VERSION = v.version + (v.ocr ? '' : ' (Drive API غير مفعّل)'); }catch(e){ SERVER_VERSION = /NET/.test(String(e && e.message || e)) ? '' : 'قديم – انشر إصداراً جديداً'; } try{ renderTabs(); }catch(e){} }
 /* [ERRORS] بدل الصفحة الفارغة: رسالة واضحة وزر إعادة تحميل */
@@ -3794,8 +3844,8 @@ renderTabs = function(){
   const side = $('#side');
   if(side){
     side.innerHTML = `<div class="brandbox"><img src="${LOGO}" alt=""><div><b>نظام ضبط الجودة</b><span>F.E.T Packaging</span></div></div>
-      <nav class="navg">${NAV.map(g => { const its = g.items.filter(i => i[2] !== 'mgr' || isMgr()); return `${g.g?`<div class="ng">${g.g}</div>`:''}${its.map(([k,l]) => `<button class="nv ${cur===k?'on':''}" data-v="${k}">${ICONS[k]}<span>${l}</span>${cnt[k]?`<span class="cnt">${cnt[k]}</span>`:''}</button>`).join('')}`; }).join('')}</nav>
-      <div class="foot"><div class="fav">${esc(((CUR.name||S.settings.inspector||'').trim().split(/\s+/).pop()||'').replace(/^ال/,'')[0]||'')}</div><div><b>${esc(CUR.name||S.settings.inspector||'')}</b><span>${serverMode&&CUR.role==='manager'?'مدير القسم':serverMode?'مراقب جودة':'هذا الجهاز'} · ${esc(S.settings.shift)}</span><span class="ver">البرنامج ${APP_VERSION}${GAS_MODE?` · الخادم ${esc(SERVER_VERSION||'…')}`:''}</span></div></div>`;
+      <nav class="navg">${NAV.map(g => { const its = g.items.filter(i => i[2] !== 'mgr' || canSeeAll()); return `${g.g?`<div class="ng">${g.g}</div>`:''}${its.map(([k,l]) => `<button class="nv ${cur===k?'on':''}" data-v="${k}">${ICONS[k]}<span>${l}</span>${cnt[k]?`<span class="cnt">${cnt[k]}</span>`:''}</button>`).join('')}`; }).join('')}</nav>
+      <div class="foot"><div class="fav">${esc(((CUR.name||S.settings.inspector||'').trim().split(/\s+/).pop()||'').replace(/^ال/,'')[0]||'')}</div><div><b>${esc(CUR.name||S.settings.inspector||'')}</b><span>${serverMode&&CUR.role==='manager'?'مدير القسم':serverMode&&CUR.role==='viewer'?'الإدارة – مشاهدة فقط':serverMode?'مراقب جودة':'هذا الجهاز'} · ${esc(S.settings.shift)}</span><span class="ver">البرنامج ${APP_VERSION}${GAS_MODE?` · الخادم ${esc(SERVER_VERSION||'…')}`:''}</span></div></div>`;
   }
   const mcur = MOBILE.some(m => m[0]===cur) ? cur : 'more';
   $('#tabs').innerHTML = MOBILE.map(([k,l]) => `<button class="${mcur===k?'on':''}" data-v="${k}">${ICONS[k]}<span>${l}${cnt[k]?`<span class="cnt">${cnt[k]}</span>`:''}</span></button>`).join('');
@@ -3846,7 +3896,7 @@ VIEWS.search = {
 /* "more" page: every section grouped with real icons (mobile) */
 VIEWS.more = {
   html(){
-    return `<h1>كل الأقسام</h1>${NAV.map(g => { const its = g.items.filter(i => i[2] !== 'mgr' || isMgr()); return `${g.g?`<h2>${g.g}</h2>`:''}<div class="mods">${its.map(([k,l]) => `<button class="mod" data-go="${k}"><span class="mi">${ICONS[k]}</span><b>${l}</b></button>`).join('')}</div>`; }).join('')}`;
+    return `<h1>كل الأقسام</h1>${NAV.map(g => { const its = g.items.filter(i => i[2] !== 'mgr' || canSeeAll()); return `${g.g?`<h2>${g.g}</h2>`:''}<div class="mods">${its.map(([k,l]) => `<button class="mod" data-go="${k}"><span class="mi">${ICONS[k]}</span><b>${l}</b></button>`).join('')}</div>`; }).join('')}`;
   },
   bind(){ $$('[data-go]').forEach(b => b.onclick = () => go(b.dataset.go)); }
 };
@@ -3889,7 +3939,7 @@ VIEWS.data.bind = function(){
   let list = [];
   const draw = () => {
     $('#uBox').innerHTML = `<div class="tw"><table class="t"><thead><tr><th>الاسم</th><th>الصلاحية</th><th>الرمز السري</th><th>الحالة</th><th></th></tr></thead><tbody>
-      ${list.map((u,i)=>`<tr><td><input type="text" data-u="${i}" data-f="name" value="${esc(u.name)}"></td><td><select data-u="${i}" data-f="role"><option value="inspector" ${u.role==='inspector'?'selected':''}>مراقب جودة</option><option value="manager" ${u.role==='manager'?'selected':''}>مدير القسم</option></select></td>
+      ${list.map((u,i)=>`<tr><td><input type="text" data-u="${i}" data-f="name" value="${esc(u.name)}"></td><td><select data-u="${i}" data-f="role"><option value="inspector" ${u.role==='inspector'?'selected':''}>مراقب جودة</option><option value="manager" ${u.role==='manager'?'selected':''}>مدير القسم</option><option value="viewer" ${u.role==='viewer'?'selected':''}>الإدارة – مشاهدة فقط</option></select></td>
         <td><input type="text" inputmode="numeric" data-u="${i}" data-f="pin" value="${esc(u.pin)}" style="max-width:120px"></td><td><select data-u="${i}" data-f="active"><option value="1" ${u.active!==false?'selected':''}>فعّال</option><option value="0" ${u.active===false?'selected':''}>موقوف</option></select></td>
         <td><button class="btn sm d" data-ud="${i}">حذف</button></td></tr>`).join('')}</tbody></table></div>
       <div class="row" style="margin-top:10px"><button class="btn" id="uAdd">${LI('plus')} إضافة مستخدم</button><button class="btn p" id="uSave">حفظ المستخدمين</button></div>`;
@@ -4141,7 +4191,7 @@ document.addEventListener('click', e => { const d = e.target.closest('[data-deld
 /* ================= EXECUTIVE MANAGEMENT REPORT ================= */
 PARENT.exec = 'rep'; NAV_OF.exec = 'rep'; PAGE.exec = ['التقارير', 'التقرير التنفيذي للإدارة'];
 function repTabs(cur){
-  const items = [['exec','التقرير التنفيذي للإدارة'], ['rep','تقرير الفترة'], ...(isMgr() ? [['daily','التقارير اليومية النهائية']] : []), ['product','تقرير منتج']];
+  const items = [['exec','التقرير التنفيذي للإدارة'], ['rep','تقرير الفترة'], ...(canSeeAll() ? [['daily','التقارير اليومية النهائية']] : []), ['product','تقرير منتج']];
   return `<div class="pick noprint subnav">${items.map(([k,l]) => `<button class="${cur===k?'on':''}" data-rt="${k}">${l}</button>`).join('')}</div>`;
 }
 let execP = 'm', execMode = 'exec';
@@ -4230,7 +4280,7 @@ VIEWS.exec = {
           <div><b class="r">${LI('warn')} تراجع</b>${bads.length ? bads.slice(0,2).map(x => `<p>${x.l}: ${deltaTag(K[x.k], Kp[x.k], KPI_DEF.find(d=>d[0]===x.k)[3])}</p>`).join('') : '<p class="muted">لا يوجد</p>'}</div>
           <div><b>${LI('alert')} يحتاج قرار</b><p>NCR متأخرة: <b>${lateN.length}</b></p><p>محجوز > 48 ساعة: <b>${oldH.length}</b></p><p>شكاوى دون رد: <b>${lateC.length}</b></p></div></div>
         ${head(3,'التوصيات')}<ol class="xrec">${rec.slice(0,3).map(r => `<li>${r}</li>`).join('')}</ol>
-        <div class="sig"><div><b>إعداد</b>${esc(S.settings.manager)}<br><span class="muted">مدير ضبط الجودة</span></div><div><b>مراجعة</b>${esc(S.settings.qa||'')}<br><span class="muted">مدير ضمان الجودة</span></div><div><b>اعتماد</b>${esc(S.settings.ceo)}<br><span class="muted">المدير التنفيذي</span></div></div>
+        <div class="sig sig4"><div><b>إعداد</b>${esc(S.settings.manager)}<br><span class="muted">مدير قسم ضبط الجودة</span></div><div><b>مراجعة</b>${esc(S.settings.ceo)}<br><span class="muted">المدير التنفيذي</span></div><div><b>اعتماد</b>${esc(S.settings.gm||'')}<br><span class="muted">المدير العام</span></div><div class="siglogo"><img src="${LOGO}" alt="F.E.T"><span>F.E.T Packaging</span></div></div>
         <div class="xft">QC-01-F27 · ملخص الإدارة العليا · F.E.T Packaging</div></section></div>`;
     }
     return repTabs('exec') + `<div class="pagehead noprint"><div><h1 style="margin:0">التقرير التنفيذي للإدارة</h1><p>${P.sub}</p></div>
@@ -4285,7 +4335,7 @@ VIEWS.exec = {
         ${head(11,'التوصيات')}
         <ol class="xrec">${rec.map(r => `<li>${r}</li>`).join('')}</ol>
         ${head(12,'ملاحظات مدير ضبط الجودة')}<textarea class="notes" placeholder="تُكتب قبل الطباعة"></textarea>
-        <div class="sig"><div><b>إعداد</b>${esc(S.settings.manager)}<br><span class="muted">مدير ضبط الجودة</span></div><div><b>مراجعة</b>${esc(S.settings.qa||'')}<br><span class="muted">مدير ضمان الجودة</span></div><div><b>اعتماد</b>${esc(S.settings.ceo)}<br><span class="muted">المدير التنفيذي</span></div></div>
+        <div class="sig sig4"><div><b>إعداد</b>${esc(S.settings.manager)}<br><span class="muted">مدير قسم ضبط الجودة</span></div><div><b>مراجعة</b>${esc(S.settings.ceo)}<br><span class="muted">المدير التنفيذي</span></div><div><b>اعتماد</b>${esc(S.settings.gm||'')}<br><span class="muted">المدير العام</span></div><div class="siglogo"><img src="${LOGO}" alt="F.E.T"><span>F.E.T Packaging</span></div></div>
         <div class="xft">QC-01-F26 · تقرير مولّد من نظام ضبط الجودة · F.E.T Packaging</div>
       </section>
     </div>`;
@@ -4656,17 +4706,18 @@ const PRINT_DEFECTS = ['كتابة / نص','لون مختلف عن العينة'
 /* [STAGE_DEFECTS] عيوب كل مرحلة */
 const SORT_DEFECTS = ['معيب مخلوط بالسليم','صندوق غير معلّم','تيوبات من منتج آخر'];
 const MIX_DEFECTS = ['لون مختلف عن العينة','نسبة صباغ غير صحيحة','خلط غير متجانس','تكتلات','رطوبة في المادة','شوائب / أجسام غريبة','مادة غير مطابقة للوصفة','كيس غير معلّم'];
-const INJ_DEFECTS = ['خيال','نفخة','دمعة','طعجة','روايش','نقص مادة','ثقوب','حقنة بيضاء ظاهرة','انفصال الكتف (هليكوبتر)','سن خطأ','فوهة خطأ','لون كتف مختلف','أوساخ الحقنة','طول من الكتف خارج الحد','تسريب'];
+const INJ_DEFECTS = ['حقن بالمقلوب','خيال','نفخة','دمعة','طعجة','روايش','نقص مادة','ثقوب','حقنة بيضاء ظاهرة','انفصال الكتف (هليكوبتر)','سن خطأ','فوهة خطأ','لون كتف مختلف','أوساخ الحقنة','طول من الكتف خارج الحد','تسريب'];
 const ASM_DEFECTS = ['ملحق خطأ','ارتخاء الملحق','ميل الملحق','تشوه / تشقق','خدوش','تسريب'];
 const CAP_DEFECTS = ['غطاء خطأ','ارتخاء الغطاء','فويلة ضعيفة','فويلة مثقوبة / محروقة','تسريب','لصاقة خاطئة / ناقصة','عدد خاطئ في الطرد','كرتونة تالفة','خلط منتجات'];
 const SEAL_DEFECTS = ['تختيم مائل','حافة حادة','تختيم يفتح','تسريب من التختيم','حروق / بقايا مادة','طعجة'];
 function defectsFor(stage){
   const u = (...l) => [...new Set([].concat(...l))];
-  return ({draw: u(DRAW_DEFECTS, PRINT_DEFECTS), sort: u(DRAW_DEFECTS, PRINT_DEFECTS, SORT_DEFECTS), mix: MIX_DEFECTS,
+  const custom = ((S.settings.customDefects || {})[stage]) || [];
+  return u(({draw: u(DRAW_DEFECTS, PRINT_DEFECTS), sort: u(DRAW_DEFECTS, PRINT_DEFECTS, SORT_DEFECTS), mix: MIX_DEFECTS,
     inj: u(INJ_DEFECTS, MIX_DEFECTS, DRAW_DEFECTS, PRINT_DEFECTS, SORT_DEFECTS), asm: u(ASM_DEFECTS, INJ_DEFECTS, DRAW_DEFECTS, PRINT_DEFECTS),
     cap: u(CAP_DEFECTS, ASM_DEFECTS, INJ_DEFECTS, MIX_DEFECTS, DRAW_DEFECTS, PRINT_DEFECTS, SORT_DEFECTS), seal: u(SEAL_DEFECTS, CAP_DEFECTS, INJ_DEFECTS, DRAW_DEFECTS, PRINT_DEFECTS),
     check: u(CAP_DEFECTS, SEAL_DEFECTS, ASM_DEFECTS, INJ_DEFECTS, DRAW_DEFECTS, PRINT_DEFECTS),
-    final: u(CAP_DEFECTS, SEAL_DEFECTS, ASM_DEFECTS, INJ_DEFECTS, DRAW_DEFECTS, PRINT_DEFECTS)})[stage] || DEFECTS;
+    final: u(CAP_DEFECTS, SEAL_DEFECTS, ASM_DEFECTS, INJ_DEFECTS, DRAW_DEFECTS, PRINT_DEFECTS)})[stage] || DEFECTS, custom);
 }
 /* [STOPS] أسباب توقف الآلة */
 const STOP_REASONS = [['noprod','لا يوجد منتج', ''], ['maint','صيانة / عطل', 'وصف العطل'], ['mold','تبديل قالب', 'القطر الجديد'], ['operator','غياب مشغل', ''], ['other','أخرى', 'السبب']];
@@ -4693,16 +4744,17 @@ function drawMachineHtml(m, f){
   const o = withF(f, () => fSpec()), sg = withF(f, () => suggestRound());
   const cls = f.cls ?? sg.cls, dec = f.decision ?? sg.dec;
   const inItems = (o2, code) => (f.items||[]).some(i => String(i.order)===String(o2) && i.code===code);
-  return head + `<div class="grid"><label class="f">رقم الطلبية على ${esc(m)}<input type="text" inputmode="numeric" list="ordList" data-ord value="${esc(f.order || ((f.items||[])[0]||{}).order || '')}" placeholder="اكتب أو اختر"></label></div>
+  return head + `<div class="grid"><label class="f">رقم الطلبية على ${esc(m)}<input type="text" inputmode="numeric" list="ordList" data-ord value="${esc(f.order || ((f.items||[])[0]||{}).order || '')}" placeholder="رقم الطلبية أو اسم المنتج"></label></div>
     ${rows.length > 1 ? `<div class="pick" style="margin-top:8px">${rows.map((x,i) => `<button class="pchip ${inItems(x.order_number, x.product_code)?'on':''}" data-pi="${i}"><b>${esc(x.product_name)}</b><small>${esc(x.product_code)} · قطر ${esc(x.product_diameter||'—')} · طول ${esc(x.tube_cylinder_length||'—')}</small></button>`).join('')}</div>` : ''}
     ${(f.items||[]).length ? productCards(f.items, sk, f.mi||0) : f.order ? orderCard(null, f.order) : ''}
+    ${(f.items||[]).length ? productNotesHtml(f.items) : ''}
     ${f.order || (f.items||[]).length ? boxSummaryHtml(f.order || f.items[0].order) : ''}
     <h3 class="mh3">بنود الفحص</h3><div class="mchecks">${checkRows(stageChecks(s), o, f.checks, f.vals)}</div>
-    <h3 class="mh3">العيوب المرصودة</h3><div class="pick" data-defs>${defectsFor(sk).map(x => `<button class="${f.defects.includes(x)?'on':''}" data-dv="${esc(x)}">${esc(x)}</button>`).join('')}</div>
+    <h3 class="mh3">العيوب المرصودة</h3><div class="pick" data-defs>${defectsFor(sk).map(x => `<button class="${f.defects.includes(x)?'on':''}" data-dv="${esc(x)}">${esc(x)}</button>`).join('')}</div>${addDefectHtml(sk, 'dm:' + m)}
     <h3 class="mh3">القرار <span class="muted">(المقترح بإطار متقطع)</span></h3><div class="dec">${DECISIONS.map(d => `<button data-dd="${d}" data-d="${d}" class="${dec===d?'on':''} ${sg.dec===d?'sug':''}">${d}</button>`).join('')}</div>
     <div class="rollbox"><b>${LI('warn')} قبل الحفظ: ${sk==='draw' ? 'رقم الرول ورقم الصندوق' : 'رقم الصندوق'} للآلة ${esc(m)}</b><div class="grid">
       ${sk==='draw' ? `<label class="f">رقم الرول <span class="req">*</span><input type="text" data-roll value="${esc(f.extra.roll||'')}" placeholder="رقم الرول على الآلة"></label>` : ''}
-      <label class="f">رقم الصندوق <span class="req">*</span><input type="text" data-box value="${esc(f.box||'')}" placeholder="رقم الصندوق الحالي"></label></div>${sk==='draw' ? '' : ''}<div data-rw>${sk!=='draw' ? '' : rollNotesHtml(f.order || ((f.items||[])[0]||{}).order || '', f.extra.roll)}</div><div data-bw>${boxNotesHtml(f.order || ((f.items||[])[0]||{}).order || '', f.box)}</div></div>
+      <label class="f">رقم الصندوق <span class="req">*</span><input type="text" data-box value="${esc(f.box||'')}" placeholder="رقم الصندوق الحالي"></label></div>${sk==='draw' ? '' : ''}<div data-rw>${sk!=='draw' ? '' : rollNotesHtml(f.order || ((f.items||[])[0]||{}).order || '', f.extra.roll, null, f.items)}</div><div data-bw>${boxNotesHtml(f.order || ((f.items||[])[0]||{}).order || '', f.box, f.items)}</div></div>
     <div class="grid" style="margin-top:12px">
       ${dec==='محجور'||dec==='مرفوض' ? `<label class="f">الكمية المحجوزة / المرفوضة<input type="text" data-qty value="${esc(f.qty||'')}"></label>` : ''}
       <label class="f">ملاحظات <span class="muted">(تبقى على الصندوق في المراحل التالية)</span><input type="text" data-notes value="${esc(f.notes||'')}"></label>
@@ -4725,7 +4777,7 @@ VIEWS.drawm = {
       p.querySelectorAll('[data-rsn]').forEach(b => b.onclick = () => { f.reason = b.dataset.rsn; upd(); });
       const det = p.querySelector('[data-detail]'); if(det) det.oninput = e => f.detail = e.target.value;
       const ord = p.querySelector('[data-ord]'); if(ord) ord.onchange = e => {
-        f.order = e.target.value.trim(); f.items = []; f.mi = 0; f.cls = null; f.decision = null;
+        const _o = orderFromInput(e.target); if(_o === null) return; f.order = _o; f.items = []; f.mi = 0; f.cls = null; f.decision = null;
         const rows = ordRows(f.order);
         if(f.order && rows.length === 0) f.items.push({order:f.order, code:'', product:'', customer:''});
         if(rows.length === 1) f.items.push({order:f.order, code:rows[0].product_code||'', product:rows[0].product_name||'', customer:rows[0].customer||''});
@@ -4737,7 +4789,7 @@ VIEWS.drawm = {
       p.querySelectorAll('[data-dv]').forEach(b => b.onclick = () => { const v = b.dataset.dv; f.defects = f.defects.includes(v) ? f.defects.filter(x => x !== v) : f.defects.concat(v); f.cls = null; f.decision = null; upd(); });
       p.querySelectorAll('[data-dd]').forEach(b => b.onclick = () => { f.decision = b.dataset.dd; upd(); });
       const bind = (sel, fn) => { const el = p.querySelector(sel); if(el) el.oninput = e => fn(e.target.value); };
-      bind('[data-roll]', v => { f.extra.roll = v; const rw = p.querySelector('[data-rw]'); if(rw) rw.innerHTML = rollNotesHtml(f.order || ((f.items||[])[0]||{}).order || '', v); }); bind('[data-box]', v => { f.box = v; const bw = p.querySelector('[data-bw]'); if(bw) bw.innerHTML = boxNotesHtml(f.order || ((f.items||[])[0]||{}).order || '', v); }); bind('[data-qty]', v => f.qty = v); bind('[data-notes]', v => f.notes = v);
+      bind('[data-roll]', v => { f.extra.roll = v; const rw = p.querySelector('[data-rw]'); if(rw) rw.innerHTML = rollNotesHtml(f.order || ((f.items||[])[0]||{}).order || '', v, null, f.items); }); bind('[data-box]', v => { f.box = v; const bw = p.querySelector('[data-bw]'); if(bw) bw.innerHTML = boxNotesHtml(f.order || ((f.items||[])[0]||{}).order || '', v, f.items); }); bind('[data-qty]', v => f.qty = v); bind('[data-notes]', v => f.notes = v);
     });
     $('#dmSave').onclick = saveDrawRound;
   }
@@ -4787,9 +4839,24 @@ VIEWS.prod.html = function(){
 
 document.addEventListener('click', e => { const b = e.target.closest('[data-delstop]'); if(!b) return; ask('حذف سجل التوقف هذا؟', 'حذف', () => { S.stops = (S.stops || []).filter(x => String(x.id) !== b.dataset.delstop); save(); rerender(); }, true); });
 
+/* [CUSTOM_DEFECTS] إضافة مشكلة جديدة من المراقب: تُحفظ لهذه المرحلة وتظهر في المرات القادمة */
+function addDefectHtml(stage, target){ return `<div class="adddef noprint"><input type="text" data-newdef="${esc(target)}" placeholder="مشكلة غير موجودة؟ اكتبها هنا"><button class="btn sm" data-adddef="${esc(target)}" data-stage="${stage}">${LI('plus')} إضافة مشكلة</button></div>`; }
+document.addEventListener('click', e => {
+  const b = e.target.closest('[data-adddef]'); if(!b) return;
+  const tgt = b.dataset.adddef, stage = b.dataset.stage, inp = document.querySelector(`[data-newdef="${CSS.escape(tgt)}"]`), v = String(inp && inp.value || '').trim();
+  if(!v){ toast('اكتب اسم المشكلة'); return; }
+  S.settings.customDefects = S.settings.customDefects || {}; const l = S.settings.customDefects[stage] = S.settings.customDefects[stage] || [];
+  if(!defectsFor(stage).includes(v)) l.push(v);
+  const obj = tgt === 'F' ? F : tgt.startsWith('dm:') ? DM.machines[tgt.slice(3)] : tgt.startsWith('sm:') ? SM[+tgt.slice(3)] : null;
+  if(obj){ obj.defects = obj.defects || []; if(!obj.defects.includes(v)) obj.defects.push(v); obj.cls = null; obj.decision = null; }
+  save(); rerender(); toast(`أُضيفت المشكلة "${v}" لمرحلة ${stageBy(stage).name}`);
+});
+
 /* ================= [BOXES] الصناديق والأكياس: ملخص القرارات وملاحظاتها عبر كل المراحل ================= */
 const BOX_DEC_ORDER = ['مقبول','مقبول بملاحظة','محجور','مرفوض'];
 const normBox = b => String(b ?? '').trim().replace(/\s+/g, '').toUpperCase();
+/* [PRODUCT_NOTES] كل ملاحظة مرتبطة بمنتجها: لا تظهر ملاحظات منتج عند العمل على منتج آخر */
+const sameProduct = (r, items) => (items || []).length && itemsOf(r).some(i => items.some(t => (t.code && i.code && i.code === t.code) || (!t.code && t.product && i.product === t.product) || (t.code && !i.code && t.product && i.product === t.product)));
 /* آخر قرار لكل صندوق في كل مرحلة لطلبية معيّنة */
 function boxesOfOrder(order){
   const map = new Map();
@@ -4799,15 +4866,15 @@ function boxesOfOrder(order){
   });
   return [...map.values()];
 }
-function boxHistory(order, box){
+function boxHistory(order, box, items){
   const b = normBox(box); if(!b) return [];
-  return S.rounds.filter(r => normBox(r.box) === b && (!order || hasOrder(r, order))).sort((x, y) => (x.date + x.time).localeCompare(y.date + y.time));
+  return S.rounds.filter(r => normBox(r.box) === b && ((items || []).length ? sameProduct(r, items) : (order && hasOrder(r, order)))).sort((x, y) => (x.date + x.time).localeCompare(y.date + y.time));
 }
 /* تنبيه عند كتابة رقم صندوق عليه ملاحظات أو قرارات سابقة */
-function boxNotesHtml(order, box){
-  const h = boxHistory(order, box).filter(r => String(r.notes||'').trim() || r.decision !== 'مقبول' || (r.defects||[]).length);
+function boxNotesHtml(order, box, items){
+  const h = boxHistory(order, box, items).filter(r => String(r.notes||'').trim() || r.decision !== 'مقبول' || (r.defects||[]).length);
   if(!normBox(box)) return '';
-  if(!h.length) return boxHistory(order, box).length ? `<div class="boxok">${LI('ok')} الصندوق ${esc(box)} فُحص سابقاً دون ملاحظات</div>` : '';
+  if(!h.length) return boxHistory(order, box, items).length ? `<div class="boxok">${LI('ok')} الصندوق ${esc(box)} فُحص سابقاً دون ملاحظات</div>` : '';
   return `<div class="boxwarn"><b>${LI('warn')} تنبيه: الصندوق ${esc(box)} عليه ملاحظات من مراحل سابقة</b>${h.map(r => `<div class="bwr"><span class="num">${esc(r.date)} ${esc(r.time)}</span><span><b>${esc(stageBy(r.stage).name)}</b>${r.machine && r.machine !== '—' ? ' – ' + esc(r.machine) : ''}${r.worker ? ' – عامل الفرز: ' + esc(r.worker) : ''}<br><small>${esc(r.inspector)}</small></span><span>${(r.defects||[]).length ? esc(r.defects.join('، ')) + '<br>' : ''}${esc(r.notes || '')}</span><span>${decPill(r.decision)}</span></div>`).join('')}</div>`;
 }
 /* ملخص صناديق الطلبية حسب المرحلة والقرار */
@@ -4841,15 +4908,16 @@ function sortEntryHtml(i, f){
   if(!f.open && !has) return `<div class="mhd gate-closed"><b>${LI(STAGE_ICON[SMK])} ${ST_CFG[SMK].unit} ${f.gate}</b><span class="pill">لم يُسجَّل</span><button class="btn sm p" data-openg="${i}">${ST_CFG[SMK].open}</button>${f.gate > ST_CFG[SMK].initial() ? `<button class="btn sm d" data-rmw="${i}">إزالة</button>` : ''}</div>`;
   return `<div class="mhd"><b>${LI(STAGE_ICON[SMK])} ${ST_CFG[SMK].unit} ${f.gate}${f.worker ? ' – ' + esc(f.worker) : ''}</b><span class="pill ${has ? 'p-مقبول' : ''}">${has ? 'قيد التسجيل' : 'لم يُسجَّل'}</span>${f.gate > ST_CFG[SMK].initial() ? `<button class="btn sm d" data-rmw="${i}">إزالة</button>` : ''}${!has ? `<button class="btn sm" data-closeg="${i}">إغلاق</button>` : ''}</div>
     <div class="grid"><label class="f">${ST_CFG[SMK].nameLabel} <span class="req">*</span><input type="text" list="workerList" data-worker value="${esc(f.worker)}" placeholder="اكتب الاسم"></label>
-      <label class="f">رقم الطلبية <span class="req">*</span><input type="text" inputmode="numeric" list="ordList" data-ord value="${esc(ord)}" placeholder="اكتب أو اختر"></label></div>
+      <label class="f">رقم الطلبية <span class="req">*</span><input type="text" inputmode="numeric" list="ordList" data-ord value="${esc(ord)}" placeholder="رقم الطلبية أو اسم المنتج"></label></div>
     ${rows.length > 1 ? `<div class="pick" style="margin-top:8px">${rows.map((x, k) => `<button class="pchip ${inItems(x.product_code)?'on':''}" data-pi="${k}"><b>${esc(x.product_name)}</b><small>${esc(x.product_code)}</small></button>`).join('')}</div>` : ''}
     ${(f.items||[]).length ? productCards(f.items, SMK, f.mi||0) : ''}
+    ${(f.items||[]).length ? productNotesHtml(f.items) : ''}
     ${ord ? boxSummaryHtml(ord) : ''}
     <h3 class="mh3">بنود الفحص</h3><div class="mchecks">${checkRows(stageChecks(s), o, f.checks, f.vals)}</div>
-    <h3 class="mh3">العيوب المرصودة</h3><div class="pick">${defectsFor(SMK).map(x => `<button class="${f.defects.includes(x)?'on':''}" data-dv="${esc(x)}">${esc(x)}</button>`).join('')}</div>
+    <h3 class="mh3">العيوب المرصودة</h3><div class="pick">${defectsFor(SMK).map(x => `<button class="${f.defects.includes(x)?'on':''}" data-dv="${esc(x)}">${esc(x)}</button>`).join('')}</div>${addDefectHtml(SMK, 'sm:' + i)}
     <h3 class="mh3">القرار <span class="muted">(المقترح بإطار متقطع)</span></h3><div class="dec">${DECISIONS.map(d => `<button data-dd="${d}" data-d="${d}" class="${dec===d?'on':''} ${sg.dec===d?'sug':''}">${d}</button>`).join('')}</div>
     <div class="rollbox"><b>${LI('warn')} قبل الحفظ: رقم الصندوق ل${ST_CFG[SMK].unit} ${f.gate}</b><div class="grid"><label class="f">رقم الصندوق <span class="req">*</span><input type="text" data-box value="${esc(f.box||'')}" placeholder="رقم الصندوق الذي فرزته"></label>
-      ${dec==='محجور'||dec==='مرفوض' ? `<label class="f">الكمية المحجوزة / المرفوضة<input type="text" data-qty value="${esc(f.qty||'')}"></label>` : ''}</div><div data-bw>${boxNotesHtml(ord, f.box)}</div></div>
+      ${dec==='محجور'||dec==='مرفوض' ? `<label class="f">الكمية المحجوزة / المرفوضة<input type="text" data-qty value="${esc(f.qty||'')}"></label>` : ''}</div><div data-bw>${boxNotesHtml(ord, f.box, f.items)}</div></div>
     ${SMK==='asm' ? `<label class="f" style="margin-top:10px">المادة المركبة<input type="text" data-part value="${esc((f.extra||{}).part||'')}" placeholder="نوزل / مسكرة / غطاء…"></label>` : ''}
     <label class="f" style="margin-top:10px">ملاحظات (تبقى على الصندوق وتظهر في المراحل التالية)<input type="text" data-notes value="${esc(f.notes||'')}"></label>`;
 }
@@ -4876,7 +4944,7 @@ VIEWS.sortm = {
       const rm = p.querySelector('[data-rmw]'); if(rm) rm.onclick = () => ask(`إزالة ${ST_CFG[SMK].unit} ${f.gate}؟`, 'إزالة', () => { SM.splice(i, 1); rerender(); }, true);
       const w = p.querySelector('[data-worker]'); if(w) w.oninput = e => f.worker = e.target.value;
       const ord = p.querySelector('[data-ord]'); if(ord) ord.onchange = e => {
-        f.order = e.target.value.trim(); f.items = []; f.mi = 0; f.cls = null; f.decision = null;
+        const _o = orderFromInput(e.target); if(_o === null) return; f.order = _o; f.items = []; f.mi = 0; f.cls = null; f.decision = null;
         const rows = ordRows(f.order);
         if(f.order && rows.length === 0) f.items.push({order:f.order, code:'', product:'', customer:''});
         if(rows.length === 1) f.items.push({order:f.order, code:rows[0].product_code||'', product:rows[0].product_name||'', customer:rows[0].customer||''});
@@ -4887,7 +4955,7 @@ VIEWS.sortm = {
       p.querySelectorAll('.tri').forEach(t => t.querySelectorAll('button').forEach(b => b.onclick = () => { const k = t.dataset.ck; f.checks[k] = f.checks[k] === b.dataset.v ? '' : b.dataset.v; f.cls = null; f.decision = null; upd(); }));
       p.querySelectorAll('[data-dv]').forEach(b => b.onclick = () => { const v = b.dataset.dv; f.defects = f.defects.includes(v) ? f.defects.filter(x => x !== v) : f.defects.concat(v); f.cls = null; f.decision = null; upd(); });
       p.querySelectorAll('[data-dd]').forEach(b => b.onclick = () => { f.decision = b.dataset.dd; upd(); });
-      const bx = p.querySelector('[data-box]'); if(bx) bx.oninput = e => { f.box = e.target.value; const ord2 = f.order || ((f.items||[])[0]||{}).order || ''; p.querySelector('[data-bw]').innerHTML = boxNotesHtml(ord2, f.box); };
+      const bx = p.querySelector('[data-box]'); if(bx) bx.oninput = e => { f.box = e.target.value; const ord2 = f.order || ((f.items||[])[0]||{}).order || ''; p.querySelector('[data-bw]').innerHTML = boxNotesHtml(ord2, f.box, f.items); };
       const q = p.querySelector('[data-qty]'); if(q) q.oninput = e => f.qty = e.target.value;
       const pt = p.querySelector('[data-part]'); if(pt) pt.oninput = e => { f.extra = f.extra || {}; f.extra.part = e.target.value; };
       const n = p.querySelector('[data-notes]'); if(n) n.oninput = e => f.notes = e.target.value;
@@ -4941,16 +5009,29 @@ VIEWS.boxes = {
 };
 
 /* ================= [ROLLS] ملاحظات الرول: من الطباعة تظهر في السحب لكل المراقبين ================= */
-function rollHistory(roll){ const k = normBox(roll); if(!k) return []; return S.rounds.filter(r => normBox((r.extra||{}).roll) === k).sort((x, y) => (x.date + x.time).localeCompare(y.date + y.time)); }
-function rollNotesHtml(order, roll, exceptId){
+function rollHistory(roll, items, order){ const k = normBox(roll); if(!k) return []; return S.rounds.filter(r => normBox((r.extra||{}).roll) === k && ((items || []).length ? sameProduct(r, items) : (order && hasOrder(r, order)))).sort((x, y) => (x.date + x.time).localeCompare(y.date + y.time)); }
+function rollNotesHtml(order, roll, exceptId, items){
   const k = normBox(roll); if(!k) return '';
-  const h = rollHistory(roll).filter(r => r.id !== exceptId);
+  const h = rollHistory(roll, items, order).filter(r => r.id !== exceptId);
   const flagged = h.filter(r => String(r.notes||'').trim() || r.decision !== 'مقبول' || (r.defects||[]).length || ((r.failed||[]).length));
-  const printNotes = order ? S.rounds.filter(r => r.stage === 'print' && hasOrder(r, order) && String(r.notes||'').trim() && !flagged.includes(r)) : [];
+  const printNotes = order ? S.rounds.filter(r => r.stage === 'print' && hasOrder(r, order) && (!(items || []).length || sameProduct(r, items)) && String(r.notes||'').trim() && !flagged.includes(r)) : [];
   if(!flagged.length && !printNotes.length) return h.length ? `<div class="boxok">${LI('ok')} الرول ${esc(roll)} مسجّل سابقاً دون ملاحظات</div>` : '';
   const row = r => `<div class="bwr"><span class="num">${esc(r.date)} ${esc(r.time)}</span><span><b>${esc(stageBy(r.stage).name)}</b>${r.type === 'فحص نهائي' ? ' – فحص نهائي' : r.type === 'بدء تشغيل' && r.stage === 'print' ? ' – بداية التشغيل' : ''}${r.machine && r.machine !== '—' ? ' – ' + esc(r.machine) : ''}<br><small>${esc(r.inspector)}${(r.extra||{}).roll ? ' · رول ' + esc(r.extra.roll) : ''}</small></span><span>${[...(r.failed||[]), ...(r.defects||[])].length ? esc([...(r.failed||[]), ...(r.defects||[])].join('، ')) + '<br>' : ''}${esc(r.notes || '')}</span><span>${decPill(r.decision)}</span></div>`;
   return `<div class="boxwarn roll">${flagged.length ? `<b>${LI('warn')} تنبيه: الرول ${esc(roll)} عليه ملاحظات</b>${flagged.map(row).join('')}` : ''}
     ${printNotes.length ? `<b style="margin-top:6px">${LI('s_print')} ملاحظات الطباعة لهذه الطلبية</b>${printNotes.map(row).join('')}` : ''}</div>`;
+}
+
+/* لوحة "ملاحظات هذا المنتج": تظهر في كل المراحل، لنفس المنتج فقط */
+function productNotesHtml(items, exceptId){
+  if(!(items || []).length) return '';
+  const ords = new Set(items.map(i => String(i.order)));
+  const rs = S.rounds.filter(r => r.id !== exceptId && r.stage !== 'design' && sameProduct(r, items) && (String(r.notes || '').trim() || r.decision !== 'مقبول' || (r.defects || []).length || (r.failed || []).length)).sort((a, b) => (b.date + b.time).localeCompare(a.date + a.time));
+  const cur = rs.filter(r => itemsOf(r).some(i => ords.has(String(i.order)))), old = rs.filter(r => !cur.includes(r) && daysBetween(r.date, todayStr()) <= 60);
+  const name = items.map(i => i.product || i.code).filter(Boolean).join('، ');
+  const row = r => `<div class="bwr"><span class="num">${esc(r.date)} ${esc(r.time)}</span><span><b>${esc(stageBy(r.stage).name)}</b>${r.type === 'فحص نهائي' ? ' – فحص نهائي' : r.type === 'بدء تشغيل' && r.stage === 'print' ? ' – بداية التشغيل' : ''}${r.machine && r.machine !== '—' ? ' – ' + esc(r.machine) : ''}${r.worker ? ' – ' + esc(r.worker) : ''}<br><small>${esc(r.inspector)}${r.box ? ' · صندوق ' + esc(r.box) : ''}${(r.extra||{}).roll ? ' · رول ' + esc(r.extra.roll) : ''}${itemsOf(r)[0] && itemsOf(r)[0].order ? ' · طلبية ' + esc(itemsOf(r)[0].order) : ''}</small></span><span>${[...(r.failed||[]), ...(r.defects||[])].length ? esc([...(r.failed||[]), ...(r.defects||[])].join('، ')) + '<br>' : ''}${esc(r.notes || '')}</span><span>${r.stage === 'design' ? designPill(r.decision) : decPill(r.decision)}</span></div>`;
+  if(!cur.length && !old.length) return `<div class="pnotes2 ok">${LI('ok')} لا توجد ملاحظات سابقة على <b>${esc(name)}</b></div>`;
+  return `<div class="pnotes2"><b>${LI('warn')} ملاحظات المنتج: ${esc(name)}</b>${cur.length ? cur.slice(0, 15).map(row).join('') : '<p class="muted" style="margin:4px 0">لا ملاحظات على هذه الطلبية.</p>'}
+    ${old.length ? `<details><summary>ملاحظات سابقة لنفس المنتج من طلبيات أخرى (${old.length})</summary>${old.slice(0, 10).map(row).join('')}</details>` : ''}</div>`;
 }
 
 /* ================= [FINAL] فحص المنتج النهائي: ملخص مشاكل المنتج + الكراتين المعاينة ================= */
@@ -5147,13 +5228,21 @@ function calWindow(d){ d = d || new Date(); const last = new Date(d.getFullYear(
 function maintNCR(desc, req){ return createNCR({source:'مراقبات عامة', dept:'الصيانة', desc, requirement:req, cls:'رئيسي', correction:'إبلاغ قسم الصيانة للإصلاح'}); }
 const openAuditActions = () => S.audits.flatMap(a => (a.actions || []).map((x, i) => ({a, x, i}))).filter(o => !o.x.done && String(o.x.what || '').trim());
 
+/* [AUDIT_WEEK] مراقبات النظافة والتفتيش أسبوعية: يوم المراقبة (السبت افتراضياً) وتغطي مخالفات الأسبوع من السبت إلى الخميس */
+const DAY_NAMES = ['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
+const auditDay = () => S.settings.auditDay ?? 6;
+function auditPeriod(dateStr){ const d = new Date(dateStr || todayStr()); const thu = new Date(d); thu.setDate(d.getDate() - 1); while(thu.getDay() !== 4) thu.setDate(thu.getDate() - 1); const sat = new Date(thu); sat.setDate(thu.getDate() - 5); return {from: todayStr(sat), to: todayStr(thu)}; }
+const auditDoneFor = (type, p) => S.audits.find(x => x.type === type && x.period && x.period.from === p.from);
+function auditDue(){ const t = new Date(), p = auditPeriod(); const dueStart = new Date(p.to); dueStart.setDate(dueStart.getDate() + ((auditDay() - 4 + 7) % 7 || 7)); return {p, isDue: t >= new Date(todayStr(dueStart)), day: DAY_NAMES[auditDay()]}; }
 let A2 = null;
 VIEWS.auditform = {
   html(){
     const a = AUDITS.find(x => x.key === arg.type);
-    if(!A2 || A2.type !== a.key) A2 = {type:a.key, res:{}, notes:{}, actions:[{what:'', who:'', due:''}], gnote:''};
+    if(!A2 || A2.type !== a.key) A2 = {type:a.key, res:{}, notes:{}, actions:[{what:'', who:'', due:''}], gnote:'', period: auditPeriod()};
+    A2.period = A2.period || auditPeriod();
     let i = 0;
-    return `<div class="row" style="justify-content:space-between"><h1 style="margin:0">${a.name}</h1><button class="btn" id="back">رجوع</button></div><p class="muted">${a.form} · الوردية ${S.settings.shift}</p>
+    return `<div class="row" style="justify-content:space-between"><h1 style="margin:0">${a.name}</h1><button class="btn" id="back">رجوع</button></div><p class="muted">${a.form} · مراقبة أسبوعية${A2.editId ? ' · <b>تعديل مراقبة محفوظة</b>' : ''}</p>
+    <div class="panel aper"><b>${LI('cal') || ''} المخالفات خلال الأسبوع</b><div class="grid"><label class="f">من (السبت)<input type="date" id="apFrom" value="${A2.period.from}"></label><label class="f">إلى (الخميس)<input type="date" id="apTo" value="${A2.period.to}"></label></div><span class="muted">سجّل كل مخالفة حدثت خلال هذه الفترة، ويمكن تعديل الفترة عند الحاجة.</span></div>
     <button class="btn" id="allOk" style="margin-bottom:8px">كل البنود صح ✓</button>
     ${a.groups.map(([g, items]) => `<h2>${g}</h2><div class="panel">${items.map(([n, crit]) => { const k = 'i' + (i++); return `<div class="ck au"><div><div class="lb">${esc(n)}</div><div class="ac">${esc(crit)}</div>
       <input type="text" class="aun ${A2.res[k]==='n'?'need':''}" data-note="${k}" value="${esc(A2.notes[k]||'')}" placeholder="${A2.res[k]==='n' ? 'وصف المشكلة (مطلوب)' : 'ملاحظة (اختياري)'}"></div>
@@ -5167,6 +5256,7 @@ VIEWS.auditform = {
   bind(){
     const a = AUDITS.find(x => x.key === arg.type); const items = a.groups.flatMap(g => g[1]);
     $('#back').onclick = () => { A2 = null; go('mon'); };
+    $('#apFrom').onchange = e => A2.period.from = e.target.value; $('#apTo').onchange = e => A2.period.to = e.target.value;
     $$('.tri2').forEach(t => t.querySelectorAll('button').forEach(b => b.onclick = () => { A2.res[t.dataset.ck] = b.dataset.v; rerender(); }));
     $$('[data-note]').forEach(el => el.oninput = () => A2.notes[el.dataset.note] = el.value);
     $('#allOk').onclick = () => { items.forEach((_, i) => { if(!A2.res['i' + i]) A2.res['i' + i] = 'y'; }); rerender(); };
@@ -5180,13 +5270,17 @@ VIEWS.auditform = {
       const unset = items.filter((_, i) => !A2.res['i' + i]).length; if(unset){ toast(`حدّد صح أو خطأ لكل البنود (${unset} بند)`); return; }
       const miss = items.map((_, i) => 'i' + i).filter(k => A2.res[k] === 'n' && !String(A2.notes[k]||'').trim()); if(miss.length){ toast('اكتب وصف المشكلة لكل بند خطأ'); return; }
       const failed = items.map((it, i) => A2.res['i' + i] === 'n' ? it[0] + (A2.notes['i' + i] ? ` (${A2.notes['i' + i]})` : '') : null).filter(Boolean);
-      const actions = A2.actions.filter(x => String(x.what).trim()).map(x => ({...x, done:false}));
+      const actions = A2.actions.filter(x => String(x.what).trim());
       if(failed.length && !actions.length){ toast('أضف إجراءً تصحيحياً واحداً على الأقل للبنود الخطأ'); return; }
-      const rec = {id:uid(), date:todayStr(), time:timeStr(), shift:S.settings.shift, inspector:S.settings.inspector, type:a.key, res:{...A2.res}, notes:{...A2.notes}, gnote:A2.gnote, failed, actions, action:actions.map(x => x.what).join('، '), fixed: actions.length ? 'لا' : ''};
+      const old = A2.editId ? S.audits.find(x => x.id === A2.editId) : null;
+      const prevActs = old ? (old.actions || []) : [];
+      const acts2 = A2.actions.filter(x => String(x.what).trim()).map(x => { const p = prevActs.find(y => y.what === x.what); return p ? {...p, who:x.who, due:x.due} : {...x, done:false}; });
+      const rec = {id: old ? old.id : uid(), date: old ? old.date : todayStr(), time: old ? old.time : timeStr(), shift: old ? old.shift : S.settings.shift, inspector: old ? old.inspector : S.settings.inspector, type:a.key, period:{...A2.period}, res:{...A2.res}, notes:{...A2.notes}, workers:{...(A2.workers||{})}, gnote:A2.gnote, failed, actions:acts2, action:acts2.map(x => x.what).join('، '), fixed: acts2.length && !acts2.every(x => x.done) ? 'لا' : (acts2.length ? 'نعم' : '')};
+      if(old){ rec.editedBy = CUR.name || S.settings.inspector; Object.keys(old).forEach(k => delete old[k]); Object.assign(old, rec); save(); A2 = null; monTab = 'audit'; toast('تم تعديل المراقبة'); go('mon'); return; }
       S.audits.push(rec);
       const prev = S.audits.filter(x => x.type === a.key).slice(-2, -1)[0];
       if(failed.length && prev && (prev.failed||[]).length && failed.some(f => prev.failed.some(p => p.split(' (')[0] === f.split(' (')[0]))){ createNCR({source:'مراقبات عامة', dept:a.name, desc:`مخالفة متكررة: ${failed.join('، ')}`, requirement:a.form, cls:'ثانوي'}); toast('مخالفة متكررة – فُتح NCR'); }
-      else toast(failed.length ? `حُفظت المراقبة – ${failed.length} بند خطأ، ${actions.length} إجراء مفتوح` : 'حُفظت المراقبة');
+      else toast(failed.length ? `حُفظت المراقبة – ${failed.length} بند خطأ، ${acts2.length} إجراء مفتوح` : 'حُفظت المراقبة');
       save(); A2 = null; monTab = 'audit'; go('mon');
     };
   }
@@ -5201,10 +5295,11 @@ VIEWS.mon.html = function(){
     const open = openAuditActions();
     return `<h1>المراقبات العامة</h1>${tabs}
       ${open.length ? `<div class="openacts"><b>${LI('warn')} إجراءات تصحيحية لم تُغلق (${open.length})</b>${open.map(o => `<div class="oa"><span><b>${esc(AUDITS.find(x => x.key === o.a.type)?.name || '')}</b> · ${esc(o.a.date)}</span><span>${esc(o.x.what)}</span><span class="muted">${esc(o.x.who || '')}${o.x.due ? ' · موعد ' + esc(o.x.due) : ''}${o.x.due && o.x.due < t ? ' <b class="r">متأخر</b>' : ''}</span><button class="btn sm p" data-fix="${o.a.id}|${o.i}">تم الإصلاح</button></div>`).join('')}</div>` : ''}
-      <div class="mods" style="margin-top:12px">${AUDITS.map(a => { const last = S.audits.filter(x => x.type === a.key).map(x => x.date).sort().pop(); const due = !last || daysBetween(last, t) >= 7; return `<button class="mod ${due?'due':''}" data-a="${a.key}">${ICONS.mon}<b>${a.name}</b><span>${a.form} · ${last ? 'آخر مراقبة ' + last : 'لم تُسجل بعد'}</span></button>`; }).join('')}</div>
-      <h2>آخر المراقبات</h2><div class="tw"><table class="t"><thead><tr><th>التاريخ</th><th>النوع</th><th>المراقب</th><th>البنود الخطأ</th><th>الإجراءات</th><th>الملاحظات</th><th></th></tr></thead><tbody>
-      ${S.audits.slice(-25).reverse().map(x => `<tr><td class="num">${x.date} ${x.time||''}</td><td>${esc(AUDITS.find(a => a.key === x.type)?.name || '')}</td><td>${esc(x.inspector)}</td><td>${esc((x.failed||[]).join('، ')) || '<span class="muted">لا يوجد</span>'}</td>
-        <td>${(x.actions||[]).length ? x.actions.map(y => `<div>${y.done ? '✅' : '⏳'} ${esc(y.what)}${y.done ? ` <small class="muted">(${esc(y.doneDate||'')})</small>` : ''}</div>`).join('') : esc(x.action||'')}</td><td>${esc(x.gnote||'')}</td><td><button class="btn sm" data-pdfa="${x.id}">PDF</button></td></tr>`).join('') || '<tr><td colspan="7" class="muted">لا توجد مراقبات.</td></tr>'}</tbody></table></div>`;
+      <div class="banner info aweek"><span>المراقبات <b>أسبوعية يوم ${esc(DAY_NAMES[auditDay()])}</b> وتغطي مخالفات الأسبوع <b class="num">${auditPeriod().from}</b> – <b class="num">${auditPeriod().to}</b> (السبت إلى الخميس).</span>${isMgr() ? `<label class="f" style="margin:0">يوم المراقبة<select id="aDay">${DAY_NAMES.map((d, i) => `<option value="${i}" ${auditDay()===i?'selected':''}>${d}</option>`).join('')}</select></label>` : ''}</div>
+      <div class="mods" style="margin-top:12px">${AUDITS.map(a => { const done = auditDoneFor(a.key, auditPeriod()), due = !done; return `<button class="mod ${due && auditDue().isDue ? 'due' : ''}" data-a="${a.key}">${ICONS.mon}<b>${a.name}</b><span>${a.form} · ${done ? '✓ سُجّلت لهذا الأسبوع (' + done.date + ')' : 'لم تُسجّل لهذا الأسبوع'}</span></button>`; }).join('')}</div>
+      <h2>آخر المراقبات</h2><div class="tw"><table class="t"><thead><tr><th>التاريخ</th><th>الأسبوع</th><th>النوع</th><th>المراقب</th><th>البنود الخطأ</th><th>الإجراءات</th><th>الملاحظات</th><th></th></tr></thead><tbody>
+      ${S.audits.slice(-25).reverse().map(x => `<tr><td class="num">${x.date} ${x.time||''}</td><td class="num">${x.period ? x.period.from + '<br>' + x.period.to : ''}</td><td>${esc(AUDITS.find(a => a.key === x.type)?.name || '')}</td><td>${esc(x.inspector)}</td><td>${esc((x.failed||[]).join('، ')) || '<span class="muted">لا يوجد</span>'}</td>
+        <td>${(x.actions||[]).length ? x.actions.map(y => `<div>${y.done ? '✅' : '⏳'} ${esc(y.what)}${y.done ? ` <small class="muted">(${esc(y.doneDate||'')})</small>` : ''}</div>`).join('') : esc(x.action||'')}</td><td>${esc(x.gnote||'')}</td><td><div class="row" style="flex-wrap:nowrap">${isMgr() || x.inspector === (CUR.name || S.settings.inspector) ? `<button class="btn sm" data-aedit="${x.id}">تعديل</button>` : ''}<button class="btn sm" data-pdfa="${x.id}">PDF</button></div></td></tr>`).join('') || '<tr><td colspan="8" class="muted">لا توجد مراقبات.</td></tr>'}</tbody></table></div>`;
   }
   if(monTab === 'cal'){
     const w = calWindow(), devs = S.settings.devices, done = S.cals.filter(c => c.win === w.key);
@@ -5235,6 +5330,8 @@ VIEWS.mon.bind = function(){
   $$('[data-a]').forEach(b => b.onclick = () => go('auditform', {type:b.dataset.a}));
   $$('[data-fix]').forEach(b => b.onclick = () => { const [id, i] = b.dataset.fix.split('|'); ask('تأكيد: تم إصلاح هذا الإجراء؟', 'تم الإصلاح', () => closeAuditAction(id, +i)); });
   $$('[data-pdfa]').forEach(b => b.onclick = () => typeof pdfAudit === 'function' && pdfAudit(b.dataset.pdfa));
+  $('#aDay') && ($('#aDay').onchange = e => { S.settings.auditDay = +e.target.value; save(); render(); toast('تم تغيير يوم المراقبة الأسبوعية'); });
+  $$('[data-aedit]').forEach(b => b.onclick = () => { const x = S.audits.find(a => String(a.id) === b.dataset.aedit); if(!x) return; A2 = {editId:x.id, type:x.type, res:{...(x.res||{})}, notes:{...(x.notes||{})}, workers:{...(x.workers||{})}, gnote:x.gnote||'', period:x.period ? {...x.period} : auditPeriod(x.date), actions:(x.actions||[]).length ? x.actions.map(y => ({what:y.what, who:y.who||'', due:y.due||''})) : [{what:'', who:'', due:''}]}; go('auditform', {type:x.type}); });
   const base = () => ({date:todayStr(), time:timeStr(), shift:S.settings.shift, by:S.settings.inspector});
   $('#saveCal2') && ($('#saveCal2').onclick = () => {
     const w = calWindow(); let n = 0; const bad = [];
@@ -5257,7 +5354,8 @@ VIEWS.mon.bind = function(){
 const _todosMon = todos;
 todos = function(){
   migrateTH();
-  const L = _todosMon().filter(x => !(x[2] === 'mon' && (x[3] === 'th' || x[3] === 'cal')));
+  const L = _todosMon().filter(x => !(x[2] === 'mon' && (x[3] === 'th' || x[3] === 'cal')) && !AUDITS.some(a => String(x[1]).startsWith(a.name + ':')));
+  { const ad = auditDue(); if(ad.isDue){ const miss = AUDITS.filter(a => !auditDoneFor(a.key, ad.p)); if(miss.length) L.unshift(['warn', `مراقبات الأسبوع (يوم ${ad.day}) لم تُسجّل: ${miss.map(a => a.name).join('، ')}`, 'mon', 'audit']); } }
   const t = todayStr(), now = new Date(), h = now.getHours();
   TH_SLOTS.forEach(([slot, hr]) => { if(h >= hr && !(slot === 'صباح' && h >= 18) && !S.ths.some(x => x.date === t && x.slot === slot)) L.unshift(['warn', `قراءة الحرارة والرطوبة الساعة ${hr === 10 ? '10:00 صباحاً' : '6:00 مساءً'} لم تُسجّل`, 'mon', 'th']); });
   const w = calWindow(); if(w.open){ const done = new Set(S.cals.filter(c => c.win === w.key).map(c => c.code)); const miss = S.settings.devices.filter(d => !done.has(d.code)).length; if(miss) L.unshift(['warn', `التحقق من أدوات القياس (${w.label}): ${miss} أداة لم تُسجّل`, 'mon', 'cal']); }
@@ -5269,7 +5367,7 @@ todos = function(){
 function printDoc(title, body){
   let el = document.getElementById('printArea'); if(!el){ el = document.createElement('div'); el.id = 'printArea'; document.body.appendChild(el); }
   el.innerHTML = `<div class="pdoc"><div class="pdh"><img src="${LOGO}" alt=""><div><span>F.E.T Packaging – قسم ضبط الجودة</span><b>${esc(title)}</b></div><div class="pdm">تاريخ الطباعة ${todayStr()} ${timeStr()}<br>${esc(CUR.name || S.settings.inspector || '')}</div></div>${body}
-    <table class="pds"><tr><td><b>المراقب</b><br><br></td><td><b>مدير ضبط الجودة</b><br>${esc(S.settings.manager || '')}</td><td><b>التوقيع والتاريخ</b><br><br></td></tr></table><div class="pdf-f">نظام ضبط الجودة · F.E.T Packaging · ${esc(title)}</div></div>`;
+    <table class="pds"><tr><td><b>المُدخِل</b><br><br></td><td><b>مدير قسم ضبط الجودة</b><br>${esc(S.settings.manager || '')}</td><td><b>التوقيع والتاريخ</b><br><br></td><td class="pdlogo"><img src="${LOGO}" alt=""><br>F.E.T Packaging</td></tr></table><div class="pdf-f">نظام ضبط الجودة · F.E.T Packaging · ${esc(title)}</div></div>`;
   document.body.classList.add('printing');
   setTimeout(() => window.print(), 80);
 }
@@ -5299,7 +5397,7 @@ function pdfMat(id){
 }
 function pdfAudit(id){
   const x = S.audits.find(a => String(a.id) === String(id)); if(!x) return; const a = AUDITS.find(y => y.key === x.type); let i = 0;
-  const body = `${kv([['المراقبة', esc(a.name)], ['النموذج', esc(a.form)], ['التاريخ والوقت', esc(x.date + ' ' + (x.time || ''))], ['الوردية', esc(x.shift)], ['المراقب', esc(x.inspector)]])}
+  const body = `${kv([['المراقبة', esc(a.name)], ['النموذج', esc(a.form)], ['أسبوع المخالفات', x.period ? esc(x.period.from + ' – ' + x.period.to) : ''], ['التاريخ والوقت', esc(x.date + ' ' + (x.time || ''))], ['الوردية', esc(x.shift)], ['المراقب', esc(x.inspector)]])}
     ${a.groups.map(([g, items]) => `<h3>${esc(g)}</h3><table class="pt"><thead><tr><th>البند</th><th>النتيجة</th><th>ملاحظة</th></tr></thead><tbody>${items.map(([n]) => { const k = 'i' + (i++); const v = (x.res||{})[k]; return `<tr><td>${esc(n)}</td><td class="c ${v==='n'?'bad':''}"><b>${v === 'y' ? '✓ صح' : v === 'n' ? '✗ خطأ' : '—'}</b></td><td>${esc((x.notes||{})[k] || '')}</td></tr>`; }).join('')}</tbody></table>`).join('')}
     ${(x.actions||[]).length ? `<h3>الإجراءات التصحيحية</h3><table class="pt"><thead><tr><th>الإجراء</th><th>المسؤول</th><th>الموعد</th><th>الحالة</th></tr></thead><tbody>${x.actions.map(y => `<tr><td>${esc(y.what)}</td><td>${esc(y.who||'')}</td><td>${esc(y.due||'')}</td><td>${y.done ? `تم الإصلاح ${esc(y.doneDate||'')}` : 'مفتوح'}</td></tr>`).join('')}</tbody></table>` : ''}${x.gnote ? `<p><b>ملاحظات عامة:</b> ${esc(x.gnote)}</p>` : ''}`;
   printDoc(`${a.name} – ${x.date}`, body);
@@ -5358,6 +5456,334 @@ VIEWS.rarch = {
     $('#raMore') && ($('#raMore').onclick = () => { RA.limit += 100; rerender(); });
   }
 };
+
+/* ================= [VIEWER] حساب الإدارة: مشاهدة كل شيء دون أي تعديل ================= */
+const RO_MSG = 'حساب الإدارة للمشاهدة فقط – لا يمكن الإضافة أو التعديل';
+const _goViewer = go;
+go = function(v, a){
+  if(isViewer()){
+    const creating = (v === 'round' && !(F && F.editId)) || ['drawm','sortm','auditform','matlib','users'].includes(v) || (v === 'matform' && !(M && M.id)) || (['ncrform','compform','coaform'].includes(v) && !a);
+    if(creating){ toast(RO_MSG); return; }
+  }
+  return _goViewer(v, a);
+};
+const _saveViewer = save;
+save = function(){ if(isViewer()){ return; } return _saveViewer.apply(this, arguments); };
+const RO_VIEWS = ['round','matform','ncrform','compform','coaform','holdform','hoform','data','mon','designs','mat','prod','rarch','boxes'];
+const _renderViewer = render;
+render = function(){
+  const r = _renderViewer.apply(this, arguments);
+  document.body.classList.toggle('ro', !!isViewer());
+  const m = document.getElementById('main'); if(m) m.classList.toggle('rov', !!isViewer() && ['round','matform','ncrform','compform','coaform','holdform','hoform','data'].includes(view));
+  if(isViewer() && m && !m.querySelector('.robanner')) m.insertAdjacentHTML('afterbegin', `<div class="banner info robanner noprint">${LI('eye') || ''} حساب الإدارة: مشاهدة فقط. يمكنك عرض كل الجولات والتقارير وتصديرها PDF، دون أي تعديل.</div>`);
+  return r;
+};
+document.addEventListener('click', e => {
+  if(!isViewer()) return;
+  const t = e.target.closest('#saveR,#saveM,#delM,#saveAu,#saveCal2,#saveTH2,#dmSave,#smSave,[data-del],[data-fix],[data-deldesign],[data-dld],[data-delstop],#newMat,#goLib,.imgadd,[data-pup],#dlIn,[data-dql],#erp,#resetAll,[data-tile-new]');
+  if(t){ e.preventDefault(); e.stopPropagation(); toast(RO_MSG); }
+}, true);
+
+/* ================= [ORDER_SEARCH] البحث برقم الطلبية أو اسم المنتج أو كوده في كل المراحل ================= */
+function resolveOrderSync(raw){
+  const v = String(raw || '').trim(); if(!v) return {order: ''};
+  if(ordRows(v).length || /^\d+$/.test(v)) return {order: v};
+  const q = v.toLowerCase(), hits = new Map();
+  S.orders.forEach(o => { const txt = [o.product_name, o.product_code, o.customer, o.product_name_arabic].join(' ').toLowerCase(); if(txt.includes(q)) { const k = String(o.order_number); if(!hits.has(k)) hits.set(k, o); } });
+  const list = [...hits.values()];
+  if(list.length === 1) return {order: String(list[0].order_number)};
+  if(list.length > 1) return {multi: true, list};
+  return {order: v, none: true};
+}
+function pickOrder(list, q, cb){
+  $('#modalBody').innerHTML = `<h3 style="margin-top:0">نتائج البحث عن "${esc(q)}" (${list.length})</h3><p class="muted">اختر الطلبية:</p>
+    <div class="ordpick">${list.slice(0, 30).map((o, i) => `<button class="opk" data-opk="${i}"><b class="num">${esc(o.order_number)}</b><span>${esc(o.product_name || '')}</span><small>${esc(o.product_code || '')} · ${esc(o.customer || '')}${o.order_delivery_date ? ' · تسليم ' + esc(o.order_delivery_date) : ''}</small></button>`).join('')}</div>
+    <div class="row" style="margin-top:10px"><button class="btn" id="opkCancel">إلغاء</button></div>`;
+  $('#modal').classList.remove('hide');
+  const close = () => $('#modal').classList.add('hide');
+  $('#opkCancel').onclick = close;
+  $$('[data-opk]').forEach(b => b.onclick = () => { close(); cb(String(list[+b.dataset.opk].order_number)); });
+}
+/* يُستدعى في بداية كل حقل طلبية: يعيد رقم الطلبية، أو يفتح قائمة الاختيار ويعيد null */
+function orderFromInput(el){
+  const raw = el.value.trim(), r = resolveOrderSync(raw);
+  if(r.multi){ if(!$('#modal').classList.contains('hide') && $('#modalBody .ordpick')) return null; pickOrder(r.list, raw, o => { el.value = o; el.dispatchEvent(new Event('change')); }); return null; }
+  if(r.none && raw) toast(`لم يُعثر على طلبية أو منتج باسم "${raw}" في ملف ERP`);
+  if(r.order !== raw) el.value = r.order;
+  return r.order;
+}
+/* قائمة الاقتراحات: رقم الطلبية مع اسم المنتج والزبون */
+function orderDatalist(id){ return `<datalist id="${id || 'ordList'}">${[...new Map(S.orders.map(x => [String(x.order_number), x])).values()].map(x => { const n = ordRows(x.order_number).length; return `<option value="${esc(x.order_number)}">${esc(n > 1 ? n + ' منتجات – ' + (x.customer||'') : (x.product_name||'') + ' – ' + (x.customer||''))}</option>`; }).join('')}</datalist>`; }
+
+/* ================= [PEOPLE] ملخص العمال (المخالفات) والآلات (التوقفات) ================= */
+ICONS.people = LI('team');
+(NAV.find(g => g.g === 'التحليل والتقارير') || NAV[NAV.length - 1]).items.push(['people', 'العمال والآلات']);
+PAGE.people = ['التحليل والتقارير', 'العمال والآلات'];
+let PP = {days: 30, tab: 'workers', q: ''};
+const splitNames = s => String(s || '').split(/[،,\/]+/).map(x => x.trim()).filter(Boolean);
+function roundWorkers(r){ return splitNames(r.worker || (r.extra || {}).worker); }
+function workerStats(from, to){
+  const W = new Map(), get = n => { if(!W.has(n)) W.set(n, {name: n, rounds: 0, viol: [], stages: new Set(), audits: []}); return W.get(n); };
+  S.rounds.filter(r => r.date >= from && r.date <= to).forEach(r => roundWorkers(r).forEach(n => {
+    const w = get(n); w.rounds++; w.stages.add(r.stage);
+    if(r.decision !== 'مقبول' || (r.defects || []).length || (r.failed || []).length) w.viol.push(r);
+  }));
+  S.audits.filter(a => a.date >= from && a.date <= to).forEach(a => Object.entries(a.workers || {}).forEach(([k, names]) => splitNames(names).forEach(n => { const w = get(n); w.audits.push({a, k}); })));
+  return [...W.values()].map(w => ({...w, total: w.viol.length + w.audits.length})).sort((a, b) => b.total - a.total || b.rounds - a.rounds);
+}
+function machineStats(from, to){
+  const M = new Map(), get = (st, m) => { const k = st + '|' + m; if(!M.has(k)) M.set(k, {stage: st, m, stops: [], rounds: 0, issues: 0}); return M.get(k); };
+  (S.stops || []).filter(z => z.date >= from && z.date <= to).forEach(z => get(z.stage, z.machine).stops.push(z));
+  S.rounds.filter(r => r.date >= from && r.date <= to && r.machine && r.machine !== '—' && !/^(عامل فرز|محطة تركيب)/.test(r.machine)).forEach(r => { const x = get(r.stage, r.machine); x.rounds++; if(r.decision !== 'مقبول') x.issues++; });
+  return [...M.values()].sort((a, b) => b.stops.length - a.stops.length || STAGES.findIndex(s => s.key === a.stage) - STAGES.findIndex(s => s.key === b.stage));
+}
+function auditItemName(a, k){ const au = AUDITS.find(x => x.key === a.type); if(!au) return ''; const items = au.groups.flatMap(g => g[1]); const it = items[+String(k).slice(1)]; return it ? it[0] : ''; }
+VIEWS.people = {
+  html(){
+    const to = todayStr(), from = addDays(to, -PP.days), q = PP.q.trim().toLowerCase();
+    const ws = workerStats(from, to).filter(w => !q || w.name.toLowerCase().includes(q)), ms = machineStats(from, to).filter(x => !q || String(x.m).toLowerCase().includes(q));
+    const head = `<div class="pagehead"><div><h1 style="margin:0">العمال والآلات</h1><p>مخالفات كل عامل في مراحل الإنتاج والنظافة، وتوقفات كل آلة وأسبابها.</p></div>
+      <div class="row noprint"><div class="pick">${[[7,'7 أيام'],[30,'30 يوماً'],[90,'3 أشهر'],[365,'سنة']].map(([d, l]) => `<button class="${PP.days===d?'on':''}" data-pd="${d}">${l}</button>`).join('')}</div><button class="btn" id="ppPrint">تصدير PDF</button></div></div>
+      <div class="pick noprint" style="margin-bottom:12px">${[['workers','العمال'],['machines','الآلات']].map(([k, l]) => `<button class="${PP.tab===k?'on':''}" data-pt="${k}">${l}</button>`).join('')}<input type="search" id="ppQ" value="${esc(PP.q)}" placeholder="${PP.tab==='workers'?'بحث باسم العامل':'بحث باسم الآلة'}" style="max-width:260px;margin-inline-start:auto"></div>`;
+    if(PP.tab === 'workers'){
+      const tv = ws.reduce((a, w) => a + w.total, 0);
+      return head + `<div class="kpis"><div class="kpi"><div class="v num">${ws.length}</div><div class="l">عامل مسجّل</div></div><div class="kpi ${tv?'warn':'ok'}"><div class="v num">${tv}</div><div class="l">مخالفة في الفترة</div></div><div class="kpi"><div class="v num">${ws.filter(w => w.total).length}</div><div class="l">عامل عليه مخالفات</div></div></div>
+        <div class="tw" style="margin-top:12px"><table class="t"><thead><tr><th>العامل</th><th>المراحل</th><th>جولات</th><th>مخالفات إنتاج</th><th>مخالفات نظافة</th><th>نسبة المخالفات</th></tr></thead><tbody>
+        ${ws.map(w => `<tr class="${w.total ? 'flag' : ''}"><td><b>${esc(w.name)}</b></td><td>${[...w.stages].map(s => esc(stageBy(s).name)).join('، ') || '—'}</td><td class="num">${w.rounds}</td><td class="num">${w.viol.length || ''}</td><td class="num">${w.audits.length || ''}</td><td class="num">${w.rounds ? Math.round(w.viol.length * 100 / w.rounds) + '%' : '—'}</td></tr>`).join('') || '<tr><td colspan="6" class="muted">لا يوجد عمال مسجّلون في الفترة.</td></tr>'}</tbody></table></div>
+        ${ws.filter(w => w.total).map(w => `<div class="panel pwk"><div class="pwh"><b>${esc(w.name)}</b><span class="pill p-محجور">${w.total} مخالفة</span></div>
+          <div class="tw"><table class="t"><thead><tr><th>التاريخ</th><th>المرحلة / المكان</th><th>الطلبية / الصندوق</th><th>المخالفة</th><th>القرار</th><th>المراقب</th></tr></thead><tbody>
+          ${w.viol.slice().reverse().map(r => `<tr><td class="num">${esc(r.date)} ${esc(r.time)}</td><td>${esc(stageBy(r.stage).name)}${r.machine && r.machine !== '—' ? '<div class="muted">' + esc(r.machine) + '</div>' : ''}</td><td class="num">${esc(ordersLabel(r))}${r.box ? '<div class="muted">صندوق ' + esc(r.box) + '</div>' : ''}</td><td>${esc([...(r.failed || []), ...(r.defects || [])].join('، '))}${r.notes ? '<div>' + esc(r.notes) + '</div>' : ''}</td><td>${decPill(r.decision)}</td><td>${esc(r.inspector)}</td></tr>`).join('')}
+          ${w.audits.slice().reverse().map(({a, k}) => `<tr><td class="num">${esc(a.date)}</td><td>${esc(AUDITS.find(x => x.key === a.type)?.name || 'النظافة')}</td><td></td><td>${esc(auditItemName(a, k))}${(a.notes || {})[k] ? '<div>' + esc(a.notes[k]) + '</div>' : ''}</td><td><span class="pill p-مرفوض">مخالفة نظافة</span></td><td>${esc(a.inspector)}</td></tr>`).join('')}</tbody></table></div></div>`).join('')}`;
+    }
+    const tStops = ms.reduce((a, x) => a + x.stops.length, 0), reasons = [...new Set(ms.flatMap(x => x.stops.map(z => z.reasonLabel || z.reason)))];
+    return head + `<div class="kpis"><div class="kpi ${tStops?'warn':'ok'}"><div class="v num">${tStops}</div><div class="l">توقف في الفترة</div></div><div class="kpi"><div class="v num">${ms.filter(x => x.stops.length).length}</div><div class="l">آلة توقفت</div></div>${reasons.slice(0, 3).map(r => `<div class="kpi"><div class="v num">${ms.reduce((a, x) => a + x.stops.filter(z => (z.reasonLabel || z.reason) === r).length, 0)}</div><div class="l">${esc(r)}</div></div>`).join('')}</div>
+      <div class="tw" style="margin-top:12px"><table class="t"><thead><tr><th>المرحلة</th><th>الآلة</th><th>مرات التوقف</th>${reasons.map(r => `<th>${esc(r)}</th>`).join('')}<th>جولات الفحص</th><th>نسبة المشاكل</th></tr></thead><tbody>
+      ${ms.map(x => `<tr class="${x.stops.length ? 'flag' : ''}"><td>${esc(stageBy(x.stage).name)}</td><td><b>${esc(x.m)}</b></td><td class="num"><b>${x.stops.length || ''}</b></td>${reasons.map(r => `<td class="num">${x.stops.filter(z => (z.reasonLabel || z.reason) === r).length || ''}</td>`).join('')}<td class="num">${x.rounds}</td><td class="num">${x.rounds ? Math.round(x.issues * 100 / x.rounds) + '%' : '—'}</td></tr>`).join('') || `<tr><td colspan="${5 + reasons.length}" class="muted">لا توجد آلات في الفترة.</td></tr>`}</tbody></table></div>
+      ${ms.filter(x => x.stops.length).map(x => `<div class="panel pwk"><div class="pwh"><b>${esc(stageBy(x.stage).name)} – ${esc(x.m)}</b><span class="pill p-محجور">${x.stops.length} توقف</span></div>
+        <div class="tw"><table class="t"><thead><tr><th>التاريخ والوقت</th><th>الوردية</th><th>السبب</th><th>التفاصيل</th><th>المراقب</th></tr></thead><tbody>${x.stops.slice().reverse().map(z => `<tr><td class="num">${esc(z.date)} ${esc(z.time)}</td><td>${esc(z.shift || '')}</td><td><b>${esc(z.reasonLabel || z.reason)}</b></td><td>${esc(z.detail || '')}</td><td>${esc(z.inspector || '')}</td></tr>`).join('')}</tbody></table></div></div>`).join('')}`;
+  },
+  bind(){
+    $$('[data-pd]').forEach(b => b.onclick = () => { PP.days = +b.dataset.pd; rerender(); });
+    $$('[data-pt]').forEach(b => b.onclick = () => { PP.tab = b.dataset.pt; PP.q = ''; rerender(); });
+    $('#ppQ').onchange = e => { PP.q = e.target.value; rerender(); };
+    $('#ppPrint').onclick = () => printDoc(PP.tab === 'workers' ? `مخالفات العمال – آخر ${PP.days} يوماً` : `توقفات الآلات – آخر ${PP.days} يوماً`, $('#main').innerHTML.replace(/<div class="pagehead">[\s\S]*?<\/div><\/div>/, '').replace(/class="pick noprint"[\s\S]*?<\/div>/, 'style="display:none"'));
+  }
+};
+/* النظافة: اسم العامل المسؤول عن البند الخطأ (اختياري) */
+const _afHtmlW = VIEWS.auditform.html, _afBindW = VIEWS.auditform.bind;
+VIEWS.auditform.html = function(){
+  let h = _afHtmlW(); if(!A2) return h; A2.workers = A2.workers || {};
+  return h.replace(/(<input type="text" class="aun[^"]*" data-note="(i\d+)"[^>]*>)/g, (m, inp, k) => A2.res[k] === 'n' ? inp + `<input type="text" class="aun" data-wk="${k}" list="workerAll" value="${esc(A2.workers[k] || '')}" placeholder="اسم العامل المسؤول (اختياري)">` : inp)
+    + `<datalist id="workerAll">${[...new Set(S.rounds.flatMap(roundWorkers))].map(n => `<option value="${esc(n)}">`).join('')}</datalist>`;
+};
+VIEWS.auditform.bind = function(){ _afBindW(); $$('[data-wk]').forEach(el => el.oninput = () => { A2.workers = A2.workers || {}; A2.workers[el.dataset.wk] = el.value; }); };
+
+/* ================= [SHIFT_SUM] ملخص نهاية الوردية: كل ما حدث في الوردية ليستفيد منه المراقب التالي ================= */
+ICONS.shiftsum = ICONS.ho || ICONS.handover || LI('file');
+NAV.find(g => g.g === 'العمليات اليومية').items.push(['shiftsum', 'ملخص نهاية الوردية']);
+PAGE.shiftsum = ['العمليات اليومية', 'ملخص نهاية الوردية'];
+let SH = {date: '', shift: '', insp: ''};
+function shiftSummaryHtml(date, shift, insp){
+  const inS = x => x.date === date && (!shift || x.shift === shift) && (!insp || x.inspector === insp || x.by === insp);
+  const rs = S.rounds.filter(r => inS(r) && r.stage !== 'design').sort((a, b) => a.time.localeCompare(b.time));
+  const iss = rs.filter(r => r.decision !== 'مقبول' || String(r.notes || '').trim() || (r.defects || []).length || (r.failed || []).length);
+  const holds = S.holds.filter(inS), ncrs = S.ncrs.filter(n => n.date === date && (!shift || n.shift === shift || !n.shift)), stops = (S.stops || []).filter(inS), mats = S.mats.filter(m => m.date === date && (!insp || m.inspector === insp));
+  const auds = S.audits.filter(a => a.date === date && (!insp || a.inspector === insp)), openActs = openAuditActions(), hos = S.handovers.filter(h => h.date === date && (!shift || h.shift === shift));
+  const cnt = d => rs.filter(r => r.decision === d).length;
+  const stRows = STAGES.map(s => { const x = rs.filter(r => r.stage === s.key); return x.length ? `<tr><td><b>${s.name}</b></td><td class="num">${x.length}</td>${['مقبول','مقبول بملاحظة','محجور','مرفوض'].map(d => { const n = x.filter(r => r.decision === d).length; return `<td class="num ${n && d !== 'مقبول' ? 'cw' : ''}">${n || ''}</td>`; }).join('')}<td>${[...new Set(x.map(r => r.machine).filter(m => m && m !== '—'))].map(esc).join('، ')}</td></tr>` : ''; }).join('');
+  const who = [...new Set(rs.map(r => r.inspector))].map(n => `${esc(n)}${n === S.settings.manager ? ' (مدير القسم)' : ''}`).join('، ') || '—';
+  return `<div class="shsum">
+    <div class="shh"><div><b>ملخص الوردية ${esc(shift || 'كاملة')} – ${esc(date)}</b><span>فريق الجودة: ${who}</span></div></div>
+    <div class="kpis"><div class="kpi"><div class="v num">${rs.length}</div><div class="l">جولة فحص</div></div><div class="kpi ${iss.length ? 'warn' : 'ok'}"><div class="v num">${iss.length}</div><div class="l">جولة فيها مشكلة أو ملاحظة</div></div>
+      <div class="kpi ${rs.some(r => r.cls === 'حرج') ? 'bad' : ''}"><div class="v num">${rs.filter(r => r.cls === 'حرج').length}</div><div class="l">عيب حرج</div></div><div class="kpi ${holds.length ? 'warn' : ''}"><div class="v num">${holds.length}</div><div class="l">حجز جديد</div></div>
+      <div class="kpi ${ncrs.length ? 'bad' : ''}"><div class="v num">${ncrs.length}</div><div class="l">عدم مطابقة جديدة</div></div><div class="kpi ${stops.length ? 'warn' : ''}"><div class="v num">${stops.length}</div><div class="l">توقف آلة</div></div></div>
+    <h3>الجولات حسب المرحلة</h3>${stRows ? `<div class="tw"><table class="t"><thead><tr><th>المرحلة</th><th>جولات</th><th>مقبول</th><th>بملاحظة</th><th>محجور</th><th>مرفوض</th><th>الآلات</th></tr></thead><tbody>${stRows}</tbody></table></div>` : '<p class="muted">لا توجد جولات.</p>'}
+    <h3>المشاكل والملاحظات (ليستفيد منها المراقب التالي)</h3>${iss.length ? `<div class="tw"><table class="t"><thead><tr><th>الوقت</th><th>المرحلة / الآلة</th><th>الطلبية / المنتج</th><th>الصندوق / الرول</th><th>المشكلة والملاحظة</th><th>القرار</th><th>المراقب</th></tr></thead><tbody>${iss.map(r => `<tr><td class="num">${esc(r.time)}</td><td>${esc(stageBy(r.stage).name)}${r.machine && r.machine !== '—' ? '<div class="muted">' + esc(r.machine) + (r.worker ? ' – ' + esc(r.worker) : '') + '</div>' : ''}</td><td class="num">${esc(ordersLabel(r))}<div class="muted">${esc(itemsLabel(r))}</div></td><td class="num">${esc(r.box || '')}${(r.extra || {}).roll ? '<div class="muted">رول ' + esc(r.extra.roll) + '</div>' : ''}</td><td>${esc([...(r.failed || []), ...(r.defects || [])].join('، '))}${r.notes ? '<div><b>' + esc(r.notes) + '</b></div>' : ''}${r.action ? '<div class="muted">الإجراء: ' + esc(r.action) + '</div>' : ''}</td><td>${decPill(r.decision)}${r.hold ? '<div class="muted">' + esc(r.hold) + '</div>' : ''}</td><td>${esc(r.inspector)}</td></tr>`).join('')}</tbody></table></div>` : '<p class="boxok">✓ لا توجد مشاكل في هذه الوردية.</p>'}
+    ${ncrs.length || holds.length ? `<h3>عدم المطابقة والمحجوز</h3><div class="tw"><table class="t"><thead><tr><th>الرقم</th><th>النوع</th><th>الوصف</th><th>الحالة</th></tr></thead><tbody>${ncrs.map(n => `<tr><td class="num">${esc(n.no)}</td><td>NCR – ${esc(n.dept || n.source || '')}</td><td>${esc(n.desc)}</td><td>${esc(ncrStatus(n))}</td></tr>`).join('')}${holds.map(h => `<tr><td class="num">${esc(h.no)}</td><td>حجز – ${esc(stageBy(h.stage).name)} ${esc(h.machine || '')}</td><td>${esc(h.reason || h.product || '')} ${h.qty ? '· ' + esc(h.qty) : ''}</td><td>${esc(h.status || 'مفتوح')}</td></tr>`).join('')}</tbody></table></div>` : ''}
+    ${stops.length ? `<h3>توقف الآلات</h3><div class="tw"><table class="t"><thead><tr><th>الوقت</th><th>الآلة</th><th>السبب</th><th>التفاصيل</th></tr></thead><tbody>${stops.map(z => `<tr><td class="num">${esc(z.time)}</td><td>${esc(stageBy(z.stage).name)} – ${esc(z.machine)}</td><td><b>${esc(z.reasonLabel || z.reason)}</b></td><td>${esc(z.detail || '')}</td></tr>`).join('')}</tbody></table></div>` : ''}
+    ${mats.length ? `<h3>المواد الواردة المفحوصة</h3><div class="tw"><table class="t"><thead><tr><th>الرقم</th><th>المادة</th><th>المورد</th><th>القرار</th></tr></thead><tbody>${mats.map(m => `<tr><td class="num">${esc(m.no)}</td><td>${esc(matBy(m.type)?.name || '')} ${esc(m.name || '')}</td><td>${esc(m.supplier)}</td><td>${decPill(m.decision)}</td></tr>`).join('')}</tbody></table></div>` : ''}
+    ${auds.length || openActs.length ? `<h3>المراقبات العامة</h3>${auds.map(a => `<p>• ${esc(AUDITS.find(x => x.key === a.type)?.name || '')}: ${(a.failed || []).length ? '<b>' + esc(a.failed.join('، ')) + '</b>' : 'كل البنود صح'}</p>`).join('')}${openActs.length ? `<p class="r"><b>إجراءات تصحيحية مفتوحة (${openActs.length}):</b> ${openActs.map(o => esc(o.x.what)).join('، ')}</p>` : ''}` : ''}
+    <h3>ملاحظات التسليم للوردية التالية</h3>${hos.length ? hos.map(h => `<p>• <b>${esc(h.from || h.inspector || '')}</b>: ${esc(h.notes || h.note || '')}</p>`).join('') : '<p class="muted">لم تُكتب ملاحظة تسليم. اكتبها من صفحة تسليم الوردية.</p>'}
+  </div>`;
+}
+/* أرشيف ملخصات الورديات: ملخص لكل مراقب في كل وردية، يُحفظ تلقائياً عند انتهاء الوردية ويراه الجميع */
+const ssId = (date, shift, insp) => `SS-${date}-${shift}-${insp}`;
+function shiftClosed(date, shift){ const t = todayStr(); return date < t || (date === t && shift === 'صباحية' && S.settings.shift === 'مسائية'); }
+function shiftCounts(date, shift, insp){
+  const rs = S.rounds.filter(r => r.date === date && r.shift === shift && r.inspector === insp && r.stage !== 'design');
+  return {rounds: rs.length, issues: rs.filter(r => r.decision !== 'مقبول' || String(r.notes||'').trim() || (r.defects||[]).length).length, crit: rs.filter(r => r.cls === 'حرج').length,
+    holds: S.holds.filter(h => h.date === date && h.shift === shift && h.inspector === insp).length, ncrs: S.ncrs.filter(n => n.date === date && rs.some(r => r.ncr === n.no)).length,
+    stops: (S.stops||[]).filter(z => z.date === date && z.shift === shift && z.inspector === insp).length, mats: S.mats.filter(m => m.date === date && m.inspector === insp).length};
+}
+function saveShiftSummary(date, shift, insp, note, auto){
+  S.shiftsums = S.shiftsums || []; const id = ssId(date, shift, insp), ex = S.shiftsums.find(x => x.id === id);
+  const rec = {id, date, shift, inspector: insp, role: insp === S.settings.manager ? 'مدير القسم' : 'مراقب جودة', counts: shiftCounts(date, shift, insp), note: note ?? (ex ? ex.note : ''), auto: !!auto, savedAt: new Date().toISOString(), savedBy: auto ? 'تلقائي' : (CUR.name || S.settings.inspector)};
+  if(ex) Object.assign(ex, rec); else S.shiftsums.push(rec); save(); return rec;
+}
+/* إنشاء الملخصات تلقائياً للورديات المنتهية (لكل مراقب سجّل فيها جولات) */
+function autoShiftSummaries(){
+  if(typeof isViewer === 'function' && isViewer()) return;
+  const since = addDays(todayStr(), -7), seen = new Set((S.shiftsums || []).map(x => x.id)); let n = 0;
+  const keys = new Set(S.rounds.filter(r => r.date >= since && r.inspector && r.shift).map(r => r.date + '|' + r.shift + '|' + r.inspector));
+  keys.forEach(k => { const [d, sh, ins] = k.split('|'); if(shiftClosed(d, sh) && !seen.has(ssId(d, sh, ins))){ saveShiftSummary(d, sh, ins, '', true); n++; } });
+  return n;
+}
+setTimeout(() => { try{ autoShiftSummaries(); }catch(e){} }, 20000); setInterval(() => { try{ autoShiftSummaries(); }catch(e){} }, 15 * 60000);
+let SH2 = {mode: 'list', id: null, from: '', to: '', insp: '', shift: ''};
+VIEWS.shiftsum = {
+  html(){
+    try{ autoShiftSummaries(); }catch(e){}
+    const me = CUR.name || S.settings.inspector, t = todayStr();
+    if(SH2.mode === 'view' && SH2.id){
+      const x = (S.shiftsums || []).find(y => y.id === SH2.id); if(!x){ SH2.mode = 'list'; return VIEWS.shiftsum.html(); }
+      return `<div class="pagehead"><div><h1 style="margin:0">ملخص وردية ${esc(x.inspector)}</h1><p>${esc(x.role || '')} · الوردية ${esc(x.shift)} · ${esc(x.date)}${x.auto ? ' · حُفظ تلقائياً عند انتهاء الوردية' : ' · حفظه ' + esc(x.savedBy || '')}</p></div><div class="row noprint"><button class="btn" id="shBack">رجوع للأرشيف</button><button class="btn p" id="shPdf">تصدير PDF</button></div></div>
+        <div id="shBody">${x.note ? `<div class="banner info"><b>ملاحظات ${esc(x.inspector)} للوردية التالية:</b> ${esc(x.note)}</div>` : ''}${shiftSummaryHtml(x.date, x.shift, x.inspector)}</div>
+        ${(x.inspector === me || isMgr()) && !(typeof isViewer === 'function' && isViewer()) ? `<div class="panel noprint" style="margin-top:12px"><label class="f">ملاحظات للمراقب التالي<textarea id="shNote" rows="3">${esc(x.note || '')}</textarea></label><button class="btn p" id="shSaveNote" style="margin-top:8px">حفظ الملاحظات</button></div>` : ''}`;
+    }
+    SH2.from = SH2.from || addDays(t, -14); SH2.to = SH2.to || t;
+    const list = (S.shiftsums || []).filter(x => x.date >= SH2.from && x.date <= SH2.to && (!SH2.insp || x.inspector === SH2.insp) && (!SH2.shift || x.shift === SH2.shift)).sort((a, b) => (b.date + (b.shift === 'مسائية' ? '2' : '1')).localeCompare(a.date + (a.shift === 'مسائية' ? '2' : '1')));
+    const insps = [...new Set((S.shiftsums || []).map(x => x.inspector).concat(S.settings.inspectors || []))].filter(Boolean);
+    const curC = shiftCounts(t, S.settings.shift, me), curSaved = (S.shiftsums || []).find(x => x.id === ssId(t, S.settings.shift, me));
+    return `<div class="pagehead"><div><h1 style="margin:0">ملخصات الورديات</h1><p>ملخص لكل مراقب في كل وردية: يُحفظ <b>تلقائياً عند انتهاء الوردية</b> ويبقى في الأرشيف، ويراه كل المراقبين ومديرة القسم والإدارة.</p></div></div>
+      ${(typeof isViewer === 'function' && isViewer()) ? '' : `<div class="panel curshift"><div class="rh"><b>${LI('handover') || ''} ورديتي الحالية: ${esc(me)} – ${esc(S.settings.shift)} – ${t}</b><span class="muted">${curC.rounds} جولة · ${curC.issues} مشكلة/ملاحظة · ${curC.holds} حجز · ${curC.stops} توقف</span></div>
+        <label class="f">ملاحظات للمراقب التالي<textarea id="shCurNote" rows="2" placeholder="مثال: INJ-3 فيها نفخة متكررة في تجويف 2 – راقبها">${esc(curSaved ? curSaved.note : '')}</textarea></label>
+        <div class="row" style="margin-top:8px"><button class="btn p" id="shSaveCur">حفظ ملخص ورديتي الآن</button><button class="btn" id="shViewCur">عرض ملخص ورديتي</button></div></div>`}
+      <div class="panel rafl" style="margin-top:12px"><div class="grid"><label class="f">من<input type="date" id="shF" value="${SH2.from}"></label><label class="f">إلى<input type="date" id="shT" value="${SH2.to}"></label>
+        <label class="f">المراقب<select id="shI"><option value="">الكل</option>${insps.map(n => `<option ${SH2.insp===n?'selected':''}>${esc(n)}</option>`).join('')}</select></label>
+        <label class="f">الوردية<select id="shS"><option value="">الكل</option>${['صباحية','مسائية'].map(x => `<option ${SH2.shift===x?'selected':''}>${x}</option>`).join('')}</select></label></div></div>
+      <div class="tw" style="margin-top:12px"><table class="t"><thead><tr><th>التاريخ</th><th>الوردية</th><th>المراقب</th><th>جولات</th><th>مشاكل</th><th>حرج</th><th>حجز</th><th>NCR</th><th>توقف</th><th>ملاحظات للتالي</th><th></th></tr></thead><tbody>
+      ${list.map(x => `<tr class="${x.counts.issues ? 'flag' : ''}"><td class="num">${esc(x.date)}</td><td>${esc(x.shift)}</td><td><b>${esc(x.inspector)}</b><div class="muted">${esc(x.role || '')}</div></td><td class="num">${x.counts.rounds}</td><td class="num">${x.counts.issues || ''}</td><td class="num">${x.counts.crit || ''}</td><td class="num">${x.counts.holds || ''}</td><td class="num">${x.counts.ncrs || ''}</td><td class="num">${x.counts.stops || ''}</td><td>${esc(x.note || '')}</td><td><button class="btn sm p" data-ssv="${esc(x.id)}">عرض</button></td></tr>`).join('') || '<tr><td colspan="11" class="muted">لا توجد ملخصات في هذه الفترة.</td></tr>'}</tbody></table></div>`;
+  },
+  bind(){
+    $('#shBack') && ($('#shBack').onclick = () => { SH2.mode = 'list'; rerender(); });
+    $('#shPdf') && ($('#shPdf').onclick = () => { const x = (S.shiftsums || []).find(y => y.id === SH2.id); printDoc(`ملخص وردية ${x.inspector} – ${x.shift} ${x.date}`, $('#shBody').innerHTML); });
+    $('#shSaveNote') && ($('#shSaveNote').onclick = () => { const x = S.shiftsums.find(y => y.id === SH2.id); x.note = $('#shNote').value; x.counts = shiftCounts(x.date, x.shift, x.inspector); save(); rerender(); toast('حُفظت الملاحظات'); });
+    $('#shSaveCur') && ($('#shSaveCur').onclick = () => { saveShiftSummary(todayStr(), S.settings.shift, CUR.name || S.settings.inspector, $('#shCurNote').value, false); rerender(); toast('حُفظ ملخص ورديتك في الأرشيف'); });
+    $('#shViewCur') && ($('#shViewCur').onclick = () => { const r = saveShiftSummary(todayStr(), S.settings.shift, CUR.name || S.settings.inspector, $('#shCurNote').value, false); SH2.mode = 'view'; SH2.id = r.id; rerender(); });
+    $('#shF') && ($('#shF').onchange = e => { SH2.from = e.target.value; rerender(); }); $('#shT') && ($('#shT').onchange = e => { SH2.to = e.target.value; rerender(); });
+    $('#shI') && ($('#shI').onchange = e => { SH2.insp = e.target.value; rerender(); }); $('#shS') && ($('#shS').onchange = e => { SH2.shift = e.target.value; rerender(); });
+    $$('[data-ssv]').forEach(b => b.onclick = () => { SH2.mode = 'view'; SH2.id = b.dataset.ssv; rerender(); });
+  }
+};
+PAGE.shiftsum = ['العمليات اليومية', 'ملخصات الورديات'];
+(NAV.find(g => g.g === 'العمليات اليومية').items.find(i => i[0] === 'shiftsum') || [])[1] = 'ملخصات الورديات';
+/* صورة المنتج في تقرير المنتج */
+const _prodHtmlImg = VIEWS.product.html;
+VIEWS.product.html = function(){
+  const h = _prodHtmlImg(); if(!prodKey) return h;
+  const key = prodKey.trim(), o = S.orders.find(x => x.product_code === key || x.product_name === key); const im = o && typeof productImage === 'function' ? productImage(o) : null;
+  if(!im) return h;
+  return h.replace(/(<h3><i>1<\/i>)/, `<div class="rimg"><img src="${im.thumb}" ${im.id ? `data-iid="${esc(im.id)}"` : ''} alt="صورة المنتج"><span>صورة المنتج (${esc(im.src || '')})</span></div>$1`);
+};
+const _prodBindImg = VIEWS.product.bind;
+VIEWS.product.bind = function(){ _prodBindImg && _prodBindImg(); $$('.rimg img[data-iid]').forEach(async el => { const d = await imgCacheGet(el.dataset.iid); if(d) el.src = d; }); };
+
+/* ================= [REPORT_ACCESS] التقارير لمدير القسم (والإدارة للمشاهدة)، والمراقب: تسجيل + ملخصات الورديات + أداؤه ================= */
+const REPORT_VIEWS = ['rep','daily','exec','product','people','mgr','sup'];
+const isInspectorRole = () => serverMode && CUR && CUR.role === 'inspector';
+const _goRep = go;
+go = function(v, a){ if(isInspectorRole() && REPORT_VIEWS.includes(v)){ toast('التقارير يعدّها مدير القسم. يمكنك مشاهدة ملخصات الورديات وأدائك'); return _goRep('shiftsum'); } return _goRep(v, a); };
+/* إخفاء التقارير من القائمة للمراقب */
+NAV.forEach(g => g.items.forEach(i => { if(REPORT_VIEWS.includes(i[0])) i[3] = 'rep-only'; }));
+const _renderTabsRep = renderTabs;
+renderTabs = function(){ _renderTabsRep.apply(this, arguments); if(isInspectorRole()) REPORT_VIEWS.forEach(v => $$(`[data-v="${v}"]`).forEach(b => { if(b.closest('#side, #tabs, .more, .mods')) b.style.display = 'none'; })); };
+/* المراقب يرى أداءه فقط في صفحة أداء المراقبين */
+const _teamHtmlRep = VIEWS.team.html;
+VIEWS.team.html = function(){ const h = _teamHtmlRep(); if(!isInspectorRole()) return h; const box = document.createElement('div'); box.innerHTML = h; box.querySelectorAll('.person').forEach(p => { if(!p.classList.contains('me')) p.remove(); }); return box.innerHTML.replace('أداء المراقبين', 'أدائي'); };
+
+/* ================= [REPORT_EDIT] مدير القسم يعدّل التقرير ويحفظ التعديل ثم يطبع / PDF ================= */
+let REP_ORIG = {};
+function repKey(){
+  if(view === 'rep' && typeof rep !== 'undefined' && rep) return `rep|${rep.from}|${rep.to}`;
+  if(view === 'exec') { const P = execPeriods(execP); return `exec|${execMode}|${P.cur[0]}|${P.cur[1]}`; }
+  if(view === 'product' && prodKey) return `product|${prodKey.trim()}`;
+  if(view === 'daily' && dailyOpen) return `daily|${dailyOpen}`;
+  return null;
+}
+function repBox(){ const m = $('#main'); if(!m) return null; return view === 'exec' ? m.querySelector('.xrep:not(.hide)') : m.querySelector('.rep'); }
+const packHtml = h => h.split(LOGO).join('__LOGO__').split(RC_LOGO).join('__RCLOGO__');
+const unpackHtml = h => String(h).split('__LOGO__').join(LOGO).split('__RCLOGO__').join(RC_LOGO);
+function repToolbar(key, saved){
+  return `<div class="repbar noprint" id="repBar"><span>${saved ? `${LI('ok') || ''} نسخة معدّلة محفوظة – ${esc(saved.by || '')} ${esc((saved.at || '').slice(0, 16).replace('T', ' '))}` : 'التقرير مولّد من البيانات'}</span>
+    <div class="row">${isMgr() ? `<button class="btn" id="repEdit">${LI('edit') || ''} تعديل التقرير</button><button class="btn" id="repAddNote">إضافة فقرة</button><button class="btn p hide" id="repSave">حفظ التعديل</button>` : ''}
+    ${saved ? `<button class="btn" id="repOrig">${REP_ORIG[key] ? 'عرض النسخة المعدّلة' : 'عرض النسخة الأصلية'}</button>` : ''}<button class="btn k" id="repPrint">طباعة / حفظ PDF</button></div></div>`;
+}
+function bindRepTools(){
+  const key = repKey(), box = repBox(); if(!key || !box) return;
+  const saved = (S.savedreps || []).find(x => x.id === key);
+  if(saved && !REP_ORIG[key]) box.innerHTML = unpackHtml(saved.html);
+  if(!$('#repBar')) box.insertAdjacentHTML('beforebegin', repToolbar(key, saved));
+  $('#repEdit') && ($('#repEdit').onclick = () => { box.contentEditable = 'true'; box.classList.add('editing'); $('#repSave').classList.remove('hide'); box.focus(); toast('اضغط على أي نص في التقرير لتعديله، ثم "حفظ التعديل"'); });
+  $('#repAddNote') && ($('#repAddNote').onclick = () => { box.contentEditable = 'true'; box.classList.add('editing'); $('#repSave').classList.remove('hide'); box.insertAdjacentHTML('beforeend', `<div class="mgrnote"><b>ملاحظة مدير القسم:</b> اكتب هنا…</div>`); box.lastElementChild.scrollIntoView({behavior:'smooth'}); });
+  $('#repSave') && ($('#repSave').onclick = () => {
+    box.contentEditable = 'false'; box.classList.remove('editing');
+    S.savedreps = S.savedreps || []; const rec = {id:key, key, view, html:packHtml(box.innerHTML), by:CUR.name || S.settings.inspector, at:new Date().toISOString()};
+    const i = S.savedreps.findIndex(x => x.id === key); if(i >= 0) S.savedreps[i] = rec; else S.savedreps.push(rec);
+    REP_ORIG[key] = false; save(); rerender(); toast('حُفظ التعديل على التقرير – يمكنك الآن الطباعة أو حفظ PDF');
+  });
+  $('#repOrig') && ($('#repOrig').onclick = () => { REP_ORIG[key] = !REP_ORIG[key]; rerender(); });
+  $('#repPrint') && ($('#repPrint').onclick = () => window.print());
+}
+['rep','exec','product','daily'].forEach(v => { const b = VIEWS[v].bind; VIEWS[v].bind = function(){ b && b.apply(this, arguments); try{ bindRepTools(); }catch(e){ console.warn(e); } }; });
+
+/* ================= [REPORT_PEOPLE] حالة الآلات وأداء العمال في التقارير ================= */
+function machinesWorkersHtml(from, to, filterRounds){
+  const rs = S.rounds.filter(r => r.date >= from && r.date <= to && (!filterRounds || filterRounds(r)));
+  const ms = new Map(); const mk = (st, m) => { const k = st + '|' + m; if(!ms.has(k)) ms.set(k, {st, m, n: 0, iss: 0, stops: []}); return ms.get(k); };
+  rs.filter(r => r.machine && r.machine !== '—' && !/^(عامل فرز|محطة تركيب)/.test(r.machine)).forEach(r => { const x = mk(r.stage, r.machine); x.n++; if(r.decision !== 'مقبول') x.iss++; });
+  (S.stops || []).filter(z => z.date >= from && z.date <= to && (!filterRounds || ms.has(z.stage + '|' + z.machine))).forEach(z => mk(z.stage, z.machine).stops.push(z));
+  const mrows = [...ms.values()].sort((a, b) => STAGES.findIndex(s => s.key === a.st) - STAGES.findIndex(s => s.key === b.st) || String(a.m).localeCompare(String(b.m), undefined, {numeric: true}));
+  const W = new Map(); rs.forEach(r => splitNames(r.worker || (r.extra || {}).worker).forEach(n => { if(!W.has(n)) W.set(n, {n, rounds: 0, viol: 0, stages: new Set(), last: ''}); const w = W.get(n); w.rounds++; w.stages.add(r.stage); if(r.decision !== 'مقبول' || (r.defects || []).length) { w.viol++; w.last = [...(r.defects || []), r.notes].filter(Boolean).join('، '); } }));
+  S.audits.filter(a => a.date >= from && a.date <= to && !filterRounds).forEach(a => Object.values(a.workers || {}).forEach(ns => splitNames(ns).forEach(n => { if(!W.has(n)) W.set(n, {n, rounds: 0, viol: 0, stages: new Set(), last: ''}); W.get(n).viol++; })));
+  const wrows = [...W.values()].sort((a, b) => b.viol - a.viol || b.rounds - a.rounds);
+  return `<h3><i>⚙</i>حالة الآلات</h3>${mrows.length ? `<table class="t"><thead><tr><th>المرحلة</th><th>الآلة</th><th>الحالة</th><th>جولات</th><th>بمشاكل</th><th>التوقفات وأسبابها</th></tr></thead><tbody>${mrows.map(x => `<tr><td>${esc(stageBy(x.st).name)}</td><td><b>${esc(x.m)}</b></td><td>${x.stops.length ? '<span class="cr">توقفت ' + x.stops.length + ' مرة</span>' : '<span class="cg">عملت دون توقف</span>'}</td><td>${x.n}</td><td>${x.iss || ''}</td><td>${x.stops.map(z => esc((z.reasonLabel || z.reason) + (z.detail ? ' (' + z.detail + ')' : '') + ' ' + z.date.slice(5) + ' ' + z.time)).join('<br>')}</td></tr>`).join('')}</tbody></table>` : '<p class="mu">لا توجد آلات مسجّلة في الفترة.</p>'}
+    <h3><i>👥</i>أداء العمال</h3>${wrows.length ? `<table class="t"><thead><tr><th>العامل</th><th>المراحل</th><th>جولات</th><th>مخالفات</th><th>نسبة المخالفات</th><th>آخر مخالفة</th></tr></thead><tbody>${wrows.map(w => `<tr><td><b>${esc(w.n)}</b></td><td>${[...w.stages].map(s => esc(stageBy(s).name)).join('، ')}</td><td>${w.rounds}</td><td class="${w.viol ? 'cw' : ''}">${w.viol || ''}</td><td>${w.rounds ? Math.round(w.viol * 100 / w.rounds) + '%' : '—'}</td><td>${esc(w.last || '')}</td></tr>`).join('')}</tbody></table>` : '<p class="mu">لا يوجد عمال مسجّلون في الفترة.</p>'}`;
+}
+const _repHtmlMW = VIEWS.rep.html;
+VIEWS.rep.html = function(){ const h = _repHtmlMW(); if(!rep) return h; const sec = `<div class="mwsec">${machinesWorkersHtml(rep.from, rep.to)}</div>`; return h.includes('<div class="sig') ? h.replace(/(<div class="sig)/, sec + '$1') : h + sec; };
+const _execHtmlMW = VIEWS.exec.html;
+VIEWS.exec.html = function(){ const h = _execHtmlMW(); try{ const P = execPeriods(execP); const sec = `<div class="mwsec">${machinesWorkersHtml(P.cur[0], P.cur[1])}</div>`; return h.replace(/(<div class="sig sig4">)/g, sec + '$1'); }catch(e){ return h; } };
+const _prodHtmlMW = VIEWS.product.html;
+VIEWS.product.html = function(){
+  const h = _prodHtmlMW(); if(!prodKey) return h; const key = prodKey.trim();
+  const sec = `<div class="mwsec">${machinesWorkersHtml('2000-01-01', todayStr(), r => itemsOf(r).some(i => i.code === key || i.product === key))}</div>
+    <div class="sig sig4"><div><b>إعداد</b>${esc(S.settings.manager)}<br><span class="muted">مدير قسم ضبط الجودة</span></div><div><b>اطّلاع</b>${esc(S.settings.ceo)}<br><span class="muted">المدير التنفيذي</span></div><div><b>اطّلاع</b>${esc(S.settings.gm || '')}<br><span class="muted">المدير العام</span></div><div class="siglogo"><img src="${LOGO}" alt=""><span>F.E.T Packaging</span></div></div>`;
+  return h.replace(/<\/div>(\s*<style)/, sec + '</div>$1');
+};
+
+/* ================= [MOTIVATION] عبارات تشجيعية وتذكير لطيف بموعد الجولات ================= */
+const MOTIVATION = ['كل جولة دقيقة تحمي سمعة F.E.T عند زبائنها 💪','الجودة ليست فحصاً فقط… الجودة عادة يومية ✨','عينك على التفاصيل تصنع الفرق اليوم 👁','جولة في وقتها = مشكلة تُكتشف قبل أن تكبر ⏱',
+  'ملاحظاتك اليوم يستفيد منها زميلك غداً 🤝','الصندوق الذي تفحصه بعناية لا يعود شكوى 📦','أنت خط الدفاع الأول عن الزبون 🛡','الفريق كله يعتمد على دقتك – استمر 🌟',
+  'كل عيب تكتشفه اليوم يوفّر ساعات من إعادة العمل 🔧','ابدأ الوردية بابتسامة… والجودة تتبعها ☀️','الالتزام بالمواعيد سرّ المراقب المحترف ⏰','تسجيلك الواضح اليوم هو تقرير الإدارة غداً 📊'];
+const PRAISE = ['أحسنت! 👏','عمل ممتاز ✨','جولة موفقة 💪','رائع، استمر 🌟','دقة تُشكر عليها 🙏'];
+function motivePhrase(k){ const d = new Date(); return MOTIVATION[(d.getDate() * 5 + d.getHours() + (k || 0)) % MOTIVATION.length]; }
+function praise(){ return PRAISE[Math.floor(Math.random() * PRAISE.length)]; }
+function motiveBanner(){
+  const t = todayStr(), me = CUR.name || S.settings.inspector, myR = S.rounds.filter(r => r.date === t && r.inspector === me).length, teamR = S.rounds.filter(r => r.date === t).length;
+  const due = todos().filter(x => x[2] === 'round' && !/عامل فرز|محطة تركيب/.test(x[1]) && (+((x[1].match(/(\d+) دقيقة/) || [])[1] || 0)) < 480).slice(0, 5), h = new Date().getHours();
+  const hello = h < 12 ? 'صباح الخير' : h < 18 ? 'نهارك سعيد' : 'مساء الخير';
+  const insp = CUR.role === 'inspector' || !serverMode;
+  const line = insp ? (myR ? `${hello} ${esc(me)}، أنجزت <b class="num">${myR}</b> جولة اليوم – ${myR >= 12 ? 'أداء استثنائي! 🏆' : myR >= 6 ? 'أداء رائع، استمر 👏' : 'بداية موفقة 💪'}` : `${hello} ${esc(me)}! جاهز لأول جولة اليوم؟ 🚀`)
+    : `${hello} ${esc(me)} – أنجز فريق الجودة <b class="num">${teamR}</b> جولة اليوم ${teamR ? '👏' : ''}`;
+  return `<div class="motive noprint"><div class="mq">💡 ${esc(motivePhrase())}</div><div class="ml">${line}</div>
+    ${due.length ? `<div class="mdue"><b>⏰ حان موعد الجولات:</b><div>${due.map(x => `<button class="mdb" data-due-stage="${esc((x[3] || {}).stage || '')}">${esc(x[1].replace('بدون جولة منذ', '– آخر جولة قبل'))}</button>`).join('')}</div></div>` : `<div class="mok">✓ كل الجولات في موعدها – عمل ممتاز</div>`}</div>`;
+}
+const _homeHtmlMot = VIEWS.home.html, _homeBindMot = VIEWS.home.bind;
+VIEWS.home.html = function(){ return motiveBanner() + _homeHtmlMot.apply(this, arguments); };
+VIEWS.home.bind = function(){
+  _homeBindMot && _homeBindMot.apply(this, arguments);
+  $$('[data-due-stage]').forEach(b => b.onclick = () => { const st = b.dataset.dueStage; if(!st) return go('prod');
+    if(['draw','inj','cap'].includes(st)){ DM = DMS[st] || newDM(st); return go('drawm', {stage: st}); }
+    if(['sort','asm'].includes(st)){ SMK = st; SM = SMS[st] || newSM(st); return go('sortm', {stage: st}); }
+    newRound(st); go('round', {stage: st}); });
+};
+/* عبارة تشجيع بعد كل حفظ */
+const _saveRoundMot = saveRound;
+saveRound = function(){ const multi = F && F.__multi, n0 = S.rounds.length; const r = _saveRoundMot.apply(this, arguments); if(!multi && S.rounds.length > n0) setTimeout(() => toast(`${praise()} ${motivePhrase(3)}`), 2200); return r; };
+const _saveDrawMot = saveDrawRound;
+saveDrawRound = function(){ const n0 = S.rounds.length + (S.stops || []).length; _saveDrawMot.apply(this, arguments); if(S.rounds.length + (S.stops || []).length > n0) setTimeout(() => toast(`${praise()} ${motivePhrase(5)}`), 2400); };
+const _saveSortMot = saveSortRound;
+saveSortRound = function(){ const n0 = S.rounds.length; _saveSortMot.apply(this, arguments); if(S.rounds.length > n0) setTimeout(() => toast(`${praise()} ${motivePhrase(7)}`), 2400); };
 
 /* ================= SERVER SYNC (لابتوب القسم) ================= */
 const PWA_API = (typeof window !== 'undefined' && window.PWA_API && /^(https:\/\/|http:\/\/localhost)/.test(window.PWA_API)) ? window.PWA_API : '';
@@ -5421,7 +5847,7 @@ window.addEventListener('online', () => { if(CUR && CUR.role) syncNow(); });
 window.addEventListener('offline', () => { online = false; updateSyncPill(); render(); });
 let serverMode = false, online = true, syncVer = 0, syncing = false, syncTimer = null, lastSync = null, snap = {}, settingsSnap = '';
 const CLIENT = 'c' + Date.now().toString(36) + Math.random().toString(36).slice(2,6);
-const SYNC_COLS = ['rounds','holds','handovers','mats','ncrs','complaints','audits','cals','ths','aid','coas','reports','pimgs','stops'];
+const SYNC_COLS = ['rounds','holds','handovers','mats','ncrs','complaints','audits','cals','ths','aid','coas','reports','pimgs','stops','shiftsums','savedreps'];
 const FORM_VIEWS = ['round','matform','ncrform','auditform','compform','data','hand','letter','coaprint'];
 const keyOf = x => String(x.id ?? x.no ?? [x.date,x.time,x.type,x.code,x.loc,x.name,x.from].map(v=>v??'').join('|'));
 const strip = x => { const {_m,_v,_c,...r} = x; return JSON.stringify(r); };
@@ -5469,7 +5895,7 @@ function updateSyncPill(){
   const el = $('#syncPill'); if(!el) return;
   if(!serverMode){ el.classList.add('hide'); return; }
   el.classList.remove('hide');
-  const pc = pendingCount();
+  const pc = (typeof isViewer === 'function' && isViewer()) ? 0 : pendingCount();
   el.className = 'sync ' + (online ? (dirty || pc ? 'wait' : 'on') : 'off');
   el.textContent = online ? (dirty || pc ? `جارٍ الرفع${pc?' ('+pc+')':''}…` : `متصل · ${lastSync ? timeStr(lastSync) : ''}`) : `دون اتصال${pc?' · '+pc+' بانتظار الرفع':''}`;
   el.title = localSavedAt ? 'آخر حفظ على الجهاز ' + timeStr(localSavedAt) : '';
@@ -5509,6 +5935,7 @@ function apply(d){
 async function syncNow(){
   if(!serverMode || syncing) return; syncing = true;
   const {body, sent, ss, any} = collect();
+  if(typeof isViewer === 'function' && isViewer()){ body.cols = {}; body.deleted = []; delete body.settings; delete body.orders; }   /* حساب الإدارة: لا يرسل أي تعديل */
   try{
     let d;
     if(GAS_MODE){
