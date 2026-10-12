@@ -750,6 +750,17 @@ body.ro .sticky-save,body.ro #saveM,body.ro #delM,body.ro .btn.d,body.ro [data-d
 .editing{outline:3px dashed var(--brand);outline-offset:6px;background:#FFFDF8}
 .mgrnote{margin:14px 0;padding:10px 12px;border-right:4px solid #E8772E;background:#FFF8F1;border-radius:6px}
 .mwsec{margin-top:14px}.mwsec .cr{color:#B83227;font-weight:700}.mwsec .cg{color:#1F7A5A}
+.mini-motive{background:linear-gradient(90deg,#FFF3E8,#FFFFFF);border:1px solid #F7D2B5;border-radius:12px;padding:8px 14px;margin-bottom:12px;font-weight:700;color:#8A4B12;font-size:14.5px}
+.opbox{margin:12px 0;background:#F6FAFF;border:1px solid #CFE0F5;border-radius:12px;padding:10px 12px}
+.opbox .chk{justify-content:center}.opbox .chk span{display:flex;gap:8px;align-items:center;font-weight:700}.opbox .chk input{width:20px;height:20px;min-height:0!important}
+.oprep{margin-top:8px}.oprep > b{display:block;margin-bottom:6px;font-size:14px}.oprep.need{border:2px dashed var(--bad);border-radius:10px;padding:6px 8px;background:var(--bad-l)}
+.wgrade{color:#fff;border-radius:999px;padding:2px 10px;font-weight:700;font-size:12.5px;white-space:nowrap}.wkt .cg{color:#1F7A5A;font-weight:700}.wkt .cr{color:#B83227;font-weight:700}
+.planbadge{display:inline-block;background:#E8F1FB;color:#1D4E89;border:1px solid #9EC1EC;border-radius:999px;padding:2px 10px;font-size:12.5px;font-weight:700;margin-bottom:4px}
+.plt .plo{display:flex;gap:6px;align-items:center;margin:3px 0;flex-wrap:wrap}.plt .plo input[type=time]{width:110px;min-height:36px!important}.plt .plo input[type=text]{min-width:150px;min-height:36px!important}.plt .plo .muted{font-size:12px}
+.planchips{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:4px 0 8px;grid-column:1/-1}.planchips > span{font-size:13px;color:#1D4E89;font-weight:700}
+.planchips button{border:1px solid #9EC1EC;background:#fff;border-radius:10px;padding:5px 10px;display:flex;flex-direction:column;align-items:flex-start;font-size:13px;cursor:pointer}.planchips button small{color:var(--ink2);font-size:11px}
+.planchips button.on{background:#1D4E89;color:#fff;border-color:#1D4E89}.planchips button.on small{color:#D6E6F7}
+.grid > .planbadge{grid-column:1/-1;justify-self:start}
 </style>
 </head>
 <body>
@@ -801,6 +812,8 @@ setTimeout(function(){ if(window.__appLoaded) return; var m=document.getElementB
    [MAT_SAMPLE] قاعدة عينة كل مادة واردة · [MATLIB] أرشيف أكواد المواد
    [TH_LOCS] أماكن الحرارة والرطوبة · [CAL_WINDOWS] مواعيد التحقق من أدوات القياس
    [ORDER_SEARCH] البحث برقم الطلبية أو اسم المنتج · [AUDIT_WEEK] المراقبات الأسبوعية
+   [PLAN]       خطة الإنتاج لكل وردية وآلة
+   [WORKERS]    سجل عمال الإنتاج وتوزيعهم على الآلات · [WORKER_KPI] مؤشرات العامل
    [MOTIVATION] العبارات التشجيعية · [REPORT_ACCESS] من يرى التقارير · [REPORT_EDIT] تعديل التقارير وحفظها
    [SHIFT_SUM]  ملخص نهاية الوردية · [CUSTOM_DEFECTS] المشاكل المضافة من المراقبين
    [PEOPLE]     ملخص مخالفات العمال وتوقفات الآلات
@@ -1216,7 +1229,7 @@ const STAGES = [
    "BM-2"
   ],
   "sample": "6 تيوبات متتالية",
-  "freq": "كل 30 دقيقة لكل آلة",
+  "freq": "جولات دورية خلال الوردية",
   "extra": [],
   "checks": [
    {
@@ -1263,7 +1276,7 @@ const STAGES = [
    "طاولة الفرز"
   ],
   "sample": "6 تيوبات عشوائية من الصندوق",
-  "freq": "كل 30 دقيقة",
+  "freq": "جولات دورية خلال الوردية",
   "extra": [],
   "checks": [
    {
@@ -1442,7 +1455,7 @@ const STAGES = [
    "INJ-7"
   ],
   "sample": "جميع عينات القالب من الجانبين",
-  "freq": "كل 30 دقيقة لكل آلة",
+  "freq": "جولات دورية خلال الوردية",
   "extra": [],
   "checks": [
    {
@@ -1566,7 +1579,7 @@ const STAGES = [
    "تركيب يدوي"
   ],
   "sample": "4 تيوبات",
-  "freq": "كل 30 دقيقة",
+  "freq": "جولات دورية خلال الوردية",
   "extra": [
    {
     "k": "part",
@@ -1675,7 +1688,7 @@ const STAGES = [
    "CAP-4"
   ],
   "sample": "2 تيوب متتاليان + 5 من الكرتونة",
-  "freq": "كل 30 دقيقة لكل آلة",
+  "freq": "جولات دورية خلال الوردية",
   "extra": [],
   "checks": [
    {
@@ -1800,7 +1813,7 @@ const STAGES = [
    "آلة التختيم"
   ],
   "sample": "2 تيوب على الأقل",
-  "freq": "كل 30 دقيقة",
+  "freq": "جولات دورية خلال الوردية",
   "extra": [
    {
     "k": "worker",
@@ -2136,7 +2149,7 @@ STAGES.find(s => s.key==='final').extra = [{k:'cartons',l:'عدد الكراتي
 
 const blank = () => ({settings:{inspectors:[],inspector:'',shift:'صباحية',manager:'ندى حجازي',qa:'محمد براء رحمون',reviewer:'Talal Alraee',ceo:'أيهم سكرية',
   weldMin:1.8,weldMax:3,seamMin:2,seamMax:4,devices:JSON.parse(JSON.stringify(DEVICES)),th:JSON.parse(JSON.stringify(TH_LOC))},
-  orders:DEFAULT_ORDERS, ordersDate:'', reports:[], pimgs:[], stops:[], shiftsums:[], savedreps:[], rounds:[], holds:[], handovers:[], mats:[], ncrs:[], complaints:[], audits:[], cals:[], ths:[], aid:[], coas:[]});
+  orders:DEFAULT_ORDERS, ordersDate:'', reports:[], pimgs:[], stops:[], shiftsums:[], savedreps:[], plans:[], rounds:[], holds:[], handovers:[], mats:[], ncrs:[], complaints:[], audits:[], cals:[], ths:[], aid:[], coas:[]});
 let S = blank();
 let persistent = typeof window.storage !== 'undefined' && window.storage && typeof window.storage.get === 'function';
 let dirty = false;
@@ -2158,7 +2171,10 @@ const todayStr = (d=new Date()) => `${d.getFullYear()}-${pad(d.getMonth()+1)}-${
 const timeStr = (d=new Date()) => `${pad(d.getHours())}:${pad(d.getMinutes())}`;
 const addDays = (s,n) => { const d = new Date(s); d.setDate(d.getDate()+n); return todayStr(d); };
 const daysBetween = (a,b) => Math.round((new Date(b) - new Date(a)) / 86400000);
-const stageBy = k => STAGES.find(s => s.key === k);
+/* [RETIRED] مراحل أُزيلت من الإنتاج: لا تظهر للتسجيل، وتبقى جولاتها القديمة مقروءة */
+const RETIRED_STAGES = STAGES.filter(s => ['mix'].includes(s.key));
+RETIRED_STAGES.forEach(r => STAGES.splice(STAGES.indexOf(r), 1));
+const stageBy = k => STAGES.find(s => s.key === k) || RETIRED_STAGES.find(s => s.key === k) || {key:k, name:k, machines:['—'], checks:[], extra:[], form:'', wi:'', sample:'', freq:''};
 const matBy = k => MATERIALS.find(m => m.key === k);
 const orderBy = n => S.orders.find(o => String(o.order_number) === String(n ?? '').trim());
 const ordRows = n => S.orders.filter(o => String(o.order_number) === String(n ?? '').trim());
@@ -2319,8 +2335,7 @@ VIEWS.prod = {
     const due = Object.values(lastBy).map(r => { const [h,m] = String(r.time||'00:00').split(':').map(Number); const d = new Date(); d.setHours(h,m,0,0); return {r, min:Math.round((now-d)/60000)}; }).sort((a,b)=>b.min-a.min);
     const rec = S.rounds.filter(r => r.date === day).slice(-60).reverse();
     return `<h1>اختر المرحلة لتسجيل جولة</h1><div class="line">${tiles}</div>
-    <h2>توقيت الجولات على الآلات</h2>
-    <div class="due">${due.length ? due.map(({r,min})=>`<span class="chip ${min>30?'late':'ok'} num">${esc(r.machine)} · ${stageBy(r.stage).name} · منذ ${min} د</span>`).join('') : '<span class="muted">تظهر الآلات هنا بعد أول جولة عليها اليوم، وتتحول للأحمر بعد 30 دقيقة دون جولة.</span>'}</div>
+    ${typeof motivePhrase==='function' ? `<div class="mini-motive">💡 ${esc(motivePhrase(11))}</div>` : ''}
     <div class="row" style="justify-content:space-between;align-items:flex-end;margin-top:22px"><h2 style="margin:0">${day===t?'جولات اليوم':'جولات يوم '+day}</h2><label class="f" style="max-width:200px">عرض جولات يوم<input type="date" id="prodDay" value="${day}" max="${t}"></label></div>
     ${roundsTable(rec, true)}<p class="muted" style="font-size:12.5px">اضغط "فتح" لعرض أي جولة. صاحب الجولة ومديرة القسم يستطيعان تعديلها.</p>`;
   },
@@ -2401,7 +2416,7 @@ VIEWS.round = {
     <div class="panel">
       ${s.key!=='print'?'':`<div class="pick" id="typePick" style="margin-bottom:12px">${(s.key==='print' ? [['بدء تشغيل','طباعة بداية التشغيل'],['فحص نهائي','فحص طباعة نهائي']] : [['جولة','جولة دورية'],['بدء تشغيل','موافقة بدء تشغيل']]).map(([x,l])=>`<button class="${F.type===x?'on':''}" data-v="${x}">${l}</button>`).join('')}</div>`}
       <div class="grid">
-        ${s.key==='mix' ? '' : `<label class="f">${s.key==='design'?'رقم الطلبية (اختياري – إن وُجدت)':'رقم الطلبية'}<input type="text" inputmode="numeric" list="ordList" id="fOrder" value="${esc(F.order || ((F.items||[])[0]||{}).order || '')}" placeholder="رقم الطلبية أو اسم المنتج"></label>`}
+        ${s.key==='mix' ? '' : `<label class="f">${s.key==='design'?'رقم الطلبية (اختياري – إن وُجدت)':'رقم الطلبية'}<input type="text" list="ordList" id="fOrder" value="${esc(F.order || ((F.items||[])[0]||{}).order || '')}" placeholder="رقم الطلبية أو اسم المنتج"></label>`}
         
         ${s.key==='design'?'':`<label class="f">عدد العينات<input type="number" id="fSamples" value="${esc(F.samples)}"></label>`}${extra}
       </div>
@@ -3348,7 +3363,7 @@ function userStats(name, from, to){
   const shifts = new Set(rs.map(r => r.date+'|'+r.shift)).size; const g = gapsOf(rs);
   const last = rs.length ? rs[rs.length-1] : null;
   return { name, rounds:rs.length, m:rs.filter(r=>r.shift==='صباحية').length, e:rs.filter(r=>r.shift==='مسائية').length, days:new Set(rs.map(r=>r.date)).size, shifts,
-    perShift: shifts ? Math.round(rs.length/shifts) : 0, ontime: g.n ? pct(g.ontime, g.n) : null, gap: g.avg,
+    perShift: shifts ? Math.round(rs.length/shifts) : 0, ontime: null, gap: g.avg,
     issues: rs.filter(r=>r.decision!=='مقبول').length, crit: rs.filter(r=>r.cls==='حرج').length, firstOff: rs.filter(r=>r.type==='بدء تشغيل').length, finals: rs.filter(r=>r.stage==='final').length,
     holds: S.holds.filter(h=>h.inspector===name && inR(h.date)).length, ncrs: S.ncrs.filter(n=>n.by===name && inR(n.date)).length, mats: S.mats.filter(m=>m.inspector===name && inR(m.date)).length,
     audits: S.audits.filter(a=>a.inspector===name && inR(a.date)).length, cals: S.cals.filter(c=>c.by===name && inR(c.date)).length, ths: S.ths.filter(x=>x.by===name && inR(x.date)).length,
@@ -3370,7 +3385,7 @@ function kpiSet(from, to){
     rounds: rs.length,
     issues: rs.length ? pct(iss.length, rs.length) : null,
     crit: rs.filter(r=>r.cls==='حرج').length,
-    ontime: g.n ? pct(g.ontime, g.n) : null,
+    ontime: null,
     foRef: fo.length ? pct(fo.filter(r=>r.decision!=='مقبول').length, fo.length) : null,
     ftr: fin.length ? pct(fin.filter(r=>r.decision==='مقبول'||r.decision==='مقبول بملاحظة').length, fin.length) : null,
     holdDays: hc.length ? +(hc.reduce((a,h)=>a+daysBetween(h.date,h.closed),0)/hc.length).toFixed(1) : null,
@@ -3385,7 +3400,6 @@ function kpiSet(from, to){
 /* [KPI_DEF] */
 const KPI_DEF = [
   ['issues','نسبة الجولات بمشاكل','%','down',null],
-  ['ontime','الالتزام بفاصل 30 دقيقة بين الجولات','%','up',95],
   ['ftr','التحرير من أول فحص نهائي','%','up',95],
   ['foRef','بدء تشغيل غير مسموح','%','down',5],
   ['crit','العيوب الحرجة','','down',0],
@@ -3448,7 +3462,7 @@ VIEWS.team = {
     <div class="people" style="margin-top:16px">${st.map(s => `<div class="panel person ${s.name===CUR.name?'me':''}">
       <div class="ph"><div class="av">${esc((s.name.trim().split(/\s+/).pop()||'').replace(/^ال/,'')[0]||'')}</div><div><b>${esc(s.name)}</b><span>${s.name===CUR.name?'أنت':'مراقب جودة'} – آخر نشاط ${esc(s.last)}</span></div></div>
       <div class="big"><b class="num">${s.rounds}</b><span>جولة فحص</span></div>
-      <div class="sg">${row('صباحي / مسائي', `${s.m} / ${s.e}`)}${row('متوسط الجولات في الوردية', s.perShift)}${row('الالتزام بفاصل 30 دقيقة', s.ontime===null?'—':s.ontime+'%', s.ontime===null?'':s.ontime>=90?'g':s.ontime>=70?'w':'r')}${row('متوسط الفاصل بين الجولات', s.gap===null?'—':s.gap+' د')}
+      <div class="sg">${row('صباحي / مسائي', `${s.m} / ${s.e}`)}${row('متوسط الجولات في الوردية', s.perShift)}
         ${row('مشاكل اكتشفها', s.issues, s.issues?'w':'')}${row('عيوب حرجة', s.crit, s.crit?'r':'')}${row('موافقات بدء تشغيل', s.firstOff)}${row('فحوص منتج نهائي', s.finals)}
         ${row('فحوص مواد واردة', s.mats)}${row('مراقبات نظافة وتفتيش', s.audits)}${row('تحقق أدوات القياس', s.cals)}${row('قراءات الحرارة والرطوبة', s.ths)}${row('حجوزات فتحها', s.holds)}${row('NCR سجلها', s.ncrs)}${row('تسليم وردية', s.hand)}</div>
       ${s.stages.length?`<div class="muted" style="margin-top:10px">المراحل: ${s.stages.map(([n,c])=>`${esc(n)} ${c}`).join('، ')}</div>`:''}
@@ -3503,8 +3517,8 @@ VIEWS.mgr = {
     <table class="rt"><thead><tr><th>المرحلة</th><th class="num">الجولات</th><th class="num">نسبة المشاكل الآن</th><th class="num">السابق</th><th class="num">التغير</th></tr></thead><tbody>
       ${stg.map(x=>`<tr><td><b>${x.s.name}</b></td><td class="num">${x.n}</td><td class="num">${x.pa===null?'—':x.pa+'%'}</td><td class="num">${x.pb===null?'—':x.pb+'%'}</td><td class="num">${deltaTag(x.pa, x.pb, 'down')}</td></tr>`).join('')}</tbody></table>
     <h2>أداء المراقبين</h2>
-    <table class="rt"><thead><tr><th>المراقب</th><th class="num">الجولات</th><th class="num">صباحي / مسائي</th><th class="num">جولات / وردية</th><th class="num">الالتزام بفاصل 30 د</th><th class="num">مشاكل اكتشفها</th><th class="num">عيوب حرجة</th><th class="num">مواد</th><th class="num">مراقبات</th><th class="num">NCR</th></tr></thead><tbody>
-      ${us.map(s=>`<tr><td><b>${esc(s.name)}</b></td><td class="num">${s.rounds}</td><td class="num">${s.m} / ${s.e}</td><td class="num">${s.perShift}</td><td class="num">${s.ontime===null?'—':s.ontime+'%'}</td><td class="num">${s.issues}</td><td class="num">${s.crit}</td><td class="num">${s.mats}</td><td class="num">${s.audits}</td><td class="num">${s.ncrs}</td></tr>`).join('') || '<tr><td colspan="10" class="muted">لا يوجد نشاط.</td></tr>'}</tbody></table>`;
+    <table class="rt"><thead><tr><th>المراقب</th><th class="num">الجولات</th><th class="num">صباحي / مسائي</th><th class="num">جولات / وردية</th><th class="num">مشاكل اكتشفها</th><th class="num">عيوب حرجة</th><th class="num">مواد</th><th class="num">مراقبات</th><th class="num">NCR</th></tr></thead><tbody>
+      ${us.map(s=>`<tr><td><b>${esc(s.name)}</b></td><td class="num">${s.rounds}</td><td class="num">${s.m} / ${s.e}</td><td class="num">${s.perShift}</td><td class="num">${s.issues}</td><td class="num">${s.crit}</td><td class="num">${s.mats}</td><td class="num">${s.audits}</td><td class="num">${s.ncrs}</td></tr>`).join('') || '<tr><td colspan="10" class="muted">لا يوجد نشاط.</td></tr>'}</tbody></table>`;
   },
   bind(){ $$('[data-mp]').forEach(b => b.onclick = () => { mgrP = b.dataset.mp; render(); }); $('#mPrint') && ($('#mPrint').onclick = () => window.print()); }
 };
@@ -3515,7 +3529,7 @@ VIEWS.home.html = function(){
   if(!(serverMode && CUR.role==='manager')) return h;
   const K = kpiSet(...periodOf('m')); const t = todayStr();
   const strip = `<button class="panel mgrstrip" id="toMgr"><b>لوحة الإدارة – هذا الشهر</b>
-    <span>نسبة المشاكل <b class="num">${K.issues===null?'—':K.issues+'%'}</b></span><span>الالتزام بالجولات <b class="num">${K.ontime===null?'—':K.ontime+'%'}</b></span>
+    <span>نسبة المشاكل <b class="num">${K.issues===null?'—':K.issues+'%'}</b></span>
     <span>التحرير من أول فحص <b class="num">${K.ftr===null?'—':K.ftr+'%'}</b></span><span>NCR متأخرة <b class="num">${S.ncrs.filter(n=>ncrStatus(n)==='متأخر').length}</b></span><span class="go">فتح اللوحة</span></button>`;
   return h.replace('<div class="homegrid">', strip + '<div class="homegrid">');
 };
@@ -3523,12 +3537,12 @@ VIEWS.home.bind = function(){ _homeBind(); $('#toMgr') && ($('#toMgr').onclick =
 
 var RC_LOGO = 'data:image/png;base64,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';
 /* ===== Daily final report core – shared by the app and the Google Drive server ===== */
-var RC_STAGES = [['design','التصميم'],['print','الطباعة'],['draw','السحب'],['sort','الفرز'],['mix','الخلط'],['inj','الحقن'],['asm','التركيب غير الآلي'],['cap','التغطية والتعبئة'],['seal','التختيم'],['check','التشييك'],['final','فحص المنتج النهائي']];
+var RC_STAGES = [['design','التصميم'],['print','الطباعة'],['draw','السحب'],['sort','الفرز'],['inj','الحقن'],['asm','التركيب غير الآلي'],['cap','التغطية والتعبئة'],['seal','التختيم'],['check','التشييك'],['final','فحص المنتج النهائي']];
 function rcPct(a, b) { return b ? Math.round(a * 100 / b) : 0; }
 function rcDays(a, b) { return Math.round((new Date(b) - new Date(a)) / 86400000); }
 function rcAdd(s, n) { var d = new Date(s); d.setDate(d.getDate() + n); return d.toISOString().slice(0, 10); }
 function rcEsc(s) { return String(s === undefined || s === null ? '' : s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
-function rcStageName(k) { for (var i = 0; i < RC_STAGES.length; i++) if (RC_STAGES[i][0] === k) return RC_STAGES[i][1]; return k || ''; }
+function rcStageName(k) { for (var i = 0; i < RC_STAGES.length; i++) if (RC_STAGES[i][0] === k) return RC_STAGES[i][1]; return ({ mix: 'الخلط' })[k] || k || ''; }
 function rcItems(r) { return (r.items && r.items.length) ? r.items : (r.order ? [{ order: r.order, code: r.code || '', product: r.product || '', customer: r.customer || '' }] : []); }
 function rcNcrLate(n, today) { if (n.closed) return false; var due = (n.actions || []).map(function (a) { return a.due; }).filter(Boolean).sort().pop(); return !!(due && today > due && (n.actions || []).some(function (a) { return !a.done; })); }
 
@@ -3591,7 +3605,7 @@ function computeDaily(D, date, by) {
       audits: auds.length, auditFails: auds.reduce(function (a, x) { return a + (x.failed || []).length; }, 0), cals: cals.length, calBad: cals.filter(function (c) { return !c.ok; }).length, ths: ths.length, thBad: ths.filter(function (x) { return !x.ok; }).length },
     stages: stages, defects: defects, products: products, inspectors: Object.keys(insp).map(function (k) { return insp[k]; }), problems: problems.slice(0, 80),
     mats: mats, ncrNew: ncrNew, ncrLate: lateN, holdsOpen: openH, comps: comps, due: due, stops: stops, boxes: boxes, manager: D.manager || '', machines: (function () { var m = {}; rs.forEach(function (r) { if (!r.machine || r.machine === '—' || /^(عامل فرز|محطة تركيب)/.test(r.machine)) return; var k = r.stage + '|' + r.machine; m[k] = m[k] || { stage: rcStageName(r.stage), machine: r.machine, n: 0, iss: 0, stops: [] }; m[k].n++; if (r.decision !== 'مقبول') m[k].iss++; }); (D.stops || []).filter(function (z) { return z.date === date; }).forEach(function (z) { var k = z.stage + '|' + z.machine; m[k] = m[k] || { stage: rcStageName(z.stage), machine: z.machine, n: 0, iss: 0, stops: [] }; m[k].stops.push((z.reasonLabel || z.reason) + (z.detail ? ' (' + z.detail + ')' : '') + ' ' + z.time); }); return Object.keys(m).map(function (k) { return m[k]; }); })(),
-    workers: (function () { var w = {}; rs.forEach(function (r) { String(r.worker || (r.extra || {}).worker || '').split(/[،,\/]+/).map(function (x) { return x.trim(); }).filter(Boolean).forEach(function (n) { w[n] = w[n] || { name: n, n: 0, viol: 0, stages: {} }; w[n].n++; w[n].stages[rcStageName(r.stage)] = 1; if (r.decision !== 'مقبول' || (r.defects || []).length) w[n].viol++; }); }); return Object.keys(w).map(function (k) { var x = w[k]; x.stages = Object.keys(x.stages).join('، '); return x; }).sort(function (a, b) { return b.viol - a.viol; }); })(),
+    workers: (function () { var w = {}; rs.forEach(function (r) { var ns = String(r.worker || (r.extra || {}).worker || '').split(/[،,\/]+/).map(function (x) { return x.trim(); }).filter(Boolean); if (r.operator && ns.indexOf(r.operator) < 0) ns.push(r.operator); ns.forEach(function (n) { w[n] = w[n] || { name: n, n: 0, viol: 0, rep: 0, norep: 0, stages: {} }; w[n].n++; w[n].stages[rcStageName(r.stage) + (r.machine && r.machine !== '—' ? ' ' + r.machine : '')] = 1; if (r.decision !== 'مقبول' || (r.defects || []).length) { w[n].viol++; if (r.operator === n) { if (r.opReported === 'yes') w[n].rep++; else if (r.opReported === 'no') w[n].norep++; } } }); }); return Object.keys(w).map(function (k) { var x = w[k]; x.stages = Object.keys(x.stages).join('، '); return x; }).sort(function (a, b) { return b.viol - a.viol; }); })(),
     notes: '' };
 }
 
@@ -3638,7 +3652,7 @@ function renderDaily(s, opts) {
     (bx.flagged.length ? '<table class="t" style="margin-top:8px"><thead><tr><th>الصندوق</th><th>المرحلة / الآلة</th><th>الطلبية</th><th>القرار</th><th>العيوب والملاحظات</th><th>المراقب</th></tr></thead><tbody>' + bx.flagged.map(function (x) { return '<tr><td><b>' + e(x.box) + '</b>' + (x.roll ? '<div class="mu">رول ' + e(x.roll) + '</div>' : '') + '</td><td>' + e(x.stage) + (x.machine && x.machine !== '—' ? ' – ' + e(x.machine) : '') + (x.worker ? '<div class="mu">عامل الفرز: ' + e(x.worker) + '</div>' : '') + '</td><td>' + e(x.order) + '</td><td>' + pill(x.decision) + '</td><td>' + e(x.defects) + (x.notes ? '<div>' + e(x.notes) + '</div>' : '') + '</td><td class="sm">' + e(x.inspector) + ' ' + e(x.time) + '</td></tr>'; }).join('') + '</tbody></table>' : '') : '<p class="mu">لم تُسجّل أرقام صناديق اليوم.</p>');
   var mcs = s.machines || [], wks = s.workers || [];
   h += sec('12أ', 'حالة الآلات') + (mcs.length ? '<table class="t"><thead><tr><th>المرحلة</th><th>الآلة</th><th>الحالة</th><th>جولات</th><th>بمشاكل</th><th>التوقفات</th></tr></thead><tbody>' + mcs.map(function (x) { return '<tr><td>' + e(x.stage) + '</td><td><b>' + e(x.machine) + '</b></td><td class="' + (x.stops.length ? 'cr' : '') + '">' + (x.stops.length ? 'توقفت ' + x.stops.length + ' مرة' : 'عملت دون توقف') + '</td><td>' + x.n + '</td><td>' + (x.iss || '') + '</td><td class="sm">' + x.stops.map(e).join('<br>') + '</td></tr>'; }).join('') + '</tbody></table>' : '<p class="mu">لا توجد آلات مسجّلة اليوم.</p>');
-  h += sec('12ب', 'أداء العمال') + (wks.length ? '<table class="t"><thead><tr><th>العامل</th><th>المراحل</th><th>جولات</th><th>مخالفات</th><th>نسبة المخالفات</th></tr></thead><tbody>' + wks.map(function (x) { return '<tr><td><b>' + e(x.name) + '</b></td><td>' + e(x.stages) + '</td><td>' + x.n + '</td><td class="' + (x.viol ? 'cw' : '') + '">' + (x.viol || '') + '</td><td>' + (x.n ? Math.round(x.viol * 100 / x.n) + '%' : '—') + '</td></tr>'; }).join('') + '</tbody></table>' : '<p class="mu">لم تُسجّل أسماء عمال اليوم.</p>');
+  h += sec('12ب', 'أداء العمال') + (wks.length ? '<table class="t"><thead><tr><th>العامل</th><th>الآلة / المرحلة</th><th>جولات</th><th>مشاكل على عمله</th><th>اكتشف وأبلغ</th><th>لم يبلغ</th></tr></thead><tbody>' + wks.map(function (x) { return '<tr><td><b>' + e(x.name) + '</b></td><td>' + e(x.stages) + '</td><td>' + x.n + '</td><td class="' + (x.viol ? 'cw' : '') + '">' + (x.viol || '') + '</td><td>' + (x.rep || '') + '</td><td class="' + (x.norep ? 'cr' : '') + '">' + (x.norep || '') + '</td></tr>'; }).join('') + '</tbody></table>' : '<p class="mu">لم تُسجّل أسماء عمال اليوم.</p>');
   var stp = s.stops || [];
   h += sec(12, 'توقف الآلات') + (stp.length ? '<table class="t"><thead><tr><th>الوقت</th><th>الوردية</th><th>المرحلة / الآلة</th><th>السبب</th><th>التفاصيل</th><th>المراقب</th></tr></thead><tbody>' + stp.map(function (x) { return '<tr><td>' + e(x.time) + '</td><td>' + e(x.shift) + '</td><td>' + e(x.stage) + ' – ' + e(x.machine) + '</td><td><b>' + e(x.reason) + '</b></td><td>' + e(x.detail) + '</td><td class="sm">' + e(x.inspector) + '</td></tr>'; }).join('') + '</tbody></table>' : '<p class="mu">لم تُسجّل توقفات للآلات.</p>');
   h += sec(13, 'ملاحظات وقرارات مدير القسم') + '<div class="nt">' + (s.notes ? e(s.notes).replace(/\n/g, '<br>') : '&nbsp;') + '</div>';
@@ -3810,7 +3824,7 @@ VIEWS.data.bind = function(){
 
 const LUCIDE = {"home": "<path d=\"M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8\" /> <path d=\"M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z\" />", "prod": "<path d=\"M12 16h.01\" /> <path d=\"M16 16h.01\" /> <path d=\"M3 19a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5a.5.5 0 0 0-.769-.422l-4.462 2.844A.5.5 0 0 1 15 10.5v-2a.5.5 0 0 0-.769-.422L9.77 10.922A.5.5 0 0 1 9 10.5V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2z\" /> <path d=\"M8 16h.01\" />", "mat": "<path d=\"M12 22V12\" /> <path d=\"m16 17 2 2 4-4\" /> <path d=\"M21 11.127V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.729l7 4a2 2 0 0 0 2 .001l1.32-.753\" /> <path d=\"M3.29 7 12 12l8.71-5\" /> <path d=\"m7.5 4.27 8.997 5.148\" />", "ncr": "<path d=\"M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z\" /> <path d=\"M12 8v4\" /> <path d=\"M12 16h.01\" />", "hold": "<path d=\"M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z\" /> <path d=\"m3.3 7 8.7 5 8.7-5\" /> <path d=\"M12 22V12\" />", "mon": "<rect width=\"8\" height=\"4\" x=\"8\" y=\"2\" rx=\"1\" ry=\"1\" /> <path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\" /> <path d=\"m9 14 2 2 4-4\" />", "rep": "<path d=\"M3 3v16a2 2 0 0 0 2 2h16\" /> <path d=\"M18 17V9\" /> <path d=\"M13 17V5\" /> <path d=\"M8 17v-3\" />", "team": "<path d=\"M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2\" /> <path d=\"M16 3.128a4 4 0 0 1 0 7.744\" /> <path d=\"M22 21v-2a4 4 0 0 0-3-3.87\" /> <circle cx=\"9\" cy=\"7\" r=\"4\" />", "mgr": "<path d=\"M16 7h6v6\" /> <path d=\"m22 7-8.5 8.5-5-5L2 17\" />", "more": "<rect width=\"7\" height=\"7\" x=\"3\" y=\"3\" rx=\"1\" /> <rect width=\"7\" height=\"7\" x=\"14\" y=\"3\" rx=\"1\" /> <rect width=\"7\" height=\"7\" x=\"14\" y=\"14\" rx=\"1\" /> <rect width=\"7\" height=\"7\" x=\"3\" y=\"14\" rx=\"1\" />", "hand": "<path d=\"M8 3 4 7l4 4\" /> <path d=\"M4 7h16\" /> <path d=\"m16 21 4-4-4-4\" /> <path d=\"M20 17H4\" />", "comp": "<path d=\"M22 17a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 21.286V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2z\" /> <path d=\"M12 15h.01\" /> <path d=\"M12 7v4\" />", "coa": "<path d=\"m15.477 12.89 1.515 8.526a.5.5 0 0 1-.81.47l-3.58-2.687a1 1 0 0 0-1.197 0l-3.586 2.686a.5.5 0 0 1-.81-.469l1.514-8.526\" /> <circle cx=\"12\" cy=\"8\" r=\"6\" />", "sup": "<path d=\"M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2\" /> <path d=\"M15 18H9\" /> <path d=\"M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 17.52 8H14\" /> <circle cx=\"17\" cy=\"18\" r=\"2\" /> <circle cx=\"7\" cy=\"18\" r=\"2\" />", "data": "<ellipse cx=\"12\" cy=\"5\" rx=\"9\" ry=\"3\" /> <path d=\"M3 5V19A9 3 0 0 0 21 19V5\" /> <path d=\"M3 12A9 3 0 0 0 21 12\" />", "bell": "<path d=\"M10.268 21a2 2 0 0 0 3.464 0\" /> <path d=\"M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326\" />", "search": "<path d=\"m21 21-4.34-4.34\" /> <circle cx=\"11\" cy=\"11\" r=\"8\" />", "logout": "<path d=\"m16 17 5-5-5-5\" /> <path d=\"M21 12H9\" /> <path d=\"M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4\" />", "dash": "<rect width=\"7\" height=\"9\" x=\"3\" y=\"3\" rx=\"1\" /> <rect width=\"7\" height=\"5\" x=\"14\" y=\"3\" rx=\"1\" /> <rect width=\"7\" height=\"9\" x=\"14\" y=\"12\" rx=\"1\" /> <rect width=\"7\" height=\"5\" x=\"3\" y=\"16\" rx=\"1\" />", "s_design": "<path d=\"M15.707 21.293a1 1 0 0 1-1.414 0l-1.586-1.586a1 1 0 0 1 0-1.414l5.586-5.586a1 1 0 0 1 1.414 0l1.586 1.586a1 1 0 0 1 0 1.414z\" /> <path d=\"m18 13-1.375-6.874a1 1 0 0 0-.746-.776L3.235 2.028a1 1 0 0 0-1.207 1.207L5.35 15.879a1 1 0 0 0 .776.746L13 18\" /> <path d=\"m2.3 2.3 7.286 7.286\" /> <circle cx=\"11\" cy=\"11\" r=\"2\" />", "s_print": "<path d=\"M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2\" /> <path d=\"M6 9V3a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v6\" /> <rect x=\"6\" y=\"14\" width=\"12\" height=\"8\" rx=\"1\" />", "s_draw": "<ellipse cx=\"12\" cy=\"5\" rx=\"9\" ry=\"3\" /> <path d=\"M3 5v14a9 3 0 0 0 18 0V5\" />", "s_sort": "<path d=\"M2 5h20\" /> <path d=\"M6 12h12\" /> <path d=\"M9 19h6\" />", "s_mix": "<path d=\"M14 2v6a2 2 0 0 0 .245.96l5.51 10.08A2 2 0 0 1 18 22H6a2 2 0 0 1-1.755-2.96l5.51-10.08A2 2 0 0 0 10 8V2\" /> <path d=\"M6.453 15h11.094\" /> <path d=\"M8.5 2h7\" />", "s_inj": "<path d=\"m18 2 4 4\" /> <path d=\"m17 7 3-3\" /> <path d=\"M19 9 8.7 19.3c-1 1-2.5 1-3.4 0l-.6-.6c-1-1-1-2.5 0-3.4L15 5\" /> <path d=\"m9 11 4 4\" /> <path d=\"m5 19-3 3\" /> <path d=\"m14 4 6 6\" />", "s_asm": "<path d=\"M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.106-3.105c.32-.322.863-.22.983.218a6 6 0 0 1-8.259 7.057l-7.91 7.91a1 1 0 0 1-2.999-3l7.91-7.91a6 6 0 0 1 7.057-8.259c.438.12.54.662.219.984z\" />", "s_cap": "<path d=\"M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z\" /> <path d=\"M12 22V12\" /> <polyline points=\"3.29 7 12 12 20.71 7\" /> <path d=\"m7.5 4.27 9 5.15\" />", "s_seal": "<path d=\"M14 13V8.5C14 7 15 7 15 5a3 3 0 0 0-6 0c0 2 1 2 1 3.5V13\" /> <path d=\"M20 15.5a2.5 2.5 0 0 0-2.5-2.5h-11A2.5 2.5 0 0 0 4 15.5V17a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1z\" /> <path d=\"M5 22h14\" />", "s_final": "<path d=\"M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z\" /> <path d=\"m16 9-5.5 5.5L8 12\" />", "thermo": "<path d=\"M14 4v10.54a4 4 0 1 1-4 0V4a2 2 0 0 1 4 0Z\" />", "ruler": "<path d=\"M21.3 15.3a2.4 2.4 0 0 1 0 3.4l-2.6 2.6a2.4 2.4 0 0 1-3.4 0L2.7 8.7a2.41 2.41 0 0 1 0-3.4l2.6-2.6a2.41 2.41 0 0 1 3.4 0Z\" /> <path d=\"m14.5 12.5 2-2\" /> <path d=\"m11.5 9.5 2-2\" /> <path d=\"m8.5 6.5 2-2\" /> <path d=\"m17.5 15.5 2-2\" />", "clean": "<path d=\"M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z\" /> <path d=\"M20 2v4\" /> <path d=\"M22 4h-4\" /> <circle cx=\"4\" cy=\"20\" r=\"2\" />", "plus": "<circle cx=\"12\" cy=\"12\" r=\"10\" /> <path d=\"M8 12h8\" /> <path d=\"M12 8v8\" />", "ok": "<path d=\"M21.801 10A10 10 0 1 1 17 3.335\" /> <path d=\"m9 11 3 3L22 4\" />", "warn": "<path d=\"m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3\" /> <path d=\"M12 9v4\" /> <path d=\"M12 17h.01\" />", "file": "<path d=\"M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z\" /> <path d=\"M14 2v5a1 1 0 0 0 1 1h5\" /> <path d=\"M10 9H8\" /> <path d=\"M16 13H8\" /> <path d=\"M16 17H8\" />", "scan": "<path d=\"M3 7V5a2 2 0 0 1 2-2h2\" /> <path d=\"M17 3h2a2 2 0 0 1 2 2v2\" /> <path d=\"M21 17v2a2 2 0 0 1-2 2h-2\" /> <path d=\"M7 21H5a2 2 0 0 1-2-2v-2\" /> <circle cx=\"12\" cy=\"12\" r=\"3\" /> <path d=\"m16 16-1.9-1.9\" />", "clock": "<circle cx=\"12\" cy=\"12\" r=\"10\" /> <path d=\"M12 6v6l4 2\" />", "alert": "<path d=\"M12 16h.01\" /> <path d=\"M12 8v4\" /> <path d=\"M15.312 2a2 2 0 0 1 1.414.586l4.688 4.688A2 2 0 0 1 22 8.688v6.624a2 2 0 0 1-.586 1.414l-4.688 4.688a2 2 0 0 1-1.414.586H8.688a2 2 0 0 1-1.414-.586l-4.688-4.688A2 2 0 0 1 2 15.312V8.688a2 2 0 0 1 .586-1.414l4.688-4.688A2 2 0 0 1 8.688 2z\" />", "activity": "<path d=\"M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2\" />", "gauge": "<path d=\"m12 14 4-4\" /> <path d=\"M3.34 19a10 10 0 1 1 17.32 0\" />"};
 /* [VERSION] رقم إصدار البرنامج – يظهر أسفل القائمة وفي شاشة الدخول */
-const APP_VERSION = '10.4';
+const APP_VERSION = '10.9';
 let SERVER_VERSION = '';
 async function checkServerVersion(){ if(!GAS_MODE) return; try{ const v = JSON.parse(await rpc('serverVersion', '')); SERVER_VERSION = v.version + (v.ocr ? '' : ' (Drive API غير مفعّل)'); }catch(e){ SERVER_VERSION = /NET/.test(String(e && e.message || e)) ? '' : 'قديم – انشر إصداراً جديداً'; } try{ renderTabs(); }catch(e){} }
 /* [ERRORS] بدل الصفحة الفارغة: رسالة واضحة وزر إعادة تحميل */
@@ -4091,7 +4105,7 @@ function productImageHtml(o, idx){
     <label class="btn sm">${typeof LI==='function'?LI('plus'):''} رفع صورة المنتج<input type="file" accept="image/*" class="hide" data-pup="${idx}"></label></div>`;
 }
 /* [PF_SHOW] الحقول المعروضة في كل مرحلة (الباقي يظهر في المراحل الأخرى) */
-const PF_SHOW = {inj: ['customer','dia','len','shoulder','tooth','hole','cap','qty','delivery'], cap: ['customer','cap','nozzle','shoulder','qty','delivery'], asm: ['customer','cap','nozzle','qty','delivery'], draw: ['customer','dia','len','ptype','pcolor','thick','rollw','print360','foil','qty','delivery'], print: ['customer','set','ptype','pcolor','thick','rollw','rolll','print360','foil','varn','colors','qty','delivery']};
+const PF_SHOW = {inj: ['customer','dia','len','shoulder','tooth','hole','cap'], cap: ['customer','cap','nozzle','shoulder'], asm: ['customer','cap','nozzle'], draw: ['customer','dia','len','ptype','pcolor','thick','rollw','print360','foil'], print: ['customer','dia','len','set','ptype','pcolor','thick','rollw','rolll','print360','foil','varn','colors','printshop']};
 /* [ERP_NOTES] ملاحظات ERP التي تظهر للمراقب (cost_notes غير مستوردة) */
 const ERP_NOTES = [['quality_notes','ملاحظات الجودة','q'], ['gm_notes','ملاحظات المدير العام','gm'], ['production_notes','ملاحظات الإنتاج',''], ['sales_notes','ملاحظات المبيعات',''],
   ['coordination_notes','ملاحظات التنسيق',''], ['design_notes','ملاحظات التصميم',''], ['customer_notes','ملاحظات الزبون',''], ['stock_notes','ملاحظات المستودع','s']];
@@ -4113,8 +4127,8 @@ function productCards(items, stageKey, mi){
     const cleanV = v => { const s = String(v ?? '').trim(); return /^((undefined|null|none|nan|-)[\s\-–]*)+$/i.test(s) ? '' : s; };
     const show = PF_SHOW[stageKey];
     const always = stageKey === 'print' ? {varn:'غير محدد – اربط تصميم المنتج (مكتبة التصاميم)', set:'غير موجود في ERP', rollw:'غير موجود في set'} : {};
-    const fields = PF.filter(([k]) => !show || show.includes(k)).map(([k,l,f]) => [k,l,cleanV(f(o)) || always[k] || '']).filter(x => x[2] !== '');
-    return `<div class="pcard ${items.length>1 && i===mi ? 'meas' : ''}"><div class="ph3"><b>${esc(o.product_name || it.product)}</b><span>طلبية ${esc(it.order)}${items.length>1 && i===mi ? ' · القياسات على هذا المنتج' : ''}</span>${dd!=null?`<em class="${dd<0?'r':dd<=3?'w':''}">${dd<0?'متأخرة '+(-dd)+' يوم':'التسليم بعد '+dd+' يوم'}</em>`:''}</div>
+    const fields = PF.filter(([k]) => (!show || show.includes(k)) && !['qty','delivery'].includes(k)).map(([k,l,f]) => [k,l,cleanV(f(o)) || always[k] || '']).filter(x => x[2] !== '');
+    return `<div class="pcard ${items.length>1 && i===mi ? 'meas' : ''}"><div class="ph3"><b>${esc(o.product_name || it.product)}</b><span>طلبية ${esc(it.order)}${items.length>1 && i===mi ? ' · القياسات على هذا المنتج' : ''}</span></div>
       <div class="pbody">${productImageHtml(o, i)}<div class="pf">${fields.map(([k,l,v]) => `<div class="${rel.has(k)?'rel':''}"><span>${l}</span><b>${esc(v)}</b></div>`).join('')}</div></div>
       ${erpNotesHtml(o)}</div>`;
   }).join('')}<p class="muted" style="margin:4px 0 0;font-size:12.5px">الخانات الملوّنة هي الأهم في مرحلة ${esc(stageBy(stageKey).name)}.</p></div>`;
@@ -4253,7 +4267,6 @@ VIEWS.exec = {
     const worst = heat.filter(h => h.p!==null && h.n>=5).sort((a,b) => b.p-a.p)[0];
     if(worst && worst.p > 20) rec.push(`مرحلة <b>${worst.s.name}</b> هي الأعلى مشاكل (${worst.p}%): مراجعة إعدادات الآلات مع الصيانة، وجلسة تدريب على عيوب المرحلة (M4) لمشغليها.`);
     if(par.length && totD && par[0][1]/totD >= .25) rec.push(`العيب <b>${esc(par[0][0])}</b> يمثل ${pct(par[0][1], totD)}% من كل العيوب: فتح مشروع تحسين مشترك جودة/إنتاج لإزالة سببه الجذري.`);
-    if(K.ontime!==null && K.ontime < 90) rec.push(`الالتزام بفاصل 30 دقيقة بين الجولات ${K.ontime}%: مراجعة توزيع المراقبين على الآلات وتوقيت الجولات.`);
     if(K.holdDays!==null && K.holdDays > 2) rec.push(`متوسط قرار المحجوز ${K.holdDays} يوم: تسريع قرارات الفرز والتصرف خلال 48 ساعة.`);
     if(lateN.length) rec.push(`${lateN.length} حالة عدم مطابقة متأخرة عن موعد الفعل التصحيحي: متابعة المسؤولين وإغلاقها.`);
     if(supRows.some(x => x.g==='C')) rec.push(`مورد/موردون بتقييم C (${supRows.filter(x=>x.g==='C').map(x=>esc(x.s)).join('، ')}): فحص مشدد لكل دفعة والبحث عن بديل.`);
@@ -4325,8 +4338,8 @@ VIEWS.exec = {
       </section>
       <section class="xpage">
         ${head(9,'فريق الجودة والالتزام')}
-        <table class="xt"><thead><tr><th>المراقب</th><th class="c">الجولات</th><th class="c">صباحي / مسائي</th><th class="c">جولات / وردية</th><th class="c">الالتزام بفاصل 30 د</th><th class="c">مشاكل اكتشفها</th><th class="c">حرج</th><th class="c">مواد</th><th class="c">مراقبات</th></tr></thead><tbody>
-          ${us.map(s => `<tr><td><b>${esc(s.name)}</b></td><td class="c num">${s.rounds}</td><td class="c num">${s.m} / ${s.e}</td><td class="c num">${s.perShift}</td><td class="c num" style="background:${s.ontime===null?'':s.ontime>=90?'#D6EFE3':s.ontime>=70?'#FCEFD6':'#F4B6B6'}">${s.ontime===null?'—':s.ontime+'%'}</td><td class="c num">${s.issues}</td><td class="c num">${s.crit}</td><td class="c num">${s.mats}</td><td class="c num">${s.audits}</td></tr>`).join('') || '<tr><td colspan="9" class="muted">لا يوجد نشاط.</td></tr>'}</tbody></table>
+        <table class="xt"><thead><tr><th>المراقب</th><th class="c">الجولات</th><th class="c">صباحي / مسائي</th><th class="c">جولات / وردية</th><th class="c">مشاكل اكتشفها</th><th class="c">حرج</th><th class="c">مواد</th><th class="c">مراقبات</th></tr></thead><tbody>
+          ${us.map(s => `<tr><td><b>${esc(s.name)}</b></td><td class="c num">${s.rounds}</td><td class="c num">${s.m} / ${s.e}</td><td class="c num">${s.perShift}</td><td class="c num">${s.issues}</td><td class="c num">${s.crit}</td><td class="c num">${s.mats}</td><td class="c num">${s.audits}</td></tr>`).join('') || '<tr><td colspan="9" class="muted">لا يوجد نشاط.</td></tr>'}</tbody></table>
         ${(() => { const st = (S.stops || []).filter(z => inR(z.date, P.cur)); if(!st.length) return head('⏸','توقف الآلات') + '<p class="muted">لم تُسجّل توقفات في الفترة.</p>'; const ms = [...new Set(st.map(z => z.machine))], rs = [...new Set(st.map(z => z.reasonLabel || z.reason))];
           return head('⏸','توقف الآلات') + `<table class="xt"><thead><tr><th>الآلة</th>${rs.map(r => `<th class="c">${esc(r)}</th>`).join('')}<th class="c">المجموع</th></tr></thead><tbody>${ms.map(m => `<tr><td><b>${esc(m)}</b></td>${rs.map(r => `<td class="c num">${st.filter(z => z.machine===m && (z.reasonLabel||z.reason)===r).length || ''}</td>`).join('')}<td class="c num"><b>${st.filter(z => z.machine===m).length}</b></td></tr>`).join('')}</tbody></table>`; })()}
         ${head(10,'حالات عدم المطابقة المفتوحة')}
@@ -4744,7 +4757,7 @@ function drawMachineHtml(m, f){
   const o = withF(f, () => fSpec()), sg = withF(f, () => suggestRound());
   const cls = f.cls ?? sg.cls, dec = f.decision ?? sg.dec;
   const inItems = (o2, code) => (f.items||[]).some(i => String(i.order)===String(o2) && i.code===code);
-  return head + `<div class="grid"><label class="f">رقم الطلبية على ${esc(m)}<input type="text" inputmode="numeric" list="ordList" data-ord value="${esc(f.order || ((f.items||[])[0]||{}).order || '')}" placeholder="رقم الطلبية أو اسم المنتج"></label></div>
+  return head + `<div class="grid"><label class="f">رقم الطلبية على ${esc(m)}<input type="text" list="ordList" data-ord value="${esc(f.order || ((f.items||[])[0]||{}).order || '')}" placeholder="رقم الطلبية أو اسم المنتج"></label></div>
     ${rows.length > 1 ? `<div class="pick" style="margin-top:8px">${rows.map((x,i) => `<button class="pchip ${inItems(x.order_number, x.product_code)?'on':''}" data-pi="${i}"><b>${esc(x.product_name)}</b><small>${esc(x.product_code)} · قطر ${esc(x.product_diameter||'—')} · طول ${esc(x.tube_cylinder_length||'—')}</small></button>`).join('')}</div>` : ''}
     ${(f.items||[]).length ? productCards(f.items, sk, f.mi||0) : f.order ? orderCard(null, f.order) : ''}
     ${(f.items||[]).length ? productNotesHtml(f.items) : ''}
@@ -4764,7 +4777,7 @@ VIEWS.drawm = {
   html(){
     const sk = (arg && arg.stage) || (DM && DM.stage) || 'draw'; DM = DMS[sk] || newDM(sk);
     const s = stageBy(sk);
-    return `<div class="pagehead"><div><h1 style="margin:0;display:flex;align-items:center;gap:12px"><span class="sti big">${LI(STAGE_ICON[sk])}</span>جولة مرحلة ${s.name}</h1><p>${esc(s.form)} · ${esc(s.wi)} · العينة: ${esc(s.sample)} لكل آلة · كل 30 دقيقة</p></div><button class="btn" id="dmBack">رجوع</button></div>
+    return `<div class="pagehead"><div><h1 style="margin:0;display:flex;align-items:center;gap:12px"><span class="sti big">${LI(STAGE_ICON[sk])}</span>جولة مرحلة ${s.name}</h1><p>${esc(s.form)} · ${esc(s.wi)} · العينة: ${esc(s.sample)} لكل آلة</p></div><button class="btn" id="dmBack">رجوع</button></div>
       <datalist id="ordList">${[...new Map(S.orders.map(x => [String(x.order_number), x])).values()].map(x => `<option value="${esc(x.order_number)}">${esc(ordRows(x.order_number).length>1 ? ordRows(x.order_number).length+' منتجات – '+(x.customer||'') : x.product_name)}</option>`).join('')}</datalist>
       <div class="dmgrid">${Object.entries(DM.machines).map(([m, f]) => `<div class="panel dmach ${f.status}" data-m="${esc(m)}">${drawMachineHtml(m, f)}</div>`).join('')}</div>
       <div class="sticky-save"><button class="btn p" id="dmSave">حفظ جولة ${s.name} (${Object.keys(DM.machines).length} آلات)</button></div>`;
@@ -4908,7 +4921,7 @@ function sortEntryHtml(i, f){
   if(!f.open && !has) return `<div class="mhd gate-closed"><b>${LI(STAGE_ICON[SMK])} ${ST_CFG[SMK].unit} ${f.gate}</b><span class="pill">لم يُسجَّل</span><button class="btn sm p" data-openg="${i}">${ST_CFG[SMK].open}</button>${f.gate > ST_CFG[SMK].initial() ? `<button class="btn sm d" data-rmw="${i}">إزالة</button>` : ''}</div>`;
   return `<div class="mhd"><b>${LI(STAGE_ICON[SMK])} ${ST_CFG[SMK].unit} ${f.gate}${f.worker ? ' – ' + esc(f.worker) : ''}</b><span class="pill ${has ? 'p-مقبول' : ''}">${has ? 'قيد التسجيل' : 'لم يُسجَّل'}</span>${f.gate > ST_CFG[SMK].initial() ? `<button class="btn sm d" data-rmw="${i}">إزالة</button>` : ''}${!has ? `<button class="btn sm" data-closeg="${i}">إغلاق</button>` : ''}</div>
     <div class="grid"><label class="f">${ST_CFG[SMK].nameLabel} <span class="req">*</span><input type="text" list="workerList" data-worker value="${esc(f.worker)}" placeholder="اكتب الاسم"></label>
-      <label class="f">رقم الطلبية <span class="req">*</span><input type="text" inputmode="numeric" list="ordList" data-ord value="${esc(ord)}" placeholder="رقم الطلبية أو اسم المنتج"></label></div>
+      <label class="f">رقم الطلبية <span class="req">*</span><input type="text" list="ordList" data-ord value="${esc(ord)}" placeholder="رقم الطلبية أو اسم المنتج"></label></div>
     ${rows.length > 1 ? `<div class="pick" style="margin-top:8px">${rows.map((x, k) => `<button class="pchip ${inItems(x.product_code)?'on':''}" data-pi="${k}"><b>${esc(x.product_name)}</b><small>${esc(x.product_code)}</small></button>`).join('')}</div>` : ''}
     ${(f.items||[]).length ? productCards(f.items, SMK, f.mi||0) : ''}
     ${(f.items||[]).length ? productNotesHtml(f.items) : ''}
@@ -5752,21 +5765,25 @@ VIEWS.product.html = function(){
 };
 
 /* ================= [MOTIVATION] عبارات تشجيعية وتذكير لطيف بموعد الجولات ================= */
-const MOTIVATION = ['كل جولة دقيقة تحمي سمعة F.E.T عند زبائنها 💪','الجودة ليست فحصاً فقط… الجودة عادة يومية ✨','عينك على التفاصيل تصنع الفرق اليوم 👁','جولة في وقتها = مشكلة تُكتشف قبل أن تكبر ⏱',
-  'ملاحظاتك اليوم يستفيد منها زميلك غداً 🤝','الصندوق الذي تفحصه بعناية لا يعود شكوى 📦','أنت خط الدفاع الأول عن الزبون 🛡','الفريق كله يعتمد على دقتك – استمر 🌟',
-  'كل عيب تكتشفه اليوم يوفّر ساعات من إعادة العمل 🔧','ابدأ الوردية بابتسامة… والجودة تتبعها ☀️','الالتزام بالمواعيد سرّ المراقب المحترف ⏰','تسجيلك الواضح اليوم هو تقرير الإدارة غداً 📊'];
+const MOTIVATION = ['كل جولة دقيقة تحمي سمعة F.E.T عند زبائنها 💪','الجودة ليست فحصاً فقط… الجودة عادة يومية ✨','عينك على التفاصيل تصنع الفرق اليوم 👁','ملاحظاتك اليوم يستفيد منها زميلك غداً 🤝',
+  'الصندوق الذي تفحصه بعناية لا يعود شكوى 📦','أنت خط الدفاع الأول عن الزبون 🛡','الفريق كله يعتمد على دقتك – استمر 🌟','كل عيب تكتشفه اليوم يوفّر ساعات من إعادة العمل 🔧',
+  'ابدأ الوردية بابتسامة… والجودة تتبعها ☀️','تسجيلك الواضح اليوم هو تقرير الإدارة غداً 📊','المراقب المتميز لا ينتظر المشكلة… يكتشفها قبل أن تكبر 🔍','ثقة زبائننا تُبنى تيوباً بعد تيوب 🧴',
+  'شكراً لأنك تهتم بالتفاصيل الصغيرة – هي التي تصنع الجودة الكبيرة 🙏','جولة واحدة متقنة أفضل من عشر جولات سريعة 🎯','كلمة "مقبول" منك تعني ثقة… فاجعلها دائماً عن يقين ✅','أنت لست مراقباً فقط… أنت شريك في نجاح كل طلبية 🤝',
+  'الجودة تبدأ بك وتنتهي عند رضا الزبون 😊','عمل اليوم المتقن يوفّر شكوى الغد 📉','ملاحظة صغيرة تكتبها قد تنقذ طلبية كاملة 📝','دقتك اليوم مصدر فخر للقسم كله 🏅',
+  'كل منتج يخرج سليماً يحمل بصمتك ✋','التزامك يصنع الفرق حتى عندما لا يراك أحد 💡','استمر… أنت تبني سمعة مصنع كامل 🏭','الاحتراف هو أن تفحص الجولة الأخيرة بنفس تركيز الأولى 🔁',
+  'خطوة بخطوة… وجولة بعد جولة نصل إلى صفر شكاوى 🎯','أنت عين الزبون داخل المصنع 👁','الجودة لا تحدث صدفة… إنها نتيجة عملك اليوم 💪','يوم موفق! كل ما تسجله اليوم يجعل الغد أسهل 🌤'];
 const PRAISE = ['أحسنت! 👏','عمل ممتاز ✨','جولة موفقة 💪','رائع، استمر 🌟','دقة تُشكر عليها 🙏'];
 function motivePhrase(k){ const d = new Date(); return MOTIVATION[(d.getDate() * 5 + d.getHours() + (k || 0)) % MOTIVATION.length]; }
 function praise(){ return PRAISE[Math.floor(Math.random() * PRAISE.length)]; }
 function motiveBanner(){
   const t = todayStr(), me = CUR.name || S.settings.inspector, myR = S.rounds.filter(r => r.date === t && r.inspector === me).length, teamR = S.rounds.filter(r => r.date === t).length;
-  const due = todos().filter(x => x[2] === 'round' && !/عامل فرز|محطة تركيب/.test(x[1]) && (+((x[1].match(/(\d+) دقيقة/) || [])[1] || 0)) < 480).slice(0, 5), h = new Date().getHours();
+  const due = [], h = new Date().getHours();
   const hello = h < 12 ? 'صباح الخير' : h < 18 ? 'نهارك سعيد' : 'مساء الخير';
   const insp = CUR.role === 'inspector' || !serverMode;
   const line = insp ? (myR ? `${hello} ${esc(me)}، أنجزت <b class="num">${myR}</b> جولة اليوم – ${myR >= 12 ? 'أداء استثنائي! 🏆' : myR >= 6 ? 'أداء رائع، استمر 👏' : 'بداية موفقة 💪'}` : `${hello} ${esc(me)}! جاهز لأول جولة اليوم؟ 🚀`)
     : `${hello} ${esc(me)} – أنجز فريق الجودة <b class="num">${teamR}</b> جولة اليوم ${teamR ? '👏' : ''}`;
   return `<div class="motive noprint"><div class="mq">💡 ${esc(motivePhrase())}</div><div class="ml">${line}</div>
-    ${due.length ? `<div class="mdue"><b>⏰ حان موعد الجولات:</b><div>${due.map(x => `<button class="mdb" data-due-stage="${esc((x[3] || {}).stage || '')}">${esc(x[1].replace('بدون جولة منذ', '– آخر جولة قبل'))}</button>`).join('')}</div></div>` : `<div class="mok">✓ كل الجولات في موعدها – عمل ممتاز</div>`}</div>`;
+    <div class="mok">${esc(motivePhrase(9))}</div></div>`;
 }
 const _homeHtmlMot = VIEWS.home.html, _homeBindMot = VIEWS.home.bind;
 VIEWS.home.html = function(){ return motiveBanner() + _homeHtmlMot.apply(this, arguments); };
@@ -5784,6 +5801,292 @@ const _saveDrawMot = saveDrawRound;
 saveDrawRound = function(){ const n0 = S.rounds.length + (S.stops || []).length; _saveDrawMot.apply(this, arguments); if(S.rounds.length + (S.stops || []).length > n0) setTimeout(() => toast(`${praise()} ${motivePhrase(5)}`), 2400); };
 const _saveSortMot = saveSortRound;
 saveSortRound = function(){ const n0 = S.rounds.length; _saveSortMot.apply(this, arguments); if(S.rounds.length > n0) setTimeout(() => toast(`${praise()} ${motivePhrase(7)}`), 2400); };
+
+/* لا تذكير بمواعيد ثابتة للجولات: إزالة تنبيهات "بدون جولة منذ X دقيقة" */
+const _todosNoInt = todos;
+todos = function(){ return _todosNoInt.apply(this, arguments).filter(x => x[2] !== 'round'); };
+/* عبارة تشجيع صغيرة في أعلى صفحات المراحل */
+['round','drawm','sortm'].forEach(v => { const h = VIEWS[v].html; VIEWS[v].html = function(){ const out = h.apply(this, arguments); return `<div class="mini-motive noprint">💡 ${esc(motivePhrase(v.length + new Date().getMinutes() % 7))}</div>` + out; }; });
+
+/* ================= [WORKERS] عمال الإنتاج: السجل، توزيعهم على الآلات، البديل اليومي، ومؤشرات العامل ================= */
+const DEPT_STAGE = {'السحب':'draw','الحقن':'inj','التغطية':'cap','التشييك':'check','فرز':'sort','ورشة':'asm','الطباعة':'print','التختيم':'seal','الخلط':'mix'};
+const WORKERS_SEED = [
+  ['عمر قويدر','السحب','صباحية'],['احمد جبة','السحب','صباحية'],['احمد مارديني','الحقن','صباحية'],['ميسم القاضي','الحقن','صباحية'],['ايمن كيلاني','الحقن','صباحية'],['وسام إبراهيم','الحقن','صباحية'],
+  ['محمد خلف','الحقن','صباحية'],['وضاح مبارك','الحقن','صباحية'],['احمد السيد خليل','مساعد','صباحية'],['محمد زيد الحسني','مساعد','صباحية'],['انس حمدان','مساعد','صباحية'],['يمان الكيلاني','الحقن','صباحية'],
+  ['محمد اسعد','مساعد','صباحية'],['يوسف عثمان','مساعد','صباحية'],['خالد تبيان','مساعد','صباحية'],['عيدة الرحيل','التغطية','صباحية'],['ميساء عزايزة','التغطية','صباحية'],['اماني خلف','التغطية','صباحية'],
+  ['بثينة عبدو','التغطية','صباحية'],['سهيلة عبدو','التغطية','صباحية'],['بشرى ليلا','التغطية','صباحية'],['نسرين الحسين','التغطية','صباحية'],['اكرام شعبان','التغطية','صباحية'],['نادرة ياسين','التغطية','صباحية'],
+  ['فريال الدج','التغطية','صباحية'],['اصالة الشيخ','التغطية','صباحية'],['ميساء الطن','التشييك','صباحية'],['مرام غزال','فرز','صباحية'],['كنانة حمودة','فرز','صباحية'],['سارة شاكر','ورشة','صباحية'],
+  ['سهام عبد اللطيف','ورشة','صباحية'],['سيدرا الصايل','ورشة','صباحية'],['ولاء الناصر','ورشة','صباحية'],['نور عسكر','ورشة','صباحية'],['رند الخير','ورشة','صباحية'],['سراب المغربي','ورشة','صباحية'],
+  ['بسام عز الدين','السحب','مسائية'],['سهيل ياسين','السحب','مسائية'],['محمود جمعة','مشرف','مسائية'],['خالد دوريش','التغطية','مسائية'],['موفق الرفاعي','التغطية','مسائية'],['محمود حمود','التغطية','مسائية'],
+  ['فادي الشرابي','الحقن','مسائية'],['محمد الملا','التغطية','مسائية'],['انس الرفاعي','الحقن','مسائية'],['صالح جبة','مساعد','مسائية'],['رشيد احمد','مساعد','مسائية'],['حسان شاكر','الحقن','مسائية'],
+  ['مجد عز الدين','الحقن','مسائية'],['عدنان جبة','مساعد','مسائية'],['محمود جبة','مساعد','مسائية'],['حمد عبود','الحقن','مسائية'],['محمد إبراهيم','الحقن','مسائية'],['اغيد سراج','مساعد','مسائية'],
+  ['نصر عبود','مساعد','مسائية'],['علي مصطفى','مساعد','مسائية'],['سهف نوفل','مساعد','مسائية'],['قصي زيدان','مساعد','مسائية'],['احمد سعد موسى','مساعد','مسائية'],['قيس إبراهيم','مساعد','مسائية']];
+function workersList(){ if(!S.settings.workers){ S.settings.workers = WORKERS_SEED.map(([name, dept, shift]) => ({name, dept, shift, active: true})); } return S.settings.workers; }
+const ASSIGN_STAGES = ['print','draw','inj','cap','seal'];
+const asKey = (stage, machine, shift) => `${stage}|${machine}|${shift}`;
+/* العامل على الآلة: بديل اليوم إن وُجد، وإلا التوزيع الثابت من مدير القسم */
+function operatorFor(stage, machine, shift, date){
+  shift = shift || S.settings.shift; date = date || todayStr(); const k = asKey(stage, machine, shift);
+  const day = ((S.settings.assignDay || {})[date] || {})[k]; if(day) return {name: day, sub: true};
+  const d = (S.settings.assign || {})[k]; return d ? {name: d, sub: false} : {name: '', sub: false};
+}
+function setTodayOperator(stage, machine, name){
+  const t = todayStr(), k = asKey(stage, machine, S.settings.shift); S.settings.assignDay = S.settings.assignDay || {};
+  Object.keys(S.settings.assignDay).forEach(d => { if(d < addDays(t, -7)) delete S.settings.assignDay[d]; });
+  (S.settings.assignDay[t] = S.settings.assignDay[t] || {})[k] = name;
+}
+function workerDatalist(){ return `<datalist id="wkAll">${workersList().filter(w => w.active !== false).map(w => `<option value="${esc(w.name)}">${esc(w.dept)} · ${esc(w.shift)}</option>`).join('')}</datalist>`; }
+/* خانة عامل الآلة + سؤال الإبلاغ */
+const REPORTED = [['yes','نعم – اكتشفها وأبلغ'],['no','لا – لم ينتبه أو لم يبلغ'],['none','لا توجد مشكلة']];
+function operatorHtml(stage, machine, f, tag){
+  if(!machine || machine === '—') return '';
+  const def = operatorFor(stage, machine), cur = f.operator ?? def.name; f.operator = cur;
+  const hasIssue = (f.defects || []).length || Object.values(f.checks || {}).includes('n');
+  return `<div class="opbox"><div class="grid">
+    <label class="f">عامل الآلة ${def.sub ? '<span class="pill p-مقبول_بملاحظة">بديل اليوم</span>' : ''}<input type="text" list="wkAll" data-op="${tag}" value="${esc(cur)}" placeholder="اسم عامل الآلة"></label>
+    <label class="f chk"><span><input type="checkbox" data-opday="${tag}" ${f.opDay ? 'checked' : ''}> البديل لكل اليوم على ${esc(machine)}</span><small class="muted">دون التأشير: التغيير لهذه الجولة فقط</small></label></div>
+    <div class="oprep ${hasIssue && !f.opReported ? 'need' : ''}"><b>هل اكتشف عامل الآلة المشكلة وأبلغ عنها؟</b><div class="pick">${REPORTED.map(([k, l]) => `<button class="${(f.opReported || (hasIssue ? '' : 'none')) === k ? 'on' : ''}" data-oprep="${tag}" data-v="${k}">${l}</button>`).join('')}</div></div></div>`;
+}
+function bindOperator(root, f, stage, machine, tag){
+  const inp = root.querySelector(`[data-op="${tag}"]`); if(inp) inp.oninput = e => { f.operator = e.target.value; };
+  const day = root.querySelector(`[data-opday="${tag}"]`); if(day) day.onchange = e => { f.opDay = e.target.checked; };
+  root.querySelectorAll(`[data-oprep="${tag}"]`).forEach(b => b.onclick = () => { f.opReported = b.dataset.v; rerender(); });
+}
+/* صفحات الآلات (السحب، الحقن، التغطية) */
+const _dmHtmlW = drawMachineHtml;
+drawMachineHtml = function(m, f){ let h = _dmHtmlW(m, f); if(f.status !== 'run') return h; return h.replace('<h3 class="mh3">بنود الفحص</h3>', operatorHtml(DM.stage, m, f, 'dm:' + m) + '<h3 class="mh3">بنود الفحص</h3>'); };
+const _dmBindW = VIEWS.drawm.bind;
+VIEWS.drawm.bind = function(){ _dmBindW.apply(this, arguments); $$('.dmach').forEach(p => { const f = DM.machines[p.dataset.m]; if(f) bindOperator(p, f, DM.stage, p.dataset.m, 'dm:' + p.dataset.m); }); if(!$('#wkAll')) document.body.insertAdjacentHTML('beforeend', workerDatalist()); };
+/* الصفحة العادية للمراحل ذات الآلة (الطباعة، التختيم) */
+const _rHtmlW = VIEWS.round.html;
+VIEWS.round.html = function(){ let h = _rHtmlW.apply(this, arguments); if(!F || !ASSIGN_STAGES.includes(F.stage) || !F.machine) return h; return h.replace(/(<h2>بنود الفحص)/, operatorHtml(F.stage, F.machine, F, 'F') + '$1') + workerDatalist(); };
+const _rBindW = VIEWS.round.bind;
+VIEWS.round.bind = function(){ _rBindW.apply(this, arguments); if(F && ASSIGN_STAGES.includes(F.stage)) bindOperator(document, F, F.stage, F.machine, 'F'); };
+/* حفظ: اسم العامل، والإبلاغ، والبديل اليومي */
+const _saveRoundW = saveRound;
+saveRound = function(){
+  const f = F; if(f && ASSIGN_STAGES.includes(f.stage) && f.machine && f.machine !== '—'){
+    const hasIssue = (f.defects || []).length || Object.values(f.checks || {}).includes('n') || (f.decision && f.decision !== 'مقبول');
+    if(!String(f.operator || '').trim()){ toast(`اكتب اسم عامل الآلة ${f.machine}`); return null; }
+    if(hasIssue && !f.opReported){ toast(`${f.machine}: حدّد هل اكتشف عامل الآلة المشكلة وأبلغ عنها`); return null; }
+    if(f.opDay) setTodayOperator(f.stage, f.machine, f.operator.trim());
+  }
+  const op = f && f.operator, rep = f && (f.opReported || 'none'), editId = f && f.editId, n0 = S.rounds.length;
+  const res = _saveRoundW.apply(this, arguments);
+  const r = res && res.id ? res : (editId ? S.rounds.find(x => x.id === editId) : (S.rounds.length > n0 ? S.rounds[S.rounds.length - 1] : null));
+  if(r && op){ r.operator = op.trim(); r.opReported = rep; save(); }
+  return res;
+};
+/* في صفحات الآلات: التحقق قبل الحفظ */
+const _saveDrawW = saveDrawRound;
+saveDrawRound = function(){
+  for(const [m, f] of Object.entries(DM.machines)){
+    if(f.status !== 'run') continue;
+    const hasIssue = (f.defects || []).length || Object.values(f.checks || {}).includes('n');
+    if(!String(f.operator || '').trim()){ toast(`اكتب اسم عامل الآلة ${m}`); return; }
+    if(hasIssue && !f.opReported){ toast(`${m}: حدّد هل اكتشف عامل الآلة المشكلة وأبلغ عنها`); return; }
+  }
+  return _saveDrawW.apply(this, arguments);
+};
+
+/* ================= صفحة عمال الإنتاج: السجل والتوزيع على الآلات ================= */
+ICONS.workers = ICONS.team || LI('team');
+NAV.find(g => g.g === 'العمليات اليومية').items.push(['workers', 'عمال الإنتاج']);
+PAGE.workers = ['العمليات اليومية', 'عمال الإنتاج'];
+let WK = {tab: 'assign', shift: ''};
+VIEWS.workers = {
+  html(){
+    const ws = workersList(), sh = WK.shift || S.settings.shift, mgr = isMgr(), t = todayStr();
+    const tabs = `<div class="pick" style="margin-bottom:12px">${[['assign','توزيع العمال على الآلات'],['list','سجل العمال (' + ws.length + ')']].map(([k, l]) => `<button class="${WK.tab===k?'on':''}" data-wt="${k}">${l}</button>`).join('')}</div>`;
+    if(WK.tab === 'list') return `<div class="pagehead"><div><h1 style="margin:0">عمال الإنتاج</h1><p>${mgr ? 'مدير القسم يضيف ويعدّل العمال وأقسامهم وورديّاتهم.' : 'للعرض فقط – التعديل لمدير القسم.'}</p></div></div>${tabs}
+      ${mgr ? `<div class="panel"><div class="grid"><label class="f">الاسم<input type="text" id="wN"></label><label class="f">القسم<select id="wD">${['السحب','الحقن','التغطية','التشييك','فرز','ورشة','الطباعة','التختيم','الخلط','مساعد','مشرف'].map(d => `<option>${d}</option>`).join('')}</select></label><label class="f">الوردية<select id="wS"><option>صباحية</option><option>مسائية</option></select></label></div><button class="btn p" id="wAdd" style="margin-top:8px">إضافة عامل</button></div>` : ''}
+      <div class="tw" style="margin-top:12px"><table class="t"><thead><tr><th>#</th><th>الاسم</th><th>القسم</th><th>الوردية</th><th>الحالة</th>${mgr ? '<th></th>' : ''}</tr></thead><tbody>
+      ${ws.map((w, i) => `<tr class="${w.active === false ? 'muted' : ''}"><td class="num">${i + 1}</td><td><b>${esc(w.name)}</b></td><td>${mgr ? `<select data-wd="${i}">${['السحب','الحقن','التغطية','التشييك','فرز','ورشة','الطباعة','التختيم','الخلط','مساعد','مشرف'].map(d => `<option ${w.dept===d?'selected':''}>${d}</option>`).join('')}</select>` : esc(w.dept)}</td>
+        <td>${mgr ? `<select data-ws="${i}"><option ${w.shift==='صباحية'?'selected':''}>صباحية</option><option ${w.shift==='مسائية'?'selected':''}>مسائية</option></select>` : esc(w.shift)}</td><td>${w.active === false ? 'متوقف' : 'فعّال'}</td>
+        ${mgr ? `<td><div class="row" style="flex-wrap:nowrap"><button class="btn sm" data-wa="${i}">${w.active === false ? 'تفعيل' : 'إيقاف'}</button><button class="btn sm d" data-wx="${i}">حذف</button></div></td>` : ''}</tr>`).join('')}</tbody></table></div>`;
+    const rows = ASSIGN_STAGES.flatMap(st => stageBy(st).machines.filter(m => m !== '—').map(m => ({st, m})));
+    const pool = d => ws.filter(w => w.active !== false && w.shift === sh).sort((a, b) => (DEPT_STAGE[b.dept] === d) - (DEPT_STAGE[a.dept] === d));
+    return `<div class="pagehead"><div><h1 style="margin:0">توزيع عمال الإنتاج على الآلات</h1><p>${mgr ? 'مدير القسم يحدد العامل الثابت لكل آلة في كل وردية. المراقب يضع بديلاً عند غياب العامل: للجولة فقط، أو لكل اليوم.' : 'العامل الثابت يحدده مدير القسم. يمكنك وضع بديل لليوم من هنا أو من الجولة نفسها.'}</p></div></div>${tabs}
+      <div class="pick" style="margin-bottom:10px">${['صباحية','مسائية'].map(x => `<button class="${sh===x?'on':''}" data-wsh="${x}">الوردية ${x}</button>`).join('')}</div>
+      <div class="tw"><table class="t"><thead><tr><th>المرحلة</th><th>الآلة</th><th>العامل الثابت ${mgr ? '' : '(مدير القسم)'}</th><th>بديل اليوم (${t})</th></tr></thead><tbody>
+      ${rows.map(({st, m}) => { const k = asKey(st, m, sh), def = (S.settings.assign || {})[k] || '', day = ((S.settings.assignDay || {})[t] || {})[k] || ''; return `<tr><td>${esc(stageBy(st).name)}</td><td><b>${esc(m)}</b></td>
+        <td>${mgr ? `<select data-asg="${esc(k)}"><option value="">— اختر —</option>${pool(st).map(w => `<option ${def===w.name?'selected':''}>${esc(w.name)}</option>`).join('')}</select>` : esc(def || '—')}</td>
+        <td><div class="row" style="flex-wrap:nowrap"><input type="text" list="wkAll" data-asd="${esc(k)}" value="${esc(day)}" placeholder="لا يوجد بديل" style="min-width:160px">${day ? `<button class="btn sm" data-asdx="${esc(k)}">إلغاء البديل</button>` : ''}</div></td></tr>`; }).join('')}</tbody></table></div>${workerDatalist()}`;
+  },
+  bind(){
+    const ws = workersList();
+    $$('[data-wt]').forEach(b => b.onclick = () => { WK.tab = b.dataset.wt; rerender(); });
+    $$('[data-wsh]').forEach(b => b.onclick = () => { WK.shift = b.dataset.wsh; rerender(); });
+    $('#wAdd') && ($('#wAdd').onclick = () => { const n = $('#wN').value.trim(); if(!n){ toast('اكتب الاسم'); return; } ws.push({name: n, dept: $('#wD').value, shift: $('#wS').value, active: true}); save(); rerender(); toast('أُضيف العامل'); });
+    $$('[data-wd]').forEach(el => el.onchange = () => { ws[+el.dataset.wd].dept = el.value; save(); });
+    $$('[data-ws]').forEach(el => el.onchange = () => { ws[+el.dataset.ws].shift = el.value; save(); });
+    $$('[data-wa]').forEach(b => b.onclick = () => { const w = ws[+b.dataset.wa]; w.active = w.active === false; save(); rerender(); });
+    $$('[data-wx]').forEach(b => b.onclick = () => ask(`حذف ${ws[+b.dataset.wx].name} من السجل؟ (جولاته السابقة تبقى)`, 'حذف', () => { ws.splice(+b.dataset.wx, 1); save(); rerender(); }, true));
+    $$('[data-asg]').forEach(el => el.onchange = () => { S.settings.assign = S.settings.assign || {}; if(el.value) S.settings.assign[el.dataset.asg] = el.value; else delete S.settings.assign[el.dataset.asg]; save(); toast('تم حفظ التوزيع'); });
+    $$('[data-asd]').forEach(el => el.onchange = () => { const [st, m] = el.dataset.asd.split('|'); const t = todayStr(); S.settings.assignDay = S.settings.assignDay || {}; S.settings.assignDay[t] = S.settings.assignDay[t] || {}; if(el.value.trim()) S.settings.assignDay[t][el.dataset.asd] = el.value.trim(); else delete S.settings.assignDay[t][el.dataset.asd]; save(); rerender(); toast(el.value.trim() ? `بديل اليوم على ${m}: ${el.value.trim()}` : 'أُلغي البديل'); });
+    $$('[data-asdx]').forEach(b => b.onclick = () => { const t = todayStr(); delete ((S.settings.assignDay || {})[t] || {})[b.dataset.asdx]; save(); rerender(); });
+  }
+};
+
+/* ================= [WORKER_KPI] مؤشرات العامل: الجولات، المشاكل، الإبلاغ، النظافة، الشكاوى ================= */
+function workerKPIs(from, to){
+  const W = new Map(), get = n => { if(!W.has(n)) { const w = workersList().find(x => x.name === n); W.set(n, {name: n, dept: w ? w.dept : '', shift: w ? w.shift : '', rounds: 0, issues: 0, rep: 0, norep: 0, clean: 0, comps: [], orders: new Set(), stages: new Set()}); } return W.get(n); };
+  S.rounds.filter(r => r.date >= from && r.date <= to).forEach(r => {
+    const names = [...new Set([...(r.operator ? [r.operator] : []), ...splitNames(r.worker || (r.extra || {}).worker)])];
+    names.forEach(n => { const w = get(n); w.rounds++; w.stages.add(r.stage); itemsOf(r).forEach(i => i.order && w.orders.add(String(i.order)));
+      if(r.decision !== 'مقبول' || (r.defects || []).length){ w.issues++; if(r.operator === n){ if(r.opReported === 'yes') w.rep++; else if(r.opReported === 'no') w.norep++; } } });
+  });
+  S.audits.filter(a => a.date >= from && a.date <= to).forEach(a => Object.values(a.workers || {}).forEach(ns => splitNames(ns).forEach(n => get(n).clean++)));
+  S.complaints.filter(c => c.date >= from && c.date <= to).forEach(c => { const o = String(c.order || ''); if(!o) return; W.forEach(w => { if(w.orders.has(o)) w.comps.push(c.no || c.order); }); });
+  return [...W.values()].map(w => { const repPct = w.rep + w.norep ? Math.round(w.rep * 100 / (w.rep + w.norep)) : null;
+    let score = 100 - (w.rounds ? w.issues * 100 / w.rounds : 0) * .4 - w.norep * 5 - w.clean * 4 - w.comps.length * 10 + (repPct !== null ? (repPct - 50) * .1 : 0);
+    score = Math.max(0, Math.min(100, Math.round(score)));
+    return {...w, repPct, score, grade: score >= 90 ? ['ممتاز','#1F7A5A'] : score >= 75 ? ['جيد','#4C9A2A'] : score >= 60 ? ['مقبول','#D99A2B'] : ['يحتاج متابعة','#B83227']}; })
+    .sort((a, b) => a.score - b.score || b.rounds - a.rounds);
+}
+function workerKPITable(from, to){
+  const ws = workerKPIs(from, to); if(!ws.length) return '<p class="muted">لا يوجد عمال مسجّلون في الفترة.</p>';
+  return `<div class="tw"><table class="t wkt"><thead><tr><th>العامل</th><th>القسم</th><th>جولات</th><th>مشاكل على عمله</th><th>اكتشف وأبلغ</th><th>لم يبلغ</th><th>نسبة الإبلاغ</th><th>مخالفات نظافة</th><th>شكاوى على طلبيات عمل عليها</th><th>التقييم</th></tr></thead><tbody>
+    ${ws.map(w => `<tr><td><b>${esc(w.name)}</b><div class="muted">${esc(w.shift)}</div></td><td>${esc(w.dept)}</td><td class="num">${w.rounds}</td><td class="num">${w.issues || ''}</td><td class="num cg">${w.rep || ''}</td><td class="num ${w.norep ? 'cr' : ''}">${w.norep || ''}</td><td class="num">${w.repPct === null ? '—' : w.repPct + '%'}</td><td class="num ${w.clean ? 'cr' : ''}">${w.clean || ''}</td><td class="num ${w.comps.length ? 'cr' : ''}">${w.comps.length ? w.comps.length + ' (' + w.comps.map(esc).join('، ') + ')' : ''}</td><td><span class="wgrade" style="background:${w.grade[1]}">${w.score} · ${w.grade[0]}</span></td></tr>`).join('')}</tbody></table></div>
+    <p class="muted" style="font-size:12px">التقييم من 100: يُخصم 0.4 لكل 1% من جولات فيها مشاكل، و5 لكل مشكلة لم يبلغ عنها، و4 لكل مخالفة نظافة، و10 لكل شكوى على طلبية عمل عليها، ويُضاف حتى 5 نقاط لنسبة إبلاغ عالية.</p>`;
+}
+/* في صفحة العمال والآلات */
+const _ppHtmlW = VIEWS.people.html;
+VIEWS.people.html = function(){ const h = _ppHtmlW.apply(this, arguments); if(PP.tab !== 'workers') return h; const to = todayStr(), from = addDays(to, -PP.days);
+  return h.replace(/(<div class="tw" style="margin-top:12px">)/, `<h2>مؤشرات العمال</h2>${workerKPITable(from, to)}<h2>تفاصيل المخالفات</h2>$1`); };
+/* في التقارير (الفترة، التنفيذي، المنتج) */
+const _mwHtmlW = machinesWorkersHtml;
+machinesWorkersHtml = function(from, to, filt){ const h = _mwHtmlW(from, to, filt); if(filt) return h; return h.replace(/<h3><i>👥<\/i>أداء العمال<\/h3>[\s\S]*$/, `<h3><i>👥</i>أداء العمال ومؤشراتهم</h3>${workerKPITable(from, to)}`); };
+
+/* ================= [PLAN] خطة الإنتاج: ملف لكل وردية ولكل يوم، والطلبية تظهر جاهزة على الآلة ================= */
+const PLAN_STAGES = ['print','draw','inj','cap','seal'];
+const planId = (date, shift, stage, machine) => `PL-${date}-${shift}-${stage}-${machine}`;
+function planFor(stage, machine, date, shift){ date = date || todayStr(); shift = shift || S.settings.shift; const p = (S.plans || []).find(x => x.id === planId(date, shift, stage, machine)) || null;
+  if(p && !p.orders) p.orders = p.order ? [{order: p.order, product: p.product || '', time: ''}] : []; return p; }
+const nowHM = () => { const d = new Date(); return String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0'); };
+/* الطلبية الحالية على الآلة: حسب وقت البدء، أو آخر طلبية مخططة سُجّلت عليها جولة اليوم، أو الأولى */
+function currentPlanned(stage, machine){
+  const p = planFor(stage, machine); if(!p || !p.orders.length) return null; const os = p.orders, now = nowHM();
+  if(os.some(o => o.time)){ const started = os.filter(o => o.time && o.time <= now); return started.length ? started[started.length - 1] : os[0]; }
+  const last = S.rounds.filter(r => r.date === todayStr() && r.shift === S.settings.shift && r.machine === machine && r.stage === stage).pop();
+  if(last){ const i = os.findIndex(o => itemsOf(last).some(it => String(it.order) === String(o.order))); if(i >= 0) return os[i]; }
+  return os[0];
+}
+/* قراءة اسم الآلة بأي صيغة: INJ-3، حقن 3، مكنة الحقن 3، BM-1، سحب 1، CAP-2، تغطية 2، الطابعة… */
+function normMachine(raw){
+  const s = String(raw || '').trim(), n = (s.match(/(\d+)/) || [])[1];
+  if(/inj|حقن/i.test(s) && n) return {stage:'inj', machine:'INJ-' + n};
+  if(/bm|سحب/i.test(s) && n) return {stage:'draw', machine:'BM-' + n};
+  if(/cap|تغطي|تعبئ|تغليف/i.test(s) && n) return {stage:'cap', machine:'CAP-' + n};
+  if(/طابع|طباع|print/i.test(s)) return {stage:'print', machine:'الطابعة'};
+  if(/مخبر/.test(s)) return {stage:'seal', machine:'مكنة المخبر'};
+  if(/ختم|تختيم|seal/i.test(s)) return {stage:'seal', machine:'آلة التختيم'};
+  for(const st of PLAN_STAGES){ const m = stageBy(st).machines.find(x => x.toLowerCase() === s.toLowerCase()); if(m) return {stage: st, machine: m}; }
+  return null;
+}
+function planProduct(order){ const rows = ordRows(order); return rows.length === 1 ? rows[0].product_name : rows.length ? rows.length + ' منتجات' : ''; }
+function setPlan(date, shift, stage, machine, orders, src){
+  S.plans = S.plans || []; const id = planId(date, shift, stage, machine), i = S.plans.findIndex(p => p.id === id);
+  orders = (orders || []).filter(o => String(o.order || '').trim()).map(o => ({order: String(o.order).trim(), time: o.time || '', product: planProduct(String(o.order).trim())}));
+  if(!orders.length){ if(i >= 0) S.plans.splice(i, 1); return; }
+  const rec = {id, date, shift, stage, machine, orders, order: orders[0].order, src: src || 'تعديل', by: CUR.name || S.settings.inspector, at: new Date().toISOString()};
+  if(i >= 0) S.plans[i] = rec; else S.plans.push(rec);
+}
+async function importPlanFile(file, date, shift){
+  if(typeof XLSX === 'undefined'){ toast('مكتبة Excel غير محمّلة'); return; }
+  const wb = XLSX.read(await file.arrayBuffer()), rows = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], {header: 1, defval: ''});
+  let hi = rows.findIndex(r => r.some(c => /آل[ةه]|مكن[ةه]|machine/i.test(String(c)))); if(hi < 0){ toast('لم أجد عمود "الآلة" في الملف'); return; }
+  const h = rows[hi].map(c => String(c)), col = re => h.findIndex(c => re.test(c));
+  const cM = col(/آل[ةه]|مكن[ةه]|machine/i), cO = col(/طلب|order/i), cD = col(/تاريخ|date/i), cS = col(/وردي|shift/i), cT = col(/وقت|ساع[ةه]|بدء|من|time|start/i);
+  if(cO < 0){ toast('لم أجد عمود "رقم الطلبية" في الملف'); return; }
+  let n = 0, bad = []; const acc = {};
+  (S.plans = S.plans || []).splice(0, S.plans.length, ...S.plans.filter(p => !(p.date === date && p.shift === shift)));
+  rows.slice(hi + 1).forEach(r => {
+    const mm = normMachine(r[cM]), ord = String(r[cO] || '').trim(); if(!String(r[cM]).trim() && !ord) return;
+    if(!mm){ bad.push(String(r[cM])); return; }
+    let d = date, sh = shift;
+    if(cD >= 0 && r[cD]){ const v = r[cD]; d = typeof v === 'number' ? todayStr(new Date(Math.round((v - 25569) * 864e5))) : String(v).slice(0, 10); }
+    if(cS >= 0 && r[cS]){ sh = /مسا/.test(String(r[cS])) ? 'مسائية' : 'صباحية'; }
+    if(ord){ let t = cT >= 0 ? r[cT] : ''; if(typeof t === 'number') t = String(Math.floor(t * 24)).padStart(2, '0') + ':' + String(Math.round((t * 1440) % 60)).padStart(2, '0'); t = String(t || '').trim().slice(0, 5);
+      const k = [d, sh, mm.stage, mm.machine].join('|'); (acc[k] = acc[k] || {d, sh, st: mm.stage, m: mm.machine, os: []}).os.push({order: ord, time: t}); n++; }
+  });
+  Object.values(acc).forEach(x => setPlan(x.d, x.sh, x.st, x.m, x.os.sort((a, b) => (a.time || '99').localeCompare(b.time || '99')), 'ملف: ' + file.name));
+  save(); rerender();
+  toast(`حُمّلت خطة ${shift} ${date}: ${n} طلبية على ${Object.keys(acc).length} آلة${bad.length ? ` · أسماء آلات غير معروفة: ${bad.slice(0, 4).join('، ')}` : ''}`);
+}
+function planTemplate(){
+  if(typeof XLSX === 'undefined') return;
+  const rows = [['الآلة','وقت البدء (اختياري)','رقم الطلبية','المنتج (اختياري)','ملاحظة'], ['INJ-1','08:00','','مثال: أول طلبية',''], ['INJ-1','11:00','','مثال: بعد 3 ساعات',''], ['INJ-1','13:00','','مثال: بعد 5 ساعات','']].concat(PLAN_STAGES.flatMap(st => stageBy(st).machines.filter(m => m !== '—' && m !== 'INJ-1').map(m => [m, '', '', '', ''])));
+  const ws = XLSX.utils.aoa_to_sheet(rows); ws['!cols'] = [{wch: 16}, {wch: 16}, {wch: 14}, {wch: 40}, {wch: 24}];
+  const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, 'خطة الإنتاج'); XLSX.writeFile(wb, 'نموذج_خطة_الإنتاج.xlsx');
+}
+/* صفحة خطة الإنتاج */
+ICONS.plan = LI('file');
+NAV.find(g => g.g === 'العمليات اليومية').items.splice(1, 0, ['plan', 'خطة الإنتاج']);
+PAGE.plan = ['العمليات اليومية', 'خطة الإنتاج'];
+let PLV = {date: '', shift: ''};
+VIEWS.plan = {
+  html(){
+    PLV.date = PLV.date || todayStr(); PLV.shift = PLV.shift || S.settings.shift; const mgr = isMgr(), ro = typeof isViewer === 'function' && isViewer();
+    const ms = PLAN_STAGES.flatMap(st => stageBy(st).machines.filter(m => m !== '—').map(m => ({st, m})));
+    const filled = ms.filter(x => (planFor(x.st, x.m, PLV.date, PLV.shift) || {orders: []}).orders.length).length;
+    return `<div class="pagehead"><div><h1 style="margin:0">خطة الإنتاج</h1><p>الطلبية المخططة لكل آلة في كل وردية. تظهر جاهزة عند فتح جولة الآلة، ويمكن للمراقب أو مدير القسم تعديلها.</p></div></div>
+      <div class="panel"><div class="grid"><label class="f">اليوم<input type="date" id="plD" value="${PLV.date}"></label><div class="f"><span class="muted">الوردية</span><div class="pick">${['صباحية','مسائية'].map(x => `<button class="${PLV.shift===x?'on':''}" data-pls="${x}">${x}</button>`).join('')}</div></div></div>
+        ${mgr ? `<div class="row" style="margin-top:10px"><label class="btn p">${LI('file')} رفع ملف خطة ${PLV.shift} ${PLV.date}<input type="file" id="plFile" accept=".xlsx,.xls,.csv" class="hide"></label><button class="btn" id="plTpl">تنزيل نموذج ملف الخطة</button>${filled ? '<button class="btn d" id="plClr">مسح خطة هذه الوردية</button>' : ''}</div>
+          <p class="muted" style="font-size:12.5px;margin:6px 0 0">الملف: عمود <b>الآلة</b> (مثل INJ-3 أو حقن 3 أو BM-1 أو تغطية 2 أو الطابعة) وعمود <b>رقم الطلبية</b>. يمكن إضافة عمودي <b>التاريخ</b> و<b>الوردية</b> لرفع أكثر من يوم في ملف واحد.</p>` : ''}</div>
+      <div class="kpis" style="margin:12px 0"><div class="kpi ${filled ? 'ok' : 'warn'}"><div class="v num">${filled} / ${ms.length}</div><div class="l">آلة عليها طلبية في خطة ${PLV.shift} ${PLV.date}</div></div></div>
+      <div class="tw"><table class="t plt"><thead><tr><th>المرحلة</th><th>الآلة</th><th>الطلبيات المخططة بالترتيب (وقت البدء اختياري)</th><th>المصدر</th></tr></thead><tbody>
+      ${ms.map(({st, m}) => { const p = planFor(st, m, PLV.date, PLV.shift), os = p ? p.orders : [], key = st + '|' + m; return `<tr><td>${esc(stageBy(st).name)}</td><td><b>${esc(m)}</b></td>
+        <td>${os.map((o, i) => `<div class="plo">${ro ? `<span class="num">${esc(o.time || '')}</span> <b class="num">${esc(o.order)}</b>` : `<input type="time" data-plt="${key}|${i}" value="${esc(o.time || '')}"><input type="text" list="ordList" data-plo="${key}|${i}" value="${esc(o.order)}" placeholder="رقم الطلبية أو اسم المنتج"><button class="btn sm d" data-plx="${key}|${i}" aria-label="حذف">×</button>`}<span class="muted">${esc(o.product || '')}</span></div>`).join('')}
+          ${ro ? (os.length ? '' : '<span class="muted">—</span>') : `<div class="plo"><input type="time" data-plt="${key}|new"><input type="text" list="ordList" data-plo="${key}|new" placeholder="${os.length ? '+ طلبية تالية' : 'رقم الطلبية أو اسم المنتج'}"></div>`}</td>
+        <td class="muted">${p ? esc(p.src) + ' · ' + esc(p.by || '') : '—'}</td></tr>`; }).join('')}</tbody></table></div>
+      ${typeof orderDatalist === 'function' ? orderDatalist() : ''}`;
+  },
+  bind(){
+    $('#plD').onchange = e => { PLV.date = e.target.value; rerender(); };
+    $$('[data-pls]').forEach(b => b.onclick = () => { PLV.shift = b.dataset.pls; rerender(); });
+    $('#plTpl') && ($('#plTpl').onclick = planTemplate);
+    $('#plFile') && ($('#plFile').onchange = e => { const f = e.target.files[0]; if(f) importPlanFile(f, PLV.date, PLV.shift); e.target.value = ''; });
+    $('#plClr') && ($('#plClr').onclick = () => ask(`مسح خطة الوردية ${PLV.shift} ليوم ${PLV.date}؟`, 'مسح', () => { S.plans = (S.plans || []).filter(p => !(p.date === PLV.date && p.shift === PLV.shift)); save(); rerender(); }, true));
+    const edit = (st, m, fn) => { const p = planFor(st, m, PLV.date, PLV.shift); const os = p ? p.orders.map(o => ({...o})) : []; fn(os); setPlan(PLV.date, PLV.shift, st, m, os.sort((a, b) => (a.time || '99').localeCompare(b.time || '99')), 'تعديل'); save(); rerender(); };
+    $$('[data-plo]').forEach(el => el.onchange = () => { const [st, m, i] = el.dataset.plo.split('|'); const o = typeof orderFromInput === 'function' ? orderFromInput(el) : el.value.trim(); if(o === null) return;
+      const tEl = document.querySelector(`[data-plt="${st}|${m}|${i}"]`), t = tEl ? tEl.value : '';
+      edit(st, m, os => { if(i === 'new'){ if(o) os.push({order: o, time: t}); } else if(o) os[+i].order = o; else os.splice(+i, 1); }); toast(`${m}: تم تحديث الخطة`); });
+    $$('[data-plt]').forEach(el => el.onchange = () => { const [st, m, i] = el.dataset.plt.split('|'); if(i === 'new') return; edit(st, m, os => { os[+i].time = el.value; }); });
+    $$('[data-plx]').forEach(b => b.onclick = () => { const [st, m, i] = b.dataset.plx.split('|'); edit(st, m, os => os.splice(+i, 1)); });
+  }
+};
+/* تعبئة الطلبية من الخطة عند فتح جولة الآلة */
+function applyPlanOrder(f, order){
+  const rows = ordRows(order); f.order = order; f.fromPlan = true; f.items = []; f.mi = 0; f.cls = null; f.decision = null;
+  if(rows.length === 1) f.items = [{order, code: rows[0].product_code || '', product: rows[0].product_name || '', customer: rows[0].customer || ''}];
+  if(!rows.length) f.items = [{order, code: '', product: '', customer: ''}];
+}
+function applyPlan(f, stage, machine){
+  if(!f || f.editId || (f.items || []).length || f.order || f._planDone) return; f._planDone = true;
+  const o = currentPlanned(stage, machine); if(o) applyPlanOrder(f, o.order);
+}
+/* أزرار الطلبيات المخططة على الآلة للتبديل بينها بضغطة */
+function planChips(stage, machine, f, tag){
+  const p = planFor(stage, machine); if(!p || p.orders.length < 2) return '';
+  const cur = String(f.order || ((f.items || [])[0] || {}).order || '');
+  return `<div class="planchips"><span>📋 الطلبيات المخططة على ${esc(machine)} اليوم:</span>${p.orders.map(o => `<button class="${String(o.order) === cur ? 'on' : ''}" data-plpick="${tag}" data-o="${esc(o.order)}">${o.time ? '<b class="num">' + esc(o.time) + '</b> ' : ''}${esc(o.product || o.order)}<small class="num">${esc(o.order)}</small></button>`).join('')}</div>`;
+}
+document.addEventListener('click', e => {
+  const b = e.target.closest('[data-plpick]'); if(!b) return; const tag = b.dataset.plpick, o = b.dataset.o;
+  const f = tag === 'F' ? F : DM && DM.machines[tag.slice(3)]; if(!f) return; applyPlanOrder(f, o); rerender(); toast(`الطلبية ${o}`);
+});
+const _newDMPlan = newDM;
+newDM = function(stKey){ const d = _newDMPlan.apply(this, arguments); Object.entries(d.machines).forEach(([m, f]) => applyPlan(f, d.stage, m)); return d; };
+const _dmHtmlPlan = drawMachineHtml;
+drawMachineHtml = function(m, f){ const h = _dmHtmlPlan(m, f); if(f.status !== 'run') return h; const chips = planChips(DM.stage, m, f, 'dm:' + m); return h.replace(/(<label class="f">رقم الطلبية على)/, chips + (f.fromPlan ? '<span class="planbadge">📋 من خطة الإنتاج – يمكنك تعديلها</span>' : '') + '$1'); };
+const _rbPlan = VIEWS.round.bind;
+VIEWS.round.bind = function(){
+  _rbPlan.apply(this, arguments);
+  if(F && PLAN_STAGES.includes(F.stage) && F.machine && !F.editId && !(F.items || []).length && !F._planDone){ applyPlan(F, F.stage, F.machine); if(F.fromPlan){ rerender(); toast(`الطلبية ${F.order} من خطة الإنتاج على ${F.machine}`); } }
+};
+const _rhPlan = VIEWS.round.html;
+VIEWS.round.html = function(){ const h = _rhPlan.apply(this, arguments); if(!F || F.editId || !PLAN_STAGES.includes(F.stage) || !F.machine) return h; return h.replace(/(<label class="f">رقم الطلبية)/, planChips(F.stage, F.machine, F, 'F') + (F.fromPlan ? '<span class="planbadge">📋 من خطة الإنتاج – يمكنك تعديلها</span>' : '') + '$1'); };
 
 /* ================= SERVER SYNC (لابتوب القسم) ================= */
 const PWA_API = (typeof window !== 'undefined' && window.PWA_API && /^(https:\/\/|http:\/\/localhost)/.test(window.PWA_API)) ? window.PWA_API : '';
@@ -5847,7 +6150,7 @@ window.addEventListener('online', () => { if(CUR && CUR.role) syncNow(); });
 window.addEventListener('offline', () => { online = false; updateSyncPill(); render(); });
 let serverMode = false, online = true, syncVer = 0, syncing = false, syncTimer = null, lastSync = null, snap = {}, settingsSnap = '';
 const CLIENT = 'c' + Date.now().toString(36) + Math.random().toString(36).slice(2,6);
-const SYNC_COLS = ['rounds','holds','handovers','mats','ncrs','complaints','audits','cals','ths','aid','coas','reports','pimgs','stops','shiftsums','savedreps'];
+const SYNC_COLS = ['rounds','holds','handovers','mats','ncrs','complaints','audits','cals','ths','aid','coas','reports','pimgs','stops','shiftsums','savedreps','plans'];
 const FORM_VIEWS = ['round','matform','ncrform','auditform','compform','data','hand','letter','coaprint'];
 const keyOf = x => String(x.id ?? x.no ?? [x.date,x.time,x.type,x.code,x.loc,x.name,x.from].map(v=>v??'').join('|'));
 const strip = x => { const {_m,_v,_c,...r} = x; return JSON.stringify(r); };
@@ -5908,7 +6211,7 @@ function collect(){
     if(arr.length){ out.cols[c] = arr; any = true; }
     Object.keys(snap[c] || {}).forEach(k => { if(!seen.has(k)){ out.deleted.push([c,k]); any = true; } });
   });
-  const ss = JSON.stringify(shared()); if(ss !== settingsSnap){ out.settings = shared(); out.settings_m = now; any = true; }
+  const ss = JSON.stringify(shared()); if(ss !== settingsSnap){ let old = {}; try{ old = JSON.parse(settingsSnap || '{}'); }catch(e){} const cur = shared(), patch = {}; Object.keys(cur).forEach(k => { if(JSON.stringify(cur[k]) !== JSON.stringify(old[k])) patch[k] = cur[k]; }); Object.keys(old).forEach(k => { if(!(k in cur)) patch[k] = null; }); out.settingsPatch = patch; out.settings_m = now; any = true; }
   if(S.ordersM && S.ordersM > (S._ordersSent || 0)){ out.orders = S.orders; out.ordersDate = S.ordersDate; out.orders_m = S.ordersM; any = true; }
   return {body: out, sent, ss, any};
 }
