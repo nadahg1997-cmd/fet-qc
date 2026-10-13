@@ -825,6 +825,7 @@ body.prodmode #gSearch,body.prodmode .top label:has(#gSearch){display:none!impor
 .bspec > div:last-child.muted{background:none;border:0;grid-column:1/-1}
 .bempty{background:#fff;border:2px dashed var(--line);border-radius:14px;padding:40px 20px;text-align:center;font-size:18px;color:var(--ink2)}
 .bspec > div.pend{background:#FAFBFC;border-style:dashed}.bspec small{display:block;font-size:11px;color:var(--ink2)}
+.opk .dia,.diab{background:#1D4E89;color:#fff;border-radius:999px;padding:0 8px;font-size:12px;margin-inline-start:6px}.diab{font-size:14px;padding:2px 10px}
 </style>
 </head>
 <body>
@@ -3368,7 +3369,7 @@ const isMgr = () => !serverMode || (CUR && CUR.role === 'manager');
 const USER_TITLES = {'ندى حجازي':'مدير ضبط الجودة', 'جمال':'مدير الإنتاج', 'محمود جمعة':'مشرف وردية', 'شوقي جابي':'معاون مدير إنتاج'};
 const ROLE_TITLES = {manager:'مدير ضبط الجودة', inspector:'مراقب جودة', viewer:'الإدارة', production:'الإنتاج'};
 /* يقارن الأسماء بعد إزالة الألقاب (م. / د. / أ. / المهندسة…) والمسافات الزائدة */
-const normName = n => String(n || '').replace(/^\s*(م|د|أ|ا|م\s*\.|د\s*\.|المهندس[ةه]?|الدكتور[ةه]?)\s*[.\/]?\s*/,'').replace(/[أإآ]/g,'ا').replace(/ة/g,'ه').replace(/\s+/g,' ').trim();
+const normName = n => String(n || '').replace(/^\s*(?:(?:م|د|أ|ا)\s*[.\/]|(?:المهندس|الدكتور|الأستاذ|الاستاذ)[ةه]?\s)\s*/,'').replace(/[أإآ]/g,'ا').replace(/ة/g,'ه').replace(/\s+/g,' ').trim();
 function titleOf(name, role, title){
   if(title) return title; const n = normName(name);
   const k = Object.keys(USER_TITLES).find(x => { const nx = normName(x); return n === nx || n.startsWith(nx + ' '); }); if(k) return USER_TITLES[k];
@@ -3376,6 +3377,15 @@ function titleOf(name, role, title){
   if(CUR && normName(CUR.name) === n && ROLE_TITLES[CUR.role]) return ROLE_TITLES[CUR.role];
   if(n && n === normName((S.settings || {}).manager)) return ROLE_TITLES.manager;
   return ROLE_TITLES.inspector;
+}
+/* [TEAM_NAMES] توحيد أسماء المراقبين (أ.احمد احمد = احمد احمد) وفصل مدير القسم */
+const sameP = (a, b) => normName(a) === normName(b);
+const isMgrName = n => normName(n) === normName((S.settings || {}).manager) || titleOf(n, '') === ROLE_TITLES.manager;
+function teamNames(list){
+  const g = new Map(); list.filter(Boolean).forEach(n => { const k = normName(n); const e = g.get(k) || {}; e[n] = (e[n] || 0) + 1; g.set(k, e); });
+  const pick = e => Object.entries(e).sort((a, b) => (a[0].length - b[0].length) || (b[1] - a[1]))[0][0];
+  const all = [...g.values()].map(pick);
+  return {inspectors: all.filter(n => !isMgrName(n)), manager: all.find(isMgrName) || null};
 }
 const isViewer = () => serverMode && CUR && CUR.role === 'viewer';
 const canSeeAll = () => isMgr() || isViewer();
@@ -3443,18 +3453,18 @@ function gapsOf(rs){
 }
 function userStats(name, from, to){
   const inR = d => d && d >= from && d <= to;
-  const rs = S.rounds.filter(r => r.inspector===name && inR(r.date));
+  const rs = S.rounds.filter(r => sameP(r.inspector, name) && inR(r.date));
   const shifts = new Set(rs.map(r => r.date+'|'+r.shift)).size; const g = gapsOf(rs);
   const last = rs.length ? rs[rs.length-1] : null;
   return { name, rounds:rs.length, m:rs.filter(r=>r.shift==='صباحية').length, e:rs.filter(r=>r.shift==='مسائية').length, days:new Set(rs.map(r=>r.date)).size, shifts,
     perShift: shifts ? Math.round(rs.length/shifts) : 0, ontime: null, gap: g.avg,
     issues: rs.filter(r=>r.decision!=='مقبول').length, crit: rs.filter(r=>r.cls==='حرج').length, firstOff: rs.filter(r=>r.type==='بدء تشغيل').length, finals: rs.filter(r=>r.stage==='final').length,
-    holds: S.holds.filter(h=>h.inspector===name && inR(h.date)).length, ncrs: S.ncrs.filter(n=>n.by===name && inR(n.date)).length, mats: S.mats.filter(m=>m.inspector===name && inR(m.date)).length,
-    audits: S.audits.filter(a=>a.inspector===name && inR(a.date)).length, cals: S.cals.filter(c=>c.by===name && inR(c.date)).length, ths: S.ths.filter(x=>x.by===name && inR(x.date)).length,
+    holds: S.holds.filter(h=>sameP(h.inspector, name) && inR(h.date)).length, ncrs: S.ncrs.filter(n=>sameP(n.by, name) && inR(n.date)).length, mats: S.mats.filter(m=>m.inspector===name && inR(m.date)).length,
+    audits: S.audits.filter(a=>sameP(a.inspector, name) && inR(a.date)).length, cals: S.cals.filter(c=>sameP(c.by, name) && inR(c.date)).length, ths: S.ths.filter(x=>x.by===name && inR(x.date)).length,
     hand: S.handovers.filter(h=>h.from===name && inR(h.date)).length, last: last ? `${last.date} ${last.time}` : '—',
     stages: STAGES.map(s => [s.name, rs.filter(r=>r.stage===s.key).length]).filter(x => x[1]),
     probs: rs.filter(r=>r.decision!=='مقبول').slice(-6).reverse(),
-    openHolds: S.holds.filter(h=>h.inspector===name && h.status!=='مغلق'), openNcr: S.ncrs.filter(n=>n.by===name && !n.closed) };
+    openHolds: S.holds.filter(h=>sameP(h.inspector, name) && h.status!=='مغلق'), openNcr: S.ncrs.filter(n=>sameP(n.by, name) && !n.closed) };
 }
 function kpiSet(from, to){
   const inR = d => d && d >= from && d <= to;
@@ -3523,7 +3533,7 @@ function chartTrend(weeks){
 function chartDaily(names, from, to){
   const days = []; for(let d = from; d <= to && days.length < 31; d = addDays(d,1)) days.push(d);
   const cols = ['#17212B', '#E8772E', '#1F7A5A', '#5B6B7A'];
-  const data = days.map(d => names.map(n => S.rounds.filter(r => r.inspector===n && r.date===d).length));
+  const data = days.map(d => names.map(n => S.rounds.filter(r => sameP(r.inspector, n) && r.date===d).length));
   const W = 640, H = 200, pl = 28, pr = 10, pt = 22, pb = 30, max = Math.max(1, ...data.flat()), gw = (W-pl-pr)/days.length, bw = Math.min(14, gw*0.8/names.length);
   let g = `<line x1="${pl}" x2="${W-pr}" y1="${H-pb}" y2="${H-pb}" stroke="#A9B4BE"/><text x="${pl-4}" y="${pt+4}" text-anchor="end" font-size="10" fill="#5B6B7A">${max}</text>`;
   data.forEach((vals,i) => { const x0 = pl + i*gw + (gw - bw*names.length)/2; vals.forEach((v,j) => { const h = (H-pt-pb)*v/max; g += `<rect x="${x0+j*bw}" y="${H-pb-h}" width="${bw-1}" height="${h}" fill="${cols[j%4]}"/>`; });
@@ -3538,12 +3548,9 @@ VIEWS.team = {
   html(){
     const [from, to] = periodOf(teamP);
     const recent = addDays(todayStr(), -90);
-    const names = [...new Set([...(CUR.role==='inspector'?[CUR.name]:[]), ...S.rounds.filter(r => r.date>=recent).map(r => r.inspector)])].filter(n => n && n !== S.settings.manager);
-    const st = names.map(n => userStats(n, from, to)).sort((a,b) => (b.name===CUR.name) - (a.name===CUR.name));
-    const row = (l, v, c='') => `<div class="sr"><span>${l}</span><b class="num ${c}">${v}</b></div>`;
-    return `<div class="pagehead"><div><h1 style="margin:0">أداء المراقبين</h1><p>${from===to?from:`${from} إلى ${to}`}</p></div>
-      <div class="pick">${[['d','اليوم'],['w','آخر 7 أيام'],['m','هذا الشهر'],['pm','الشهر السابق']].map(([k,l])=>`<button class="${teamP===k?'on':''}" data-tp="${k}">${l}</button>`).join('')}</div></div>
-    <div class="people" style="margin-top:16px">${st.map(s => `<div class="panel person ${s.name===CUR.name?'me':''}">
+    const TN = teamNames(S.rounds.filter(r => r.date>=recent).map(r => r.inspector)); const names = TN.inspectors;
+    const st = names.map(n => userStats(n, from, to)); const mgrSt = TN.manager ? userStats(TN.manager, from, to) : null;
+    const cardOf = s => `<div class="panel person ${s.name===CUR.name?'me':''}">
       <div class="ph"><div class="av">${esc((s.name.trim().split(/\s+/).pop()||'').replace(/^ال/,'')[0]||'')}</div><div><b>${esc(s.name)}</b><span>${s.name===CUR.name?'أنت':'مراقب جودة'} – آخر نشاط ${esc(s.last)}</span></div></div>
       <div class="big"><b class="num">${s.rounds}</b><span>جولة فحص</span></div>
       <div class="sg">${row('صباحي / مسائي', `${s.m} / ${s.e}`)}${row('متوسط الجولات في الوردية', s.perShift)}
@@ -3552,7 +3559,12 @@ VIEWS.team = {
       ${s.stages.length?`<div class="muted" style="margin-top:10px">المراحل: ${s.stages.map(([n,c])=>`${esc(n)} ${c}`).join('، ')}</div>`:''}
       <div class="pbox"><b>${LI('warn')} آخر المشاكل التي واجهها</b>${s.probs.length ? s.probs.map(r => `<div class="pr2"><span class="num">${r.date.slice(5)} ${r.time}</span><span>${esc(stageBy(r.stage).name)} – ${esc(r.machine)}<br><small>${esc(itemsLabel(r))}</small></span><span>${esc([...(r.failed||[]),...r.defects].join('، '))} ${clsTag(r.cls)}</span><span>${decPill(r.decision)}</span></div>`).join('') : '<div class="muted">لا مشاكل في هذه الفترة.</div>'}
         ${s.openHolds.length||s.openNcr.length?`<div class="att">${LI('alert')} مفتوح باسمه: ${s.openHolds.map(h=>esc(h.no)).join('، ')}${s.openHolds.length&&s.openNcr.length?' – ':''}${s.openNcr.map(n=>esc(n.no)).join('، ')}</div>`:''}</div>
-    </div>`).join('') || '<p class="muted">لا يوجد نشاط في هذه الفترة.</p>'}</div>
+    </div>`;
+    const row = (l, v, c='') => `<div class="sr"><span>${l}</span><b class="num ${c}">${v}</b></div>`;
+    return `<div class="pagehead"><div><h1 style="margin:0">أداء المراقبين</h1><p>${from===to?from:`${from} إلى ${to}`}</p></div>
+      <div class="pick">${[['d','اليوم'],['w','آخر 7 أيام'],['m','هذا الشهر'],['pm','الشهر السابق']].map(([k,l])=>`<button class="${teamP===k?'on':''}" data-tp="${k}">${l}</button>`).join('')}</div></div>
+    <div class="people" style="margin-top:16px">${st.map(s => cardOf(s)).join('') || '<p class="muted">لا يوجد نشاط في هذه الفترة.</p>'}</div>
+    ${mgrSt ? `<h2 style="margin-top:22px">أداء مدير ضبط الجودة</h2><div class="people">${cardOf(mgrSt)}</div>` : ''}
     ${names.length ? `<div class="panel" style="margin-top:18px"><b>الجولات اليومية لكل مراقب</b>${chartDaily(names, from, to)}</div>` : ''}`;
   },
   bind(){ $$('[data-tp]').forEach(b => b.onclick = () => { teamP = b.dataset.tp; render(); }); }
@@ -3575,7 +3587,7 @@ VIEWS.mgr = {
     const inR = (d, p) => d && d >= p[0] && d <= p[1];
     const stg = STAGES.map(s => { const a = S.rounds.filter(r=>r.stage===s.key && inR(r.date,cur)), b = S.rounds.filter(r=>r.stage===s.key && inR(r.date,prev));
       const pa = a.length ? pct(a.filter(r=>r.decision!=='مقبول').length, a.length) : null, pb = b.length ? pct(b.filter(r=>r.decision!=='مقبول').length, b.length) : null; return {s, n:a.length, pa, pb}; });
-    const names = [...new Set(S.rounds.filter(r=>inR(r.date,cur)).map(r=>r.inspector))].filter(n => n && n !== S.settings.manager);
+    const names = teamNames(S.rounds.filter(r=>inR(r.date,cur)).map(r=>r.inspector)).inspectors;
     const us = names.map(n => userStats(n, ...cur));
     const dc = (p) => { const m = {}; S.rounds.filter(r=>inR(r.date,p)).forEach(r => [...(r.failed||[]),...r.defects].forEach(d => m[d]=(m[d]||0)+1)); return m; };
     const dA = dc(cur), dB = dc(prev); const top = Object.entries(dA).sort((a,b)=>b[1]-a[1]).slice(0,6);
@@ -3912,7 +3924,7 @@ VIEWS.data.bind = function(){
 
 const LUCIDE = {"home": "<path d=\"M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8\" /> <path d=\"M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z\" />", "prod": "<path d=\"M12 16h.01\" /> <path d=\"M16 16h.01\" /> <path d=\"M3 19a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5a.5.5 0 0 0-.769-.422l-4.462 2.844A.5.5 0 0 1 15 10.5v-2a.5.5 0 0 0-.769-.422L9.77 10.922A.5.5 0 0 1 9 10.5V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2z\" /> <path d=\"M8 16h.01\" />", "mat": "<path d=\"M12 22V12\" /> <path d=\"m16 17 2 2 4-4\" /> <path d=\"M21 11.127V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.729l7 4a2 2 0 0 0 2 .001l1.32-.753\" /> <path d=\"M3.29 7 12 12l8.71-5\" /> <path d=\"m7.5 4.27 8.997 5.148\" />", "ncr": "<path d=\"M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z\" /> <path d=\"M12 8v4\" /> <path d=\"M12 16h.01\" />", "hold": "<path d=\"M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z\" /> <path d=\"m3.3 7 8.7 5 8.7-5\" /> <path d=\"M12 22V12\" />", "mon": "<rect width=\"8\" height=\"4\" x=\"8\" y=\"2\" rx=\"1\" ry=\"1\" /> <path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\" /> <path d=\"m9 14 2 2 4-4\" />", "rep": "<path d=\"M3 3v16a2 2 0 0 0 2 2h16\" /> <path d=\"M18 17V9\" /> <path d=\"M13 17V5\" /> <path d=\"M8 17v-3\" />", "team": "<path d=\"M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2\" /> <path d=\"M16 3.128a4 4 0 0 1 0 7.744\" /> <path d=\"M22 21v-2a4 4 0 0 0-3-3.87\" /> <circle cx=\"9\" cy=\"7\" r=\"4\" />", "mgr": "<path d=\"M16 7h6v6\" /> <path d=\"m22 7-8.5 8.5-5-5L2 17\" />", "more": "<rect width=\"7\" height=\"7\" x=\"3\" y=\"3\" rx=\"1\" /> <rect width=\"7\" height=\"7\" x=\"14\" y=\"3\" rx=\"1\" /> <rect width=\"7\" height=\"7\" x=\"14\" y=\"14\" rx=\"1\" /> <rect width=\"7\" height=\"7\" x=\"3\" y=\"14\" rx=\"1\" />", "hand": "<path d=\"M8 3 4 7l4 4\" /> <path d=\"M4 7h16\" /> <path d=\"m16 21 4-4-4-4\" /> <path d=\"M20 17H4\" />", "comp": "<path d=\"M22 17a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 21.286V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2z\" /> <path d=\"M12 15h.01\" /> <path d=\"M12 7v4\" />", "coa": "<path d=\"m15.477 12.89 1.515 8.526a.5.5 0 0 1-.81.47l-3.58-2.687a1 1 0 0 0-1.197 0l-3.586 2.686a.5.5 0 0 1-.81-.469l1.514-8.526\" /> <circle cx=\"12\" cy=\"8\" r=\"6\" />", "sup": "<path d=\"M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2\" /> <path d=\"M15 18H9\" /> <path d=\"M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 17.52 8H14\" /> <circle cx=\"17\" cy=\"18\" r=\"2\" /> <circle cx=\"7\" cy=\"18\" r=\"2\" />", "data": "<ellipse cx=\"12\" cy=\"5\" rx=\"9\" ry=\"3\" /> <path d=\"M3 5V19A9 3 0 0 0 21 19V5\" /> <path d=\"M3 12A9 3 0 0 0 21 12\" />", "bell": "<path d=\"M10.268 21a2 2 0 0 0 3.464 0\" /> <path d=\"M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326\" />", "search": "<path d=\"m21 21-4.34-4.34\" /> <circle cx=\"11\" cy=\"11\" r=\"8\" />", "logout": "<path d=\"m16 17 5-5-5-5\" /> <path d=\"M21 12H9\" /> <path d=\"M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4\" />", "dash": "<rect width=\"7\" height=\"9\" x=\"3\" y=\"3\" rx=\"1\" /> <rect width=\"7\" height=\"5\" x=\"14\" y=\"3\" rx=\"1\" /> <rect width=\"7\" height=\"9\" x=\"14\" y=\"12\" rx=\"1\" /> <rect width=\"7\" height=\"5\" x=\"3\" y=\"16\" rx=\"1\" />", "s_design": "<path d=\"M15.707 21.293a1 1 0 0 1-1.414 0l-1.586-1.586a1 1 0 0 1 0-1.414l5.586-5.586a1 1 0 0 1 1.414 0l1.586 1.586a1 1 0 0 1 0 1.414z\" /> <path d=\"m18 13-1.375-6.874a1 1 0 0 0-.746-.776L3.235 2.028a1 1 0 0 0-1.207 1.207L5.35 15.879a1 1 0 0 0 .776.746L13 18\" /> <path d=\"m2.3 2.3 7.286 7.286\" /> <circle cx=\"11\" cy=\"11\" r=\"2\" />", "s_print": "<path d=\"M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2\" /> <path d=\"M6 9V3a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v6\" /> <rect x=\"6\" y=\"14\" width=\"12\" height=\"8\" rx=\"1\" />", "s_draw": "<ellipse cx=\"12\" cy=\"5\" rx=\"9\" ry=\"3\" /> <path d=\"M3 5v14a9 3 0 0 0 18 0V5\" />", "s_sort": "<path d=\"M2 5h20\" /> <path d=\"M6 12h12\" /> <path d=\"M9 19h6\" />", "s_mix": "<path d=\"M14 2v6a2 2 0 0 0 .245.96l5.51 10.08A2 2 0 0 1 18 22H6a2 2 0 0 1-1.755-2.96l5.51-10.08A2 2 0 0 0 10 8V2\" /> <path d=\"M6.453 15h11.094\" /> <path d=\"M8.5 2h7\" />", "s_inj": "<path d=\"m18 2 4 4\" /> <path d=\"m17 7 3-3\" /> <path d=\"M19 9 8.7 19.3c-1 1-2.5 1-3.4 0l-.6-.6c-1-1-1-2.5 0-3.4L15 5\" /> <path d=\"m9 11 4 4\" /> <path d=\"m5 19-3 3\" /> <path d=\"m14 4 6 6\" />", "s_asm": "<path d=\"M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.106-3.105c.32-.322.863-.22.983.218a6 6 0 0 1-8.259 7.057l-7.91 7.91a1 1 0 0 1-2.999-3l7.91-7.91a6 6 0 0 1 7.057-8.259c.438.12.54.662.219.984z\" />", "s_cap": "<path d=\"M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z\" /> <path d=\"M12 22V12\" /> <polyline points=\"3.29 7 12 12 20.71 7\" /> <path d=\"m7.5 4.27 9 5.15\" />", "s_seal": "<path d=\"M14 13V8.5C14 7 15 7 15 5a3 3 0 0 0-6 0c0 2 1 2 1 3.5V13\" /> <path d=\"M20 15.5a2.5 2.5 0 0 0-2.5-2.5h-11A2.5 2.5 0 0 0 4 15.5V17a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1z\" /> <path d=\"M5 22h14\" />", "s_final": "<path d=\"M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z\" /> <path d=\"m16 9-5.5 5.5L8 12\" />", "thermo": "<path d=\"M14 4v10.54a4 4 0 1 1-4 0V4a2 2 0 0 1 4 0Z\" />", "ruler": "<path d=\"M21.3 15.3a2.4 2.4 0 0 1 0 3.4l-2.6 2.6a2.4 2.4 0 0 1-3.4 0L2.7 8.7a2.41 2.41 0 0 1 0-3.4l2.6-2.6a2.41 2.41 0 0 1 3.4 0Z\" /> <path d=\"m14.5 12.5 2-2\" /> <path d=\"m11.5 9.5 2-2\" /> <path d=\"m8.5 6.5 2-2\" /> <path d=\"m17.5 15.5 2-2\" />", "clean": "<path d=\"M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z\" /> <path d=\"M20 2v4\" /> <path d=\"M22 4h-4\" /> <circle cx=\"4\" cy=\"20\" r=\"2\" />", "plus": "<circle cx=\"12\" cy=\"12\" r=\"10\" /> <path d=\"M8 12h8\" /> <path d=\"M12 8v8\" />", "ok": "<path d=\"M21.801 10A10 10 0 1 1 17 3.335\" /> <path d=\"m9 11 3 3L22 4\" />", "warn": "<path d=\"m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3\" /> <path d=\"M12 9v4\" /> <path d=\"M12 17h.01\" />", "file": "<path d=\"M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z\" /> <path d=\"M14 2v5a1 1 0 0 0 1 1h5\" /> <path d=\"M10 9H8\" /> <path d=\"M16 13H8\" /> <path d=\"M16 17H8\" />", "scan": "<path d=\"M3 7V5a2 2 0 0 1 2-2h2\" /> <path d=\"M17 3h2a2 2 0 0 1 2 2v2\" /> <path d=\"M21 17v2a2 2 0 0 1-2 2h-2\" /> <path d=\"M7 21H5a2 2 0 0 1-2-2v-2\" /> <circle cx=\"12\" cy=\"12\" r=\"3\" /> <path d=\"m16 16-1.9-1.9\" />", "clock": "<circle cx=\"12\" cy=\"12\" r=\"10\" /> <path d=\"M12 6v6l4 2\" />", "alert": "<path d=\"M12 16h.01\" /> <path d=\"M12 8v4\" /> <path d=\"M15.312 2a2 2 0 0 1 1.414.586l4.688 4.688A2 2 0 0 1 22 8.688v6.624a2 2 0 0 1-.586 1.414l-4.688 4.688a2 2 0 0 1-1.414.586H8.688a2 2 0 0 1-1.414-.586l-4.688-4.688A2 2 0 0 1 2 15.312V8.688a2 2 0 0 1 .586-1.414l4.688-4.688A2 2 0 0 1 8.688 2z\" />", "activity": "<path d=\"M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2\" />", "gauge": "<path d=\"m12 14 4-4\" /> <path d=\"M3.34 19a10 10 0 1 1 17.32 0\" />"};
 /* [VERSION] رقم إصدار البرنامج – يظهر أسفل القائمة وفي شاشة الدخول */
-const APP_VERSION = '12.9';
+const APP_VERSION = '13.0';
 let SERVER_VERSION = '';
 async function checkServerVersion(){ if(!GAS_MODE) return; try{ const v = JSON.parse(await rpc('serverVersion', '')); SERVER_VERSION = v.version + (v.ocr ? '' : ' (Drive API غير مفعّل)'); }catch(e){ SERVER_VERSION = /NET/.test(String(e && e.message || e)) ? '' : 'قديم – انشر إصداراً جديداً'; } try{ renderTabs(); }catch(e){} }
 /* [ERRORS] بدل الصفحة الفارغة: رسالة واضحة وزر إعادة تحميل */
@@ -4347,7 +4359,7 @@ VIEWS.exec = {
     const sup = {}; S.mats.filter(m => inR(m.date, P.cur)).forEach(m => { const x = sup[m.supplier] = sup[m.supplier] || {n:0, acc:0, rej:0, sc:[]}; x.n++; if(m.decision==='مقبول'||m.decision==='مقبول بشرط') x.acc++; if(m.decision==='مرفوض') x.rej++; if(m.score!=='') x.sc.push(+m.score); });
     const supRows = Object.entries(sup).map(([s,x]) => ({s, ...x, p:pct(x.acc,x.n), g: pct(x.acc,x.n)>=95?'A':pct(x.acc,x.n)>=85?'B':'C'})).sort((a,b) => a.p-b.p);
     /* people */
-    const names = [...new Set(rs.map(r => r.inspector))].filter(n => n && n !== S.settings.manager); const us = names.map(n => userStats(n, ...P.cur));
+    const names = teamNames(rs.map(r => r.inspector)).inspectors; const us = names.map(n => userStats(n, ...P.cur));
     /* open items */
     const lateN = S.ncrs.filter(n => ncrStatus(n)==='متأخر'), openN = S.ncrs.filter(n => !n.closed), oldH = S.holds.filter(h => h.status!=='مغلق' && daysBetween(h.date,t)>=2), lateC = S.complaints.filter(c => c.status!=='مغلقة' && !c.reply && daysBetween(c.date,t)>7);
     /* recommendations */
@@ -5608,7 +5620,7 @@ function resolveOrderSync(raw){
 }
 function pickOrder(list, q, cb){
   $('#modalBody').innerHTML = `<h3 style="margin-top:0">نتائج البحث عن "${esc(q)}" (${list.length})</h3><p class="muted">اختر الطلبية:</p>
-    <div class="ordpick">${list.slice(0, 30).map((o, i) => `<button class="opk" data-opk="${i}"><b class="num">${esc(o.order_number)}</b><span>${esc(o.product_name || '')}${o.product_name_arabic ? ' · ' + esc(o.product_name_arabic) : ''}</span><small>${esc(o.product_code || '')} · ${esc(o.customer || '')}${o.order_delivery_date ? ' · تسليم ' + esc(o.order_delivery_date) : ''}</small></button>`).join('')}</div>
+    <div class="ordpick">${list.slice(0, 30).map((o, i) => `<button class="opk" data-opk="${i}"><b class="num">${esc(o.order_number)}</b><span>${esc(o.product_name || '')}${o.product_name_arabic ? ' · ' + esc(o.product_name_arabic) : ''}${o.product_diameter ? ` <b class="dia">قطر ${esc(o.product_diameter)}</b>` : ''}</span><small>${esc(o.product_code || '')} · ${esc(o.customer || '')}${o.order_delivery_date ? ' · تسليم ' + esc(o.order_delivery_date) : ''}</small></button>`).join('')}</div>
     <div class="row" style="margin-top:10px"><button class="btn" id="opkCancel">إلغاء</button></div>`;
   $('#modal').classList.remove('hide');
   const close = () => $('#modal').classList.add('hide');
@@ -5624,7 +5636,7 @@ function orderFromInput(el){
   return r.order;
 }
 /* قائمة الاقتراحات: رقم الطلبية مع اسم المنتج والزبون */
-function orderDatalist(id){ return `<datalist id="${id || 'ordList'}">${[...new Map(S.orders.map(x => [String(x.order_number), x])).values()].map(x => { const n = ordRows(x.order_number).length; return `<option value="${esc(x.order_number)}">${esc(n > 1 ? n + ' منتجات – ' + (x.customer||'') : (x.product_name||'') + (x.product_name_arabic ? ' – ' + x.product_name_arabic : '') + ' – ' + (x.customer||''))}</option>`; }).join('')}</datalist>`; }
+function orderDatalist(id){ return `<datalist id="${id || 'ordList'}">${[...new Map(S.orders.map(x => [String(x.order_number), x])).values()].map(x => { const n = ordRows(x.order_number).length; return `<option value="${esc(x.order_number)}">${esc(n > 1 ? n + ' منتجات – ' + (x.customer||'') : (x.product_name||'') + (x.product_name_arabic ? ' – ' + x.product_name_arabic : '') + (x.product_diameter ? ' – قطر ' + x.product_diameter : '') + ' – ' + (x.customer||''))}</option>`; }).join('')}</datalist>`; }
 
 /* ================= [PEOPLE] ملخص العمال (المخالفات) والآلات (التوقفات) ================= */
 ICONS.people = LI('team');
@@ -5790,17 +5802,14 @@ const _prodBindImg = VIEWS.product.bind;
 VIEWS.product.bind = function(){ _prodBindImg && _prodBindImg(); $$('.rimg img[data-iid]').forEach(async el => { const d = await imgCacheGet(el.dataset.iid); if(d) el.src = d; }); };
 
 /* ================= [REPORT_ACCESS] التقارير لمدير القسم (والإدارة للمشاهدة)، والمراقب: تسجيل + ملخصات الورديات + أداؤه ================= */
-const REPORT_VIEWS = ['rep','daily','exec','product','people','mgr','sup'];
+const REPORT_VIEWS = ['rep','daily','exec','product','people','mgr','sup','team','notelog'];
 const isInspectorRole = () => serverMode && CUR && CUR.role === 'inspector';
 const _goRep = go;
-go = function(v, a){ if(isInspectorRole() && REPORT_VIEWS.includes(v)){ toast('التقارير يعدّها مدير القسم. يمكنك مشاهدة ملخصات الورديات وأدائك'); return _goRep('shiftsum'); } return _goRep(v, a); };
+go = function(v, a){ if(isInspectorRole() && REPORT_VIEWS.includes(v)){ toast('هذه الصفحة لمدير ضبط الجودة والإدارة فقط'); return _goRep('shiftsum'); } return _goRep(v, a); };
 /* إخفاء التقارير من القائمة للمراقب */
 NAV.forEach(g => g.items.forEach(i => { if(REPORT_VIEWS.includes(i[0])) i[3] = 'rep-only'; }));
 const _renderTabsRep = renderTabs;
 renderTabs = function(){ _renderTabsRep.apply(this, arguments); if(isInspectorRole()) REPORT_VIEWS.forEach(v => $$(`[data-v="${v}"]`).forEach(b => { if(b.closest('#side, #tabs, .more, .mods')) b.style.display = 'none'; })); };
-/* المراقب يرى أداءه فقط في صفحة أداء المراقبين */
-const _teamHtmlRep = VIEWS.team.html;
-VIEWS.team.html = function(){ const h = _teamHtmlRep(); if(!isInspectorRole()) return h; const box = document.createElement('div'); box.innerHTML = h; box.querySelectorAll('.person').forEach(p => { if(!p.classList.contains('me')) p.remove(); }); return box.innerHTML.replace('أداء المراقبين', 'أدائي'); };
 
 /* ================= [REPORT_EDIT] مدير القسم يعدّل التقرير ويحفظ التعديل ثم يطبع / PDF ================= */
 let REP_ORIG = {};
@@ -6521,7 +6530,7 @@ VIEWS.board = {
     const card = n => `<div class="bdn bn ${n.src}"><div class="bnh"><b>${esc(n.by || '')}</b><span class="role">${esc(n.role || '')}</span>${n.stage ? `<span class="tag">${esc(n.stage)}</span>` : ''}<span class="muted num">${esc(n.date)} ${esc(n.time)}${o ? '' : ' · طلبية ' + esc(n.order)}</span>${n.id && (n.own || isMgr()) ? `<button class="btn sm d" data-bdel="${n.id}">حذف</button>` : ''}</div><div class="bnt">${esc(n.text)}</div></div>`;
     return `<div class="bfull">
       <div class="bmot"><span>💡 ${esc(typeof motivePhrase === 'function' ? motivePhrase(13) : '')}</span><span class="bmot2">${esc(typeof motivePhrase === 'function' ? motivePhrase(21) : '')}</span>${!isProdRole() ? `<button class="btn sm" id="bdFull">${document.body.classList.contains('boardfull') ? '⤡ إظهار القائمة' : '⛶ ملء الشاشة'}</button>` : ''}</div>
-      <div class="bbar"><input type="text" id="bdQ" list="ordList" value="${esc(o)}" placeholder="🔍 رقم الطلبية أو اسم المنتج">${o ? `<div class="bdhead"><b>${esc((rows[0] || {}).product_name || 'طلبية ' + o)}</b><span>طلبية <b class="num">${esc(o)}</b></span><span>${esc((rows[0] || {}).customer || '')}</span></div><button class="btn sm" id="bdClr">✕ إلغاء اختيار الطلبية</button>` : ''}</div>
+      <div class="bbar"><input type="text" id="bdQ" list="ordList" value="${esc(o)}" placeholder="🔍 رقم الطلبية أو اسم المنتج">${o ? `<div class="bdhead"><b>${esc((rows[0] || {}).product_name || 'طلبية ' + o)}</b>${(rows[0] || {}).product_diameter ? `<span class="diab">قطر ${esc(rows[0].product_diameter)}</span>` : ''}<span>طلبية <b class="num">${esc(o)}</b></span><span>${esc((rows[0] || {}).customer || '')}</span></div><button class="btn sm" id="bdClr">✕ إلغاء اختيار الطلبية</button>` : ''}</div>
       ${o ? (() => { const r0 = rows[0] || {}; const sh = typeof colorOf === 'function' ? (colorOf(r0.shoulder_color) || r0.shoulder_color) : r0.shoulder_color;
         const noz = bcv(r0.nozzle_name), foil = typeof foilFromErp === 'function' ? foilFromErp(r0) : '', p360 = r0.is360 == null || r0.is360 === '' ? '' : (r0.is360 == 1 ? 'نعم' : 'لا');
         const items = [['قطر المنتج', bcv(r0.product_diameter) ? r0.product_diameter + ' ملم' : ''], ['قطر الفوهة', r0.hole_diameter != null && r0.hole_diameter !== '' ? r0.hole_diameter + ' ملم' : ''], ['نوع السن', r0.tooth_type], ['لون الكتف', sh], ['الغطاء (ERP)', r0.cap_name], ['كود الغطاء', r0.cap_code],
@@ -6591,6 +6600,31 @@ shiftSummaryHtml = function(date, shift, insp){ const h = _shiftSumBN.apply(this
 const _pisBN = productIssuesHtml;
 productIssuesHtml = function(items){ const h = _pisBN.apply(this, arguments); const ords = [...new Set((items || []).map(i => String(i.order)))]; const ns = (S.onotes || []).filter(n => ords.includes(String(n.order)));
   return ns.length ? `<div class="pnotes2 board"><b>💬 ملاحظات لوحة الطلبيات على هذه الطلبية (${ns.length})</b>${ns.slice().reverse().slice(0, 8).map(n => `<div class="bwr"><span class="num">${esc(n.date)} ${esc(n.time)}</span><span><b>${esc(n.by)}</b><br><small>${esc(roleLabel(n))}</small></span><span>${esc(n.text)}</span><span></span></div>`).join('')}</div>` + h : h; };
+
+/* [NOTELOG] سجل كامل لملاحظات لوحة الطلبيات – لمدير ضبط الجودة والإدارة فقط */
+ICONS.notelog = LI('file');
+(NAV.find(g => g.g === 'التحليل والتقارير') || NAV[NAV.length - 1]).items.push(['notelog', 'سجل ملاحظات الطلبيات']);
+PAGE.notelog = ['التحليل والتقارير', 'سجل ملاحظات الطلبيات'];
+let NL = {from: '', to: '', q: '', by: ''};
+VIEWS.notelog = {
+  html(){
+    const t = todayStr(); NL.from = NL.from || addDays(t, -30); NL.to = NL.to || t;
+    const all = (S.onotes || []), authors = [...new Set(all.map(n => n.by))].filter(Boolean);
+    const list = all.filter(n => n.date >= NL.from && n.date <= NL.to && (!NL.by || n.by === NL.by) && (!NL.q || qMatch(NL.q, n.text, n.order, n.product, orderText(n.order)))).sort((a, b) => (b.date + b.time).localeCompare(a.date + a.time));
+    const byRole = r => list.filter(n => (n.role || '') === r).length;
+    return `<div class="pagehead"><div><h1 style="margin:0">سجل ملاحظات الطلبيات</h1><p>كل ما كُتب في لوحة ملاحظات الطلبيات من الإنتاج والجودة. يظهر لمدير ضبط الجودة والإدارة فقط.</p></div><button class="btn p noprint" id="nlPdf">تصدير PDF</button></div>
+      <div class="panel rafl noprint"><div class="grid"><label class="f">من<input type="date" id="nlF" value="${NL.from}"></label><label class="f">إلى<input type="date" id="nlT" value="${NL.to}"></label>
+        <label class="f">بحث (طلبية، منتج عربي أو إنكليزي، نص)<input type="search" id="nlQ" value="${esc(NL.q)}"></label>
+        <label class="f">الكاتب<select id="nlB"><option value="">الكل</option>${authors.map(a => `<option ${NL.by===a?'selected':''}>${esc(a)}</option>`).join('')}</select></label></div></div>
+      <div class="kpis" style="margin:12px 0"><div class="kpi"><div class="v num">${list.length}</div><div class="l">ملاحظة</div></div><div class="kpi"><div class="v num">${byRole('production')}</div><div class="l">من الإنتاج</div></div><div class="kpi"><div class="v num">${list.length - byRole('production')}</div><div class="l">من الجودة</div></div><div class="kpi"><div class="v num">${new Set(list.map(n => n.order)).size}</div><div class="l">طلبية</div></div></div>
+      <div id="nlBody">${boardNotesTable(list, {empty: ' في هذه الفترة'})}</div>`;
+  },
+  bind(){
+    $('#nlF').onchange = e => { NL.from = e.target.value; rerender(); }; $('#nlT').onchange = e => { NL.to = e.target.value; rerender(); };
+    $('#nlQ').onchange = e => { NL.q = e.target.value; rerender(); }; $('#nlB').onchange = e => { NL.by = e.target.value; rerender(); };
+    $('#nlPdf').onclick = () => printDoc(`سجل ملاحظات الطلبيات ${NL.from} – ${NL.to}`, $('#nlBody').innerHTML);
+  }
+};
 
 /* ================= SERVER SYNC (لابتوب القسم) ================= */
 const PWA_API = (typeof window !== 'undefined' && window.PWA_API && /^(https:\/\/|http:\/\/localhost)/.test(window.PWA_API)) ? window.PWA_API : '';
