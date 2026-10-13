@@ -788,6 +788,19 @@ button.sv-n::before{content:"ثانوي";font-size:10.5px;font-weight:700;backgr
 .mcard h2{margin:10px 0 2px;font-size:20px}.mcard .mcb{display:grid;grid-template-columns:200px 1fr;gap:12px;align-items:start}.mcard .mcb img{width:200px;border:1px solid #ccc;border-radius:8px}
 .mcard td.big{font-size:22px;font-weight:800}.mcard .warn{margin-top:10px;font-weight:700;color:#B83227;font-size:15px}
 .gnotes{margin-top:10px;display:block}.gnotes textarea{width:100%}.gn{color:#1D4E89;font-size:13px;margin-top:2px}
+/* shared order notes board */
+body.prodmode #side,body.prodmode .mobnav,body.prodmode #bell,body.prodmode .shiftsw,body.prodmode .gsearch,body.prodmode .mini-motive,body.prodmode .robanner{display:none!important}
+body.prodmode #main{max-width:1100px;margin:0 auto}
+.bdhead{display:flex;flex-wrap:wrap;gap:6px 18px;align-items:baseline;margin:14px 0 6px}.bdhead b{font-size:18px}
+.bnew{margin:12px 0}.bnew > b{display:block;margin-bottom:6px}.bnew textarea{width:100%}.bnew select{min-height:40px}
+.chk2{display:flex;gap:6px;align-items:center;font-weight:700}.chk2 input{width:20px;height:20px;min-height:0!important}
+.bn{border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin-bottom:8px;background:#fff;border-inline-start:5px solid #1D4E89}
+.bn.pr{border-inline-start-color:#E8772E}.bn.imp{background:#FFF6F4;border-color:#F2B4AC}.bn.done{opacity:.6}
+.bnh{display:flex;flex-wrap:wrap;gap:4px 10px;align-items:center;font-size:13px}.bnh .role{color:var(--ink2)}.bnh .tag{background:var(--line2);border-radius:999px;padding:0 8px}.bnh .muted{margin-inline-start:auto}
+.bnt{font-size:15.5px;margin:6px 0;white-space:pre-wrap}.bna{display:flex;gap:6px}
+.erpns{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:8px}.erpn{background:#fff;border:1px solid var(--line2);border-radius:10px;padding:8px 10px}.erpn b{display:block;font-size:12px;color:var(--ink2)}
+.pnotes2.board{background:#F6FAFF;border-color:#9EC1EC}.pnotes2.board > b{color:#1D4E89}
+.bsimple textarea{width:100%;margin-top:10px;font-size:16px}.bsimple .bdhead{margin:10px 0 0}.bsimple .bdhead .btn{margin-inline-start:auto}
 </style>
 </head>
 <body>
@@ -839,6 +852,7 @@ setTimeout(function(){ if(window.__appLoaded) return; var m=document.getElementB
    [MAT_SAMPLE] قاعدة عينة كل مادة واردة · [MATLIB] أرشيف أكواد المواد
    [TH_LOCS] أماكن الحرارة والرطوبة · [CAL_WINDOWS] مواعيد التحقق من أدوات القياس
    [ORDER_SEARCH] البحث برقم الطلبية أو اسم المنتج · [AUDIT_WEEK] المراقبات الأسبوعية
+   [BOARD]      لوحة ملاحظات الطلبيات المشتركة مع الإنتاج (وحساب الإنتاج يراها وحدها)
    [GNOTES]     الملاحظات العامة في كل المراحل
    [SPEC_CHECK] التحقق من المواصفات الحرجة عند التشغيل الأول فقط (السن، الفوهة، الكتف، الغطاء، الفويلة، الملحق)
    [DEFECT_CATALOG] قائمة العيوب المعتمدة ودرجاتها
@@ -2180,7 +2194,7 @@ STAGES.find(s => s.key==='final').extra = [{k:'cartons',l:'عدد الكراتي
 
 const blank = () => ({settings:{inspectors:[],inspector:'',shift:'صباحية',manager:'ندى حجازي',qa:'محمد براء رحمون',reviewer:'Talal Alraee',ceo:'أيهم سكرية',
   weldMin:1.8,weldMax:3,seamMin:2,seamMax:4,devices:JSON.parse(JSON.stringify(DEVICES)),th:JSON.parse(JSON.stringify(TH_LOC))},
-  orders:DEFAULT_ORDERS, ordersDate:'', reports:[], pimgs:[], stops:[], shiftsums:[], savedreps:[], plans:[], rounds:[], holds:[], handovers:[], mats:[], ncrs:[], complaints:[], audits:[], cals:[], ths:[], aid:[], coas:[]});
+  orders:DEFAULT_ORDERS, ordersDate:'', reports:[], pimgs:[], stops:[], shiftsums:[], savedreps:[], plans:[], onotes:[], rounds:[], holds:[], handovers:[], mats:[], ncrs:[], complaints:[], audits:[], cals:[], ths:[], aid:[], coas:[]});
 let S = blank();
 let persistent = typeof window.storage !== 'undefined' && window.storage && typeof window.storage.get === 'function';
 let dirty = false;
@@ -2261,7 +2275,7 @@ function createNCR(o){
     actions:[{what:'',who:'',due:addDays(todayStr(), o.cls==='حرج'?7:30),done:''}], verify:'', effect:'', closed:''});
   return no;
 }
-function ncrStatus(n){ if(n.closed) return n.effect==='غير فعال' ? 'أعيد فتحه' : 'مغلق'; const due = n.actions.map(a=>a.due).filter(Boolean).sort().pop(); if(due && todayStr() > due && n.actions.some(a=>!a.done)) return 'متأخر'; return 'مفتوح'; }
+function ncrStatus(n){ n.actions = n.actions || []; if(n.closed) return n.effect==='غير فعال' ? 'أعيد فتحه' : 'مغلق'; const due = n.actions.map(a=>a.due).filter(Boolean).sort().pop(); if(due && todayStr() > due && n.actions.some(a=>!a.done)) return 'متأخر'; return 'مفتوح'; }
 
 /* ================= NAV ================= */
 const IC = p => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${p}</svg>`;
@@ -3340,7 +3354,7 @@ renderTabs = function(){
   const ref = side.querySelector('button.nv[data-v="rep"]');
   extra.reverse().forEach(([k]) => { const b = document.createElement('button'); b.className = 'nv' + (view===k ? ' on' : ''); b.dataset.v = k; b.innerHTML = `${ICONS[k]}<span>${NAV_LABEL[k]}</span>`; b.onclick = () => go(k); ref.after(b); });
   if(['team','mgr'].includes(view)) side.querySelectorAll('button.nv[data-v="more"]').forEach(b => b.classList.remove('on'));
-  const foot = side.querySelector('.foot'); if(foot && serverMode && CUR.name) foot.innerHTML = `${esc(CUR.name)}<br>${CUR.role==='manager'?'مدير القسم':CUR.role==='viewer'?'الإدارة – مشاهدة فقط':'مراقب جودة'} – الوردية ${esc(S.settings.shift)}<br><span style="opacity:.7">الإصدار 6.2</span>`;
+  const foot = side.querySelector('.foot'); if(foot && serverMode && CUR.name) foot.innerHTML = `${esc(CUR.name)}<br>${CUR.role==='manager'?'مدير القسم':CUR.role==='viewer'?'الإدارة – مشاهدة فقط':CUR.role==='production'?(CUR.title||'الإنتاج'):'مراقب جودة'} – الوردية ${esc(S.settings.shift)}<br><span style="opacity:.7">الإصدار 6.2</span>`;
 };
 /* header: user chip instead of free inspector choice */
 const _rh = renderHeader;
@@ -3349,7 +3363,7 @@ renderHeader = function(){
   const chip = $('#userChip');
   if(serverMode && CUR.name){
     $('#inspSel').classList.add('hide'); chip.classList.remove('hide');
-    chip.innerHTML = `<b>${esc(CUR.name)}</b><span>${CUR.role==='manager'?'مدير القسم':CUR.role==='viewer'?'الإدارة · مشاهدة فقط':'مراقب'}</span><button id="logout" title="تسجيل الخروج">خروج</button>`;
+    chip.innerHTML = `<b>${esc(CUR.name)}</b><span>${CUR.role==='manager'?'مدير القسم':CUR.role==='viewer'?'الإدارة · مشاهدة فقط':CUR.role==='production'?esc(CUR.title||'الإنتاج'):'مراقب'}</span><button id="logout" title="تسجيل الخروج">خروج</button>`;
     $('#logout').onclick = () => ask('تسجيل الخروج من هذا الجهاز؟', 'خروج', () => { GAS_PIN = ''; CUR = {name:'', role:''}; IDB.del('session'); IDB.del('draft'); try{ history.replaceState(null,'',location.pathname+location.search.replace(/([?&])(pin|u)=[^&]*/g,'')); }catch(e){} setTimeout(() => location.reload(), 300); });
   } else if(chip) chip.classList.add('hide');
 };
@@ -3855,7 +3869,7 @@ VIEWS.data.bind = function(){
 
 const LUCIDE = {"home": "<path d=\"M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8\" /> <path d=\"M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z\" />", "prod": "<path d=\"M12 16h.01\" /> <path d=\"M16 16h.01\" /> <path d=\"M3 19a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5a.5.5 0 0 0-.769-.422l-4.462 2.844A.5.5 0 0 1 15 10.5v-2a.5.5 0 0 0-.769-.422L9.77 10.922A.5.5 0 0 1 9 10.5V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2z\" /> <path d=\"M8 16h.01\" />", "mat": "<path d=\"M12 22V12\" /> <path d=\"m16 17 2 2 4-4\" /> <path d=\"M21 11.127V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.729l7 4a2 2 0 0 0 2 .001l1.32-.753\" /> <path d=\"M3.29 7 12 12l8.71-5\" /> <path d=\"m7.5 4.27 8.997 5.148\" />", "ncr": "<path d=\"M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z\" /> <path d=\"M12 8v4\" /> <path d=\"M12 16h.01\" />", "hold": "<path d=\"M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z\" /> <path d=\"m3.3 7 8.7 5 8.7-5\" /> <path d=\"M12 22V12\" />", "mon": "<rect width=\"8\" height=\"4\" x=\"8\" y=\"2\" rx=\"1\" ry=\"1\" /> <path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\" /> <path d=\"m9 14 2 2 4-4\" />", "rep": "<path d=\"M3 3v16a2 2 0 0 0 2 2h16\" /> <path d=\"M18 17V9\" /> <path d=\"M13 17V5\" /> <path d=\"M8 17v-3\" />", "team": "<path d=\"M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2\" /> <path d=\"M16 3.128a4 4 0 0 1 0 7.744\" /> <path d=\"M22 21v-2a4 4 0 0 0-3-3.87\" /> <circle cx=\"9\" cy=\"7\" r=\"4\" />", "mgr": "<path d=\"M16 7h6v6\" /> <path d=\"m22 7-8.5 8.5-5-5L2 17\" />", "more": "<rect width=\"7\" height=\"7\" x=\"3\" y=\"3\" rx=\"1\" /> <rect width=\"7\" height=\"7\" x=\"14\" y=\"3\" rx=\"1\" /> <rect width=\"7\" height=\"7\" x=\"14\" y=\"14\" rx=\"1\" /> <rect width=\"7\" height=\"7\" x=\"3\" y=\"14\" rx=\"1\" />", "hand": "<path d=\"M8 3 4 7l4 4\" /> <path d=\"M4 7h16\" /> <path d=\"m16 21 4-4-4-4\" /> <path d=\"M20 17H4\" />", "comp": "<path d=\"M22 17a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 21.286V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2z\" /> <path d=\"M12 15h.01\" /> <path d=\"M12 7v4\" />", "coa": "<path d=\"m15.477 12.89 1.515 8.526a.5.5 0 0 1-.81.47l-3.58-2.687a1 1 0 0 0-1.197 0l-3.586 2.686a.5.5 0 0 1-.81-.469l1.514-8.526\" /> <circle cx=\"12\" cy=\"8\" r=\"6\" />", "sup": "<path d=\"M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2\" /> <path d=\"M15 18H9\" /> <path d=\"M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 17.52 8H14\" /> <circle cx=\"17\" cy=\"18\" r=\"2\" /> <circle cx=\"7\" cy=\"18\" r=\"2\" />", "data": "<ellipse cx=\"12\" cy=\"5\" rx=\"9\" ry=\"3\" /> <path d=\"M3 5V19A9 3 0 0 0 21 19V5\" /> <path d=\"M3 12A9 3 0 0 0 21 12\" />", "bell": "<path d=\"M10.268 21a2 2 0 0 0 3.464 0\" /> <path d=\"M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326\" />", "search": "<path d=\"m21 21-4.34-4.34\" /> <circle cx=\"11\" cy=\"11\" r=\"8\" />", "logout": "<path d=\"m16 17 5-5-5-5\" /> <path d=\"M21 12H9\" /> <path d=\"M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4\" />", "dash": "<rect width=\"7\" height=\"9\" x=\"3\" y=\"3\" rx=\"1\" /> <rect width=\"7\" height=\"5\" x=\"14\" y=\"3\" rx=\"1\" /> <rect width=\"7\" height=\"9\" x=\"14\" y=\"12\" rx=\"1\" /> <rect width=\"7\" height=\"5\" x=\"3\" y=\"16\" rx=\"1\" />", "s_design": "<path d=\"M15.707 21.293a1 1 0 0 1-1.414 0l-1.586-1.586a1 1 0 0 1 0-1.414l5.586-5.586a1 1 0 0 1 1.414 0l1.586 1.586a1 1 0 0 1 0 1.414z\" /> <path d=\"m18 13-1.375-6.874a1 1 0 0 0-.746-.776L3.235 2.028a1 1 0 0 0-1.207 1.207L5.35 15.879a1 1 0 0 0 .776.746L13 18\" /> <path d=\"m2.3 2.3 7.286 7.286\" /> <circle cx=\"11\" cy=\"11\" r=\"2\" />", "s_print": "<path d=\"M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2\" /> <path d=\"M6 9V3a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v6\" /> <rect x=\"6\" y=\"14\" width=\"12\" height=\"8\" rx=\"1\" />", "s_draw": "<ellipse cx=\"12\" cy=\"5\" rx=\"9\" ry=\"3\" /> <path d=\"M3 5v14a9 3 0 0 0 18 0V5\" />", "s_sort": "<path d=\"M2 5h20\" /> <path d=\"M6 12h12\" /> <path d=\"M9 19h6\" />", "s_mix": "<path d=\"M14 2v6a2 2 0 0 0 .245.96l5.51 10.08A2 2 0 0 1 18 22H6a2 2 0 0 1-1.755-2.96l5.51-10.08A2 2 0 0 0 10 8V2\" /> <path d=\"M6.453 15h11.094\" /> <path d=\"M8.5 2h7\" />", "s_inj": "<path d=\"m18 2 4 4\" /> <path d=\"m17 7 3-3\" /> <path d=\"M19 9 8.7 19.3c-1 1-2.5 1-3.4 0l-.6-.6c-1-1-1-2.5 0-3.4L15 5\" /> <path d=\"m9 11 4 4\" /> <path d=\"m5 19-3 3\" /> <path d=\"m14 4 6 6\" />", "s_asm": "<path d=\"M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.106-3.105c.32-.322.863-.22.983.218a6 6 0 0 1-8.259 7.057l-7.91 7.91a1 1 0 0 1-2.999-3l7.91-7.91a6 6 0 0 1 7.057-8.259c.438.12.54.662.219.984z\" />", "s_cap": "<path d=\"M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z\" /> <path d=\"M12 22V12\" /> <polyline points=\"3.29 7 12 12 20.71 7\" /> <path d=\"m7.5 4.27 9 5.15\" />", "s_seal": "<path d=\"M14 13V8.5C14 7 15 7 15 5a3 3 0 0 0-6 0c0 2 1 2 1 3.5V13\" /> <path d=\"M20 15.5a2.5 2.5 0 0 0-2.5-2.5h-11A2.5 2.5 0 0 0 4 15.5V17a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1z\" /> <path d=\"M5 22h14\" />", "s_final": "<path d=\"M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z\" /> <path d=\"m16 9-5.5 5.5L8 12\" />", "thermo": "<path d=\"M14 4v10.54a4 4 0 1 1-4 0V4a2 2 0 0 1 4 0Z\" />", "ruler": "<path d=\"M21.3 15.3a2.4 2.4 0 0 1 0 3.4l-2.6 2.6a2.4 2.4 0 0 1-3.4 0L2.7 8.7a2.41 2.41 0 0 1 0-3.4l2.6-2.6a2.41 2.41 0 0 1 3.4 0Z\" /> <path d=\"m14.5 12.5 2-2\" /> <path d=\"m11.5 9.5 2-2\" /> <path d=\"m8.5 6.5 2-2\" /> <path d=\"m17.5 15.5 2-2\" />", "clean": "<path d=\"M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z\" /> <path d=\"M20 2v4\" /> <path d=\"M22 4h-4\" /> <circle cx=\"4\" cy=\"20\" r=\"2\" />", "plus": "<circle cx=\"12\" cy=\"12\" r=\"10\" /> <path d=\"M8 12h8\" /> <path d=\"M12 8v8\" />", "ok": "<path d=\"M21.801 10A10 10 0 1 1 17 3.335\" /> <path d=\"m9 11 3 3L22 4\" />", "warn": "<path d=\"m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3\" /> <path d=\"M12 9v4\" /> <path d=\"M12 17h.01\" />", "file": "<path d=\"M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z\" /> <path d=\"M14 2v5a1 1 0 0 0 1 1h5\" /> <path d=\"M10 9H8\" /> <path d=\"M16 13H8\" /> <path d=\"M16 17H8\" />", "scan": "<path d=\"M3 7V5a2 2 0 0 1 2-2h2\" /> <path d=\"M17 3h2a2 2 0 0 1 2 2v2\" /> <path d=\"M21 17v2a2 2 0 0 1-2 2h-2\" /> <path d=\"M7 21H5a2 2 0 0 1-2-2v-2\" /> <circle cx=\"12\" cy=\"12\" r=\"3\" /> <path d=\"m16 16-1.9-1.9\" />", "clock": "<circle cx=\"12\" cy=\"12\" r=\"10\" /> <path d=\"M12 6v6l4 2\" />", "alert": "<path d=\"M12 16h.01\" /> <path d=\"M12 8v4\" /> <path d=\"M15.312 2a2 2 0 0 1 1.414.586l4.688 4.688A2 2 0 0 1 22 8.688v6.624a2 2 0 0 1-.586 1.414l-4.688 4.688a2 2 0 0 1-1.414.586H8.688a2 2 0 0 1-1.414-.586l-4.688-4.688A2 2 0 0 1 2 15.312V8.688a2 2 0 0 1 .586-1.414l4.688-4.688A2 2 0 0 1 8.688 2z\" />", "activity": "<path d=\"M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2\" />", "gauge": "<path d=\"m12 14 4-4\" /> <path d=\"M3.34 19a10 10 0 1 1 17.32 0\" />"};
 /* [VERSION] رقم إصدار البرنامج – يظهر أسفل القائمة وفي شاشة الدخول */
-const APP_VERSION = '11.6';
+const APP_VERSION = '11.9';
 let SERVER_VERSION = '';
 async function checkServerVersion(){ if(!GAS_MODE) return; try{ const v = JSON.parse(await rpc('serverVersion', '')); SERVER_VERSION = v.version + (v.ocr ? '' : ' (Drive API غير مفعّل)'); }catch(e){ SERVER_VERSION = /NET/.test(String(e && e.message || e)) ? '' : 'قديم – انشر إصداراً جديداً'; } try{ renderTabs(); }catch(e){} }
 /* [ERRORS] بدل الصفحة الفارغة: رسالة واضحة وزر إعادة تحميل */
@@ -3984,7 +3998,7 @@ VIEWS.data.bind = function(){
   let list = [];
   const draw = () => {
     $('#uBox').innerHTML = `<div class="tw"><table class="t"><thead><tr><th>الاسم</th><th>الصلاحية</th><th>الرمز السري</th><th>الحالة</th><th></th></tr></thead><tbody>
-      ${list.map((u,i)=>`<tr><td><input type="text" data-u="${i}" data-f="name" value="${esc(u.name)}"></td><td><select data-u="${i}" data-f="role"><option value="inspector" ${u.role==='inspector'?'selected':''}>مراقب جودة</option><option value="manager" ${u.role==='manager'?'selected':''}>مدير القسم</option><option value="viewer" ${u.role==='viewer'?'selected':''}>الإدارة – مشاهدة فقط</option></select></td>
+      ${list.map((u,i)=>`<tr><td><input type="text" data-u="${i}" data-f="name" value="${esc(u.name)}"></td><td><select data-u="${i}" data-f="role"><option value="inspector" ${u.role==='inspector'?'selected':''}>مراقب جودة</option><option value="manager" ${u.role==='manager'?'selected':''}>مدير القسم</option><option value="viewer" ${u.role==='viewer'?'selected':''}>الإدارة – مشاهدة فقط</option><option value="production" ${u.role==='production'?'selected':''}>الإنتاج – لوحة الملاحظات فقط</option></select>${u.role==='production' ? `<input type="text" data-u="${i}" data-f="title" value="${esc(u.title||'')}" placeholder="الصفة: مشرف الوردية…" style="margin-top:4px">` : ''}</td>
         <td><input type="text" inputmode="numeric" data-u="${i}" data-f="pin" value="${esc(u.pin)}" style="max-width:120px"></td><td><select data-u="${i}" data-f="active"><option value="1" ${u.active!==false?'selected':''}>فعّال</option><option value="0" ${u.active===false?'selected':''}>موقوف</option></select></td>
         <td><button class="btn sm d" data-ud="${i}">حذف</button></td></tr>`).join('')}</tbody></table></div>
       <div class="row" style="margin-top:10px"><button class="btn" id="uAdd">${LI('plus')} إضافة مستخدم</button><button class="btn p" id="uSave">حفظ المستخدمين</button></div>`;
@@ -6416,6 +6430,62 @@ saveRound = function(){
 };
 /* العرض: الأرشيف، ملخص الوردية، ملف PDF */
 
+/* ================= [BOARD] لوحة ملاحظات الطلبيات المشتركة بين الإنتاج والجودة ================= */
+const bcv = v => { const s = String(v ?? '').trim(); return /^(undefined|none|null|undefined-undefined|-)$/i.test(s) ? '' : s; };
+const isProdRole = () => serverMode && CUR && CUR.role === 'production';
+ICONS.board = LI('chat') || LI('file');
+NAV.find(g => g.g === 'العمليات اليومية').items.splice(1, 0, ['board', 'لوحة ملاحظات الطلبيات']);
+PAGE.board = ['العمليات اليومية', 'لوحة ملاحظات الطلبيات'];
+let BD = {order: ''};
+const roleLabel = n => n.title || ({manager: 'مدير قسم ضبط الجودة', inspector: 'مراقب جودة', production: 'الإنتاج', viewer: 'الإدارة'})[n.role] || '';
+/* لوحة بسيطة: طلبية + إضافة ملاحظة + كل الملاحظات (المشتركة وملاحظات الجودة) في قائمة واحدة */
+function boardFeed(order){
+  const shared = (S.onotes || []).filter(n => !order || String(n.order) === String(order)).map(n => ({t: n.date + ' ' + n.time, date: n.date, time: n.time, by: n.by, role: roleLabel(n), text: n.text, order: n.order, id: n.id, own: n.by === CUR.name, src: n.role === 'production' ? 'pr' : 'qc', stage: n.stage && n.stage !== 'general' ? stageBy(n.stage).name : ''}));
+  const fromRounds = order ? S.rounds.filter(r => itemsOf(r).some(i => String(i.order) === String(order)) && (String(r.notes || '').trim() || String(r.gnotes || '').trim() || (r.defects || []).length)).map(r => ({t: r.date + ' ' + r.time, date: r.date, time: r.time, by: r.inspector, role: 'مراقب جودة', order,
+      text: [(r.defects || []).join('، '), r.notes, r.gnotes].filter(x => String(x || '').trim()).join(' – ') + (r.box ? ` (صندوق ${r.box})` : ''), src: 'qc', stage: stageBy(r.stage).name + (r.machine && r.machine !== '—' ? ' ' + r.machine : '')})) : [];
+  return shared.concat(fromRounds).sort((a, b) => b.t.localeCompare(a.t));
+}
+VIEWS.board = {
+  html(){
+    const o = BD.order, rows = o ? ordRows(o) : [], feed = boardFeed(o);
+    return `<div class="pagehead"><div><h1 style="margin:0">لوحة ملاحظات الطلبيات</h1><p>اكتب رقم الطلبية، وأضف ملاحظتك، وشاهد كل الملاحظات عليها.</p></div></div>
+      <div class="panel bsimple">
+        <label class="f">رقم الطلبية أو اسم المنتج<input type="text" id="bdQ" list="ordList" value="${esc(o)}" placeholder="مثال: 260635 أو Lovage"></label>
+        ${o ? `<div class="bdhead"><b>${esc((rows[0] || {}).product_name || 'طلبية ' + o)}</b><span>${esc((rows[0] || {}).customer || '')}</span><button class="btn sm" id="bdClr">كل الطلبيات</button></div>` : ''}
+        <textarea id="bdT" rows="3" placeholder="${o ? 'اكتب ملاحظتك على هذه الطلبية…' : 'اختر الطلبية أولاً ثم اكتب ملاحظتك'}" ${o ? '' : 'disabled'}></textarea>
+        <button class="btn p" id="bdAdd" ${o ? '' : 'disabled'} style="margin-top:8px;width:100%">إضافة الملاحظة</button></div>
+      ${o ? (() => { const erp = rows.flatMap(r => ERP_NOTES.filter(([k]) => bcv(r[k])).map(([k, l]) => ({l, v: bcv(r[k]), p: rows.length > 1 ? r.product_name : ''}))); return erp.length ? `<h2>ملاحظات ERP</h2><div class="erpns">${erp.map(e => `<div class="erpn"><b>${esc(e.l)}${e.p ? ' – ' + esc(e.p) : ''}</b>${esc(e.v)}</div>`).join('')}</div>` : '<p class="muted">لا توجد ملاحظات في ERP لهذه الطلبية.</p>'; })() : ''}
+      <h2>${o ? 'كل الملاحظات على الطلبية ' + esc(o) : 'آخر الملاحظات'} (${feed.length})</h2>
+      ${feed.slice(0, o ? 300 : 50).map(n => `<div class="bdn bn ${n.src}"><div class="bnh"><b>${esc(n.by || '')}</b><span class="role">${esc(n.role || '')}</span>${n.stage ? `<span class="tag">${esc(n.stage)}</span>` : ''}<span class="muted num">${esc(n.date)} ${esc(n.time)}${o ? '' : ' · طلبية ' + esc(n.order)}</span>${n.id && (n.own || isMgr()) ? `<button class="btn sm d" data-bdel="${n.id}">حذف</button>` : ''}</div><div class="bnt">${esc(n.text)}</div></div>`).join('') || '<p class="muted">لا توجد ملاحظات بعد.</p>'}
+      ${typeof orderDatalist === 'function' ? orderDatalist() : ''}`;
+  },
+  bind(){
+    $('#bdQ').onchange = e => { const o = typeof orderFromInput === 'function' ? orderFromInput(e.target) : e.target.value.trim(); if(o === null) return; BD.order = o; rerender(); };
+    $('#bdClr') && ($('#bdClr').onclick = () => { BD.order = ''; rerender(); });
+    $('#bdAdd').onclick = () => {
+      const t = $('#bdT').value.trim(); if(!BD.order){ toast('اكتب رقم الطلبية أولاً'); return; } if(!t){ toast('اكتب الملاحظة'); return; }
+      const d = new Date(); S.onotes = S.onotes || [];
+      S.onotes.push({id: uid(), order: BD.order, product: (ordRows(BD.order)[0] || {}).product_name || '', stage: 'general', text: t, by: CUR.name || S.settings.inspector, role: CUR.role || '', title: CUR.title || '', date: todayStr(d), time: timeStr(d)});
+      save(); rerender(); toast('أُضيفت الملاحظة');
+    };
+    $$('[data-bdel]').forEach(b => b.onclick = () => ask('حذف هذه الملاحظة؟', 'حذف', () => { S.onotes = S.onotes.filter(x => x.id !== b.dataset.bdel); save(); rerender(); }, true));
+  }
+};
+/* ملاحظات اللوحة تظهر للمراقب داخل الجولة مع ملاحظات المنتج */
+const _pnBoard = productNotesHtml;
+productNotesHtml = function(items, exceptId){
+  const h = _pnBoard(items, exceptId); const ords = [...new Set((items || []).map(i => String(i.order)))];
+  const ns = (S.onotes || []).filter(n => ords.includes(String(n.order))).sort((a, b) => (b.date + b.time).localeCompare(a.date + a.time)); if(!ns.length) return h;
+  return `<div class="pnotes2 board"><b>💬 ملاحظات مشتركة مع الإنتاج على هذه الطلبية (${ns.length})</b>${ns.slice(0, 6).map(n => `<div class="bwr"><span class="num">${esc(n.date)} ${esc(n.time)}</span><span><b>${esc(n.by)}</b><br><small>${esc(roleLabel(n))}</small></span><span>${esc(n.text)}</span><span></span></div>`).join('')}</div>` + h;
+};
+/* حساب الإنتاج: يرى هذه الواجهة فقط */
+const _goBoard = go;
+go = function(v, a){ if(isProdRole() && v !== 'board'){ return _goBoard('board'); } return _goBoard(v, a); };
+const _renderBoard = render;
+render = function(){ if(isProdRole() && view !== 'board') view = 'board'; const r = _renderBoard.apply(this, arguments); document.body.classList.toggle('prodmode', !!isProdRole()); return r; };
+const _todosBoard = todos;
+todos = function(){ if(isProdRole()) return []; return _todosBoard.apply(this, arguments); };
+
 /* ================= SERVER SYNC (لابتوب القسم) ================= */
 const PWA_API = (typeof window !== 'undefined' && window.PWA_API && /^(https:\/\/|http:\/\/localhost)/.test(window.PWA_API)) ? window.PWA_API : '';
 const GAS_MODE = (typeof google !== 'undefined' && !!(google.script && google.script.run)) || !!PWA_API;
@@ -6478,7 +6548,7 @@ window.addEventListener('online', () => { if(CUR && CUR.role) syncNow(); });
 window.addEventListener('offline', () => { online = false; updateSyncPill(); render(); });
 let serverMode = false, online = true, syncVer = 0, syncing = false, syncTimer = null, lastSync = null, snap = {}, settingsSnap = '';
 const CLIENT = 'c' + Date.now().toString(36) + Math.random().toString(36).slice(2,6);
-const SYNC_COLS = ['rounds','holds','handovers','mats','ncrs','complaints','audits','cals','ths','aid','coas','reports','pimgs','stops','shiftsums','savedreps','plans'];
+const SYNC_COLS = ['rounds','holds','handovers','mats','ncrs','complaints','audits','cals','ths','aid','coas','reports','pimgs','stops','shiftsums','savedreps','plans','onotes'];
 const FORM_VIEWS = ['round','matform','ncrform','auditform','compform','data','hand','letter','coaprint'];
 const keyOf = x => String(x.id ?? x.no ?? [x.date,x.time,x.type,x.code,x.loc,x.name,x.from].map(v=>v??'').join('|'));
 const strip = x => { const {_m,_v,_c,...r} = x; return JSON.stringify(r); };
@@ -6499,7 +6569,7 @@ async function askPin(wrong){
   const go_ = async () => {
     const user = $('#uIn').value.trim(), pin = $('#pinIn').value.trim(); LAST_USER = user;
     const h = await sha(user + '|' + pin + '|fet-qc');
-    try{ const r = await apiLogin(user, pin); CUR = {name:r.name, role:r.role}; GAS_PIN = pin; IDB.set('auth:' + user, {h, role:r.role}); }
+    try{ const r = await apiLogin(user, pin); CUR = {name:r.name, role:r.role, title:r.title||''}; GAS_PIN = pin; IDB.set('auth:' + user, {h, role:r.role}); }
     catch(e){
       if(String(e && e.message || e).includes('BADPIN')){ askPin(true); return; }
       const a = await IDB.get('auth:' + user);
@@ -6566,7 +6636,8 @@ function apply(d){
 async function syncNow(){
   if(!serverMode || syncing) return; syncing = true;
   const {body, sent, ss, any} = collect();
-  if(typeof isViewer === 'function' && isViewer()){ body.cols = {}; body.deleted = []; delete body.settings; delete body.orders; }   /* حساب الإدارة: لا يرسل أي تعديل */
+  if(typeof isViewer === 'function' && isViewer()){ body.cols = {}; body.deleted = []; delete body.settings; delete body.orders; }
+  if(typeof isProdRole === 'function' && isProdRole()){ body.cols = {onotes: (body.cols || {}).onotes || []}; body.deleted = (body.deleted || []).filter(d => d[0] === 'onotes'); delete body.settings; delete body.settingsPatch; delete body.orders; }   /* حساب الإدارة: لا يرسل أي تعديل */
   try{
     let d;
     if(GAS_MODE){
@@ -6597,8 +6668,8 @@ function scheduleSync(){ clearTimeout(syncTimer); updateSyncPill(); syncTimer = 
 
 /* ---- keep the session after a page refresh + autosave of unfinished forms ---- */
 const SESSION_HOURS = 14;
-function saveSession(){ IDB.set('session', {name:CUR.name, role:CUR.role, pin:GAS_PIN, exp:Date.now() + SESSION_HOURS*3600e3}); }
-async function loadSession(){ const s = await IDB.get('session'); if(s && s.exp > Date.now() && s.name && s.pin){ CUR = {name:s.name, role:s.role}; GAS_PIN = s.pin; return true; } return false; }
+function saveSession(){ IDB.set('session', {name:CUR.name, role:CUR.role, title:CUR.title||'', pin:GAS_PIN, exp:Date.now() + SESSION_HOURS*3600e3}); }
+async function loadSession(){ const s = await IDB.get('session'); if(s && s.exp > Date.now() && s.name && s.pin){ CUR = {name:s.name, role:s.role, title:s.title||''}; GAS_PIN = s.pin; return true; } return false; }
 const DRAFT_VIEWS = ['round','matform','auditform','drawm','sortm'];
 let draftTimer = null;
 function saveDraft(){ clearTimeout(draftTimer); draftTimer = setTimeout(() => {
@@ -6628,8 +6699,8 @@ async function startApp(){
     document.addEventListener('visibilitychange', () => { if(!document.hidden && CUR.role) syncNow(); });
     S.orders = DEFAULT_ORDERS;
     if(!(CUR.name && GAS_PIN)) await loadSession();
-    if(CUR.name && GAS_PIN && !CUR.role){ try{ const r = await apiLogin(CUR.name, GAS_PIN); CUR = {name:r.name, role:r.role}; }catch(e){ if(String(e && e.message || e).includes('BADPIN')) CUR.role = ''; else { const s = await IDB.get('session'); CUR.role = s && s.name===CUR.name ? s.role : ''; online = false; } } }
-    else if(CUR.name && GAS_PIN && CUR.role){ apiLogin(CUR.name, GAS_PIN).then(r => { CUR.role = r.role; saveSession(); }).catch(e => { if(String(e && e.message || e).includes('BADPIN')){ IDB.del('session'); location.reload(); } }); }
+    if(CUR.name && GAS_PIN && !CUR.role){ try{ const r = await apiLogin(CUR.name, GAS_PIN); CUR = {name:r.name, role:r.role, title:r.title||''}; }catch(e){ if(String(e && e.message || e).includes('BADPIN')) CUR.role = ''; else { const s = await IDB.get('session'); CUR.role = s && s.name===CUR.name ? s.role : ''; CUR.title = s && s.name===CUR.name ? (s.title||'') : ''; online = false; } } }
+    else if(CUR.name && GAS_PIN && CUR.role){ apiLogin(CUR.name, GAS_PIN).then(r => { CUR.role = r.role; CUR.title = r.title || ''; saveSession(); }).catch(e => { if(String(e && e.message || e).includes('BADPIN')){ IDB.del('session'); location.reload(); } }); }
     if(!CUR.role){ renderHeader(); render(); askPin(false); return; }
     S.orders = []; await localRestore();
     if(!S.settings.inspectors.includes(CUR.name)) S.settings.inspectors.push(CUR.name);
