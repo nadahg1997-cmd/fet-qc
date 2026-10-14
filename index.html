@@ -837,6 +837,13 @@ body.prodmode #gSearch,body.prodmode .top label:has(#gSearch){display:none!impor
 .sdsel{display:flex;flex-direction:column;gap:2px;margin:10px 0;background:#F6FAFF;border:1px solid #CFE0F5;border-radius:10px;padding:8px 10px}.sdsel b{font-size:16px}
 .sdbox{margin:8px 0;border:1px solid var(--line);border-radius:10px;background:#fff}.sdbox summary{cursor:pointer;padding:10px 12px;font-weight:700}.sdbox > *:not(summary){margin:0 12px 10px}.sdbox h4{margin:8px 12px 6px}
 .sdf{margin-top:10px}
+.sacard{display:grid;grid-template-columns:2fr 1.4fr 1fr;gap:10px;margin-top:10px}.sacard > div{background:#F6FAFF;border:1px solid #CFE0F5;border-radius:10px;padding:8px 10px}.sacard span{display:block;font-size:12px;color:var(--ink2)}.sacard small{color:var(--ink2)}
+.sacard .big b{font-size:30px;color:#E8772E}.cartno{background:#E8772E;color:#fff;border-radius:8px;padding:2px 10px}
+.lblprev{display:inline-block;border:1px dashed #999;background:#fff;padding:4px;margin-top:6px}
+.lblprev .lbl{box-sizing:border-box;display:flex;align-items:center;gap:2mm;padding:1.5mm 2mm;font-family:Arial;color:#000;direction:ltr}.lblprev .lg{width:24%;display:flex;flex-direction:column;align-items:center}.lblprev .lg img{width:100%}.lblprev .lg span{font-size:2.2mm}
+.lblprev .lt{flex:1;display:flex;flex-direction:column;align-items:center;line-height:1}.lblprev .lt u{font-size:4.5mm;margin-bottom:1mm}.lblprev .lt b{font-size:13mm;font-weight:900}.lblprev .lt i{font-style:normal;font-size:3.5mm;margin-top:.8mm;direction:rtl}
+@media(max-width:700px){.sacard{grid-template-columns:1fr}}
+.sdimg{text-align:center;margin:0 12px 8px}.sdimg img{max-width:260px;max-height:260px;border:1px solid var(--line);border-radius:10px;background:#fff}.sdimg span{display:block;font-size:11px;color:var(--ink2)}
 </style>
 </head>
 <body>
@@ -888,7 +895,9 @@ setTimeout(function(){ if(window.__appLoaded) return; var m=document.getElementB
    [MAT_SAMPLE] قاعدة عينة كل مادة واردة · [MATLIB] أرشيف أكواد المواد
    [TH_LOCS] أماكن الحرارة والرطوبة · [CAL_WINDOWS] مواعيد التحقق من أدوات القياس
    [ORDER_SEARCH] البحث برقم الطلبية أو اسم المنتج · [AUDIT_WEEK] المراقبات الأسبوعية
+   [SAMPLES] أرشيف العينات ولصاقة الأرشفة · [LABEL_SIZE] مقاس اللصاقة
    [SHIFT_TIMES] أوقات الورديات (الصباحية 8–16، المسائية 16–24)
+   [PRINT_SIMPLE] واجهة الطباعة المبسطة · [SIMPLE_SEVERITY] التصنيف من القرار · [STOP_KEEP] الآلة المتوقفة تبقى متوقفة
    [SIMPLE_DRAW_USERS] واجهة السحب المبسطة (حساب إيهاب)
    [NOTES_EDIT] تعديل وحذف الملاحظات لمدير ضبط الجودة · [ORDER_REPORT] تقرير مفصل عن طلبية
    [EVENTS] السجل التفصيلي لكل ما حدث · [EXEC_TYPES] تقرير عام وتفصيلي · [EDIT_LOCK] التعديل والحذف لمدير ضبط الجودة
@@ -2234,7 +2243,7 @@ STAGES.find(s => s.key==='final').extra = [{k:'cartons',l:'عدد الكراتي
 
 const blank = () => ({settings:{inspectors:[],inspector:'',shift:'صباحية',manager:'ندى حجازي',qa:'محمد براء رحمون',reviewer:'Talal Alraee',ceo:'أيهم سكرية',
   weldMin:1.8,weldMax:3,seamMin:2,seamMax:4,devices:JSON.parse(JSON.stringify(DEVICES)),th:JSON.parse(JSON.stringify(TH_LOC))},
-  orders:DEFAULT_ORDERS, ordersDate:'', reports:[], pimgs:[], stops:[], shiftsums:[], savedreps:[], plans:[], onotes:[], rounds:[], holds:[], handovers:[], mats:[], ncrs:[], complaints:[], audits:[], cals:[], ths:[], aid:[], coas:[]});
+  orders:DEFAULT_ORDERS, ordersDate:'', reports:[], pimgs:[], stops:[], shiftsums:[], savedreps:[], plans:[], onotes:[], samples:[], rounds:[], holds:[], handovers:[], mats:[], ncrs:[], complaints:[], audits:[], cals:[], ths:[], aid:[], coas:[]});
 let S = blank();
 let persistent = typeof window.storage !== 'undefined' && window.storage && typeof window.storage.get === 'function';
 let dirty = false;
@@ -3940,7 +3949,7 @@ VIEWS.data.bind = function(){
 
 const LUCIDE = {"home": "<path d=\"M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8\" /> <path d=\"M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z\" />", "prod": "<path d=\"M12 16h.01\" /> <path d=\"M16 16h.01\" /> <path d=\"M3 19a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5a.5.5 0 0 0-.769-.422l-4.462 2.844A.5.5 0 0 1 15 10.5v-2a.5.5 0 0 0-.769-.422L9.77 10.922A.5.5 0 0 1 9 10.5V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2z\" /> <path d=\"M8 16h.01\" />", "mat": "<path d=\"M12 22V12\" /> <path d=\"m16 17 2 2 4-4\" /> <path d=\"M21 11.127V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.729l7 4a2 2 0 0 0 2 .001l1.32-.753\" /> <path d=\"M3.29 7 12 12l8.71-5\" /> <path d=\"m7.5 4.27 8.997 5.148\" />", "ncr": "<path d=\"M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z\" /> <path d=\"M12 8v4\" /> <path d=\"M12 16h.01\" />", "hold": "<path d=\"M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z\" /> <path d=\"m3.3 7 8.7 5 8.7-5\" /> <path d=\"M12 22V12\" />", "mon": "<rect width=\"8\" height=\"4\" x=\"8\" y=\"2\" rx=\"1\" ry=\"1\" /> <path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\" /> <path d=\"m9 14 2 2 4-4\" />", "rep": "<path d=\"M3 3v16a2 2 0 0 0 2 2h16\" /> <path d=\"M18 17V9\" /> <path d=\"M13 17V5\" /> <path d=\"M8 17v-3\" />", "team": "<path d=\"M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2\" /> <path d=\"M16 3.128a4 4 0 0 1 0 7.744\" /> <path d=\"M22 21v-2a4 4 0 0 0-3-3.87\" /> <circle cx=\"9\" cy=\"7\" r=\"4\" />", "mgr": "<path d=\"M16 7h6v6\" /> <path d=\"m22 7-8.5 8.5-5-5L2 17\" />", "more": "<rect width=\"7\" height=\"7\" x=\"3\" y=\"3\" rx=\"1\" /> <rect width=\"7\" height=\"7\" x=\"14\" y=\"3\" rx=\"1\" /> <rect width=\"7\" height=\"7\" x=\"14\" y=\"14\" rx=\"1\" /> <rect width=\"7\" height=\"7\" x=\"3\" y=\"14\" rx=\"1\" />", "hand": "<path d=\"M8 3 4 7l4 4\" /> <path d=\"M4 7h16\" /> <path d=\"m16 21 4-4-4-4\" /> <path d=\"M20 17H4\" />", "comp": "<path d=\"M22 17a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 21.286V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2z\" /> <path d=\"M12 15h.01\" /> <path d=\"M12 7v4\" />", "coa": "<path d=\"m15.477 12.89 1.515 8.526a.5.5 0 0 1-.81.47l-3.58-2.687a1 1 0 0 0-1.197 0l-3.586 2.686a.5.5 0 0 1-.81-.469l1.514-8.526\" /> <circle cx=\"12\" cy=\"8\" r=\"6\" />", "sup": "<path d=\"M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2\" /> <path d=\"M15 18H9\" /> <path d=\"M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 17.52 8H14\" /> <circle cx=\"17\" cy=\"18\" r=\"2\" /> <circle cx=\"7\" cy=\"18\" r=\"2\" />", "data": "<ellipse cx=\"12\" cy=\"5\" rx=\"9\" ry=\"3\" /> <path d=\"M3 5V19A9 3 0 0 0 21 19V5\" /> <path d=\"M3 12A9 3 0 0 0 21 12\" />", "bell": "<path d=\"M10.268 21a2 2 0 0 0 3.464 0\" /> <path d=\"M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326\" />", "search": "<path d=\"m21 21-4.34-4.34\" /> <circle cx=\"11\" cy=\"11\" r=\"8\" />", "logout": "<path d=\"m16 17 5-5-5-5\" /> <path d=\"M21 12H9\" /> <path d=\"M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4\" />", "dash": "<rect width=\"7\" height=\"9\" x=\"3\" y=\"3\" rx=\"1\" /> <rect width=\"7\" height=\"5\" x=\"14\" y=\"3\" rx=\"1\" /> <rect width=\"7\" height=\"9\" x=\"14\" y=\"12\" rx=\"1\" /> <rect width=\"7\" height=\"5\" x=\"3\" y=\"16\" rx=\"1\" />", "s_design": "<path d=\"M15.707 21.293a1 1 0 0 1-1.414 0l-1.586-1.586a1 1 0 0 1 0-1.414l5.586-5.586a1 1 0 0 1 1.414 0l1.586 1.586a1 1 0 0 1 0 1.414z\" /> <path d=\"m18 13-1.375-6.874a1 1 0 0 0-.746-.776L3.235 2.028a1 1 0 0 0-1.207 1.207L5.35 15.879a1 1 0 0 0 .776.746L13 18\" /> <path d=\"m2.3 2.3 7.286 7.286\" /> <circle cx=\"11\" cy=\"11\" r=\"2\" />", "s_print": "<path d=\"M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2\" /> <path d=\"M6 9V3a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v6\" /> <rect x=\"6\" y=\"14\" width=\"12\" height=\"8\" rx=\"1\" />", "s_draw": "<ellipse cx=\"12\" cy=\"5\" rx=\"9\" ry=\"3\" /> <path d=\"M3 5v14a9 3 0 0 0 18 0V5\" />", "s_sort": "<path d=\"M2 5h20\" /> <path d=\"M6 12h12\" /> <path d=\"M9 19h6\" />", "s_mix": "<path d=\"M14 2v6a2 2 0 0 0 .245.96l5.51 10.08A2 2 0 0 1 18 22H6a2 2 0 0 1-1.755-2.96l5.51-10.08A2 2 0 0 0 10 8V2\" /> <path d=\"M6.453 15h11.094\" /> <path d=\"M8.5 2h7\" />", "s_inj": "<path d=\"m18 2 4 4\" /> <path d=\"m17 7 3-3\" /> <path d=\"M19 9 8.7 19.3c-1 1-2.5 1-3.4 0l-.6-.6c-1-1-1-2.5 0-3.4L15 5\" /> <path d=\"m9 11 4 4\" /> <path d=\"m5 19-3 3\" /> <path d=\"m14 4 6 6\" />", "s_asm": "<path d=\"M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.106-3.105c.32-.322.863-.22.983.218a6 6 0 0 1-8.259 7.057l-7.91 7.91a1 1 0 0 1-2.999-3l7.91-7.91a6 6 0 0 1 7.057-8.259c.438.12.54.662.219.984z\" />", "s_cap": "<path d=\"M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z\" /> <path d=\"M12 22V12\" /> <polyline points=\"3.29 7 12 12 20.71 7\" /> <path d=\"m7.5 4.27 9 5.15\" />", "s_seal": "<path d=\"M14 13V8.5C14 7 15 7 15 5a3 3 0 0 0-6 0c0 2 1 2 1 3.5V13\" /> <path d=\"M20 15.5a2.5 2.5 0 0 0-2.5-2.5h-11A2.5 2.5 0 0 0 4 15.5V17a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1z\" /> <path d=\"M5 22h14\" />", "s_final": "<path d=\"M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z\" /> <path d=\"m16 9-5.5 5.5L8 12\" />", "thermo": "<path d=\"M14 4v10.54a4 4 0 1 1-4 0V4a2 2 0 0 1 4 0Z\" />", "ruler": "<path d=\"M21.3 15.3a2.4 2.4 0 0 1 0 3.4l-2.6 2.6a2.4 2.4 0 0 1-3.4 0L2.7 8.7a2.41 2.41 0 0 1 0-3.4l2.6-2.6a2.41 2.41 0 0 1 3.4 0Z\" /> <path d=\"m14.5 12.5 2-2\" /> <path d=\"m11.5 9.5 2-2\" /> <path d=\"m8.5 6.5 2-2\" /> <path d=\"m17.5 15.5 2-2\" />", "clean": "<path d=\"M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z\" /> <path d=\"M20 2v4\" /> <path d=\"M22 4h-4\" /> <circle cx=\"4\" cy=\"20\" r=\"2\" />", "plus": "<circle cx=\"12\" cy=\"12\" r=\"10\" /> <path d=\"M8 12h8\" /> <path d=\"M12 8v8\" />", "ok": "<path d=\"M21.801 10A10 10 0 1 1 17 3.335\" /> <path d=\"m9 11 3 3L22 4\" />", "warn": "<path d=\"m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3\" /> <path d=\"M12 9v4\" /> <path d=\"M12 17h.01\" />", "file": "<path d=\"M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z\" /> <path d=\"M14 2v5a1 1 0 0 0 1 1h5\" /> <path d=\"M10 9H8\" /> <path d=\"M16 13H8\" /> <path d=\"M16 17H8\" />", "scan": "<path d=\"M3 7V5a2 2 0 0 1 2-2h2\" /> <path d=\"M17 3h2a2 2 0 0 1 2 2v2\" /> <path d=\"M21 17v2a2 2 0 0 1-2 2h-2\" /> <path d=\"M7 21H5a2 2 0 0 1-2-2v-2\" /> <circle cx=\"12\" cy=\"12\" r=\"3\" /> <path d=\"m16 16-1.9-1.9\" />", "clock": "<circle cx=\"12\" cy=\"12\" r=\"10\" /> <path d=\"M12 6v6l4 2\" />", "alert": "<path d=\"M12 16h.01\" /> <path d=\"M12 8v4\" /> <path d=\"M15.312 2a2 2 0 0 1 1.414.586l4.688 4.688A2 2 0 0 1 22 8.688v6.624a2 2 0 0 1-.586 1.414l-4.688 4.688a2 2 0 0 1-1.414.586H8.688a2 2 0 0 1-1.414-.586l-4.688-4.688A2 2 0 0 1 2 15.312V8.688a2 2 0 0 1 .586-1.414l4.688-4.688A2 2 0 0 1 8.688 2z\" />", "activity": "<path d=\"M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2\" />", "gauge": "<path d=\"m12 14 4-4\" /> <path d=\"M3.34 19a10 10 0 1 1 17.32 0\" />"};
 /* [VERSION] رقم إصدار البرنامج – يظهر أسفل القائمة وفي شاشة الدخول */
-const APP_VERSION = '13.4';
+const APP_VERSION = '13.6';
 let SERVER_VERSION = '';
 async function checkServerVersion(){ if(!GAS_MODE) return; try{ const v = JSON.parse(await rpc('serverVersion', '')); SERVER_VERSION = v.version + (v.ocr ? '' : ' (Drive API غير مفعّل)'); }catch(e){ SERVER_VERSION = /NET/.test(String(e && e.message || e)) ? '' : 'قديم – انشر إصداراً جديداً'; } try{ renderTabs(); }catch(e){} }
 /* [ERRORS] بدل الصفحة الفارغة: رسالة واضحة وزر إعادة تحميل */
@@ -4077,11 +4086,12 @@ VIEWS.data.bind = function(){
     $$('[data-ud]').forEach(b => b.onclick = () => ask(`حذف المستخدم ${esc(list[+b.dataset.ud].name)}؟ لن يستطيع الدخول، وتبقى سجلاته.`, 'حذف', () => { list.splice(+b.dataset.ud, 1); draw(); }, true));
     $('#uAdd').onclick = () => { list.push({name:'', role:'inspector', pin:String(Math.floor(1000+Math.random()*9000)), active:true}); draw(); };
     $('#uSave').onclick = async () => {
+      list.forEach(u => { u.name = String(u.name || '').trim(); u.pin = normDigits(u.pin); });
       const clean = list.filter(u => u.name);
       if(new Set(clean.map(u => u.name)).size !== clean.length){ toast('يوجد اسم مكرر'); return; }
       if(!clean.some(u => u.role==='manager' && u.active!==false)){ toast('يجب أن يبقى مدير قسم فعّال واحد على الأقل'); return; }
       if(clean.some(u => !/^\d{4,8}$/.test(String(u.pin)))){ toast('الرمز السري من 4 إلى 8 أرقام'); return; }
-      try{ await usersApi('save', clean); S.settings.inspectors = clean.filter(u => u.active!==false).map(u => u.name); toast('تم حفظ المستخدمين'); if(!clean.some(u => u.name===CUR.name && u.active!==false)) setTimeout(() => location.reload(), 800); }
+      try{ await usersApi('save', clean); const me = clean.find(u => u.name === CUR.name); if(me && String(me.pin) !== String(GAS_PIN)){ GAS_PIN = String(me.pin); try{ saveSession(); IDB.set('auth:' + CUR.name, {h: await sha(CUR.name + '|' + GAS_PIN + '|fet-qc'), role: CUR.role}); }catch(e){} toast('تم تغيير رمزك السري – استخدم الرمز الجديد في الدخول القادم'); } S.settings.inspectors = clean.filter(u => u.active!==false).map(u => u.name); toast('تم حفظ المستخدمين'); if(!clean.some(u => u.name===CUR.name && u.active!==false)) setTimeout(() => location.reload(), 800); }
       catch(e){ toast('تعذر الحفظ: ' + e.message); }
     };
   };
@@ -4939,6 +4949,7 @@ function saveDrawRound(){
   const d = new Date(); let saved = 0, stops = 0; const notes = [];
   for(const [m, f] of ms){
     if(!f.status) continue;
+    if(f.status === 'stop' && f.stopRecorded && f.stopRecorded === f.reason){ stops++; continue; }
     if(f.status === 'stop'){
       S.stops = S.stops || [];
       S.stops.push({id:uid(), date:todayStr(d), time:timeStr(d), shift:S.settings.shift, inspector:S.settings.inspector, stage:sk, machine:m, reason:f.reason, reasonLabel:stopLabel(f.reason), detail:f.detail||''});
@@ -6069,7 +6080,7 @@ VIEWS.workers = {
 function workerKPIs(from, to){
   const W = new Map(), get = n => { if(!W.has(n)) { const w = workersList().find(x => x.name === n); W.set(n, {name: n, dept: w ? w.dept : '', shift: w ? w.shift : '', rounds: 0, issues: 0, rep: 0, norep: 0, clean: 0, comps: [], orders: new Set(), stages: new Set()}); } return W.get(n); };
   S.rounds.filter(r => r.date >= from && r.date <= to).forEach(r => {
-    const opn = splitNames(r.operator), names = [...new Set([...opn, ...splitNames(r.worker || (r.extra || {}).worker)])];
+    const opn = splitNames(r.operator || r.worker || (r.extra || {}).worker), names = [...new Set([...opn, ...splitNames(r.worker || (r.extra || {}).worker)])];
     names.forEach(n => { const w = get(n); w.rounds++; w.stages.add(r.stage); itemsOf(r).forEach(i => i.order && w.orders.add(String(i.order)));
       if(r.decision !== 'مقبول' || (r.defects || []).length){ w.issues++; if(opn.includes(n)){ if(r.opReported === 'yes') w.rep++; else if(r.opReported === 'no') w.norep++; } } });
   });
@@ -6094,6 +6105,21 @@ VIEWS.people.html = function(){ const h = _ppHtmlW.apply(this, arguments); if(PP
 /* في التقارير (الفترة، التنفيذي، المنتج) */
 const _mwHtmlW = machinesWorkersHtml;
 machinesWorkersHtml = function(from, to, filt){ const h = _mwHtmlW(from, to, filt); if(filt) return h; return h.replace(/<h3><i>👥<\/i>أداء العمال<\/h3>[\s\S]*$/, `<h3><i>👥</i>أداء العمال ومؤشراتهم</h3>${workerKPITable(from, to)}`); };
+
+/* [STATION_REPORT] الفرز والتركيب: هل اكتشف العامل المشكلة وأبلغ عنها؟ */
+const _seHtmlRep = sortEntryHtml;
+sortEntryHtml = function(i, f){ const h = _seHtmlRep(i, f); if(h.includes('data-openg')) return h; const hasIssue = (f.defects || []).length || Object.values(f.checks || {}).includes('n') || (f.decision && f.decision !== 'مقبول');
+  return h.replace('<h3 class="mh3">العيوب المرصودة</h3>', `<div class="oprep ${hasIssue && !f.opReported ? 'need' : ''}" style="margin:8px 0"><b>هل اكتشف العامل المشكلة وأبلغ عنها؟</b><div class="pick">${REPORTED.map(([k, l]) => `<button class="${(f.opReported || (hasIssue ? '' : 'none')) === k ? 'on' : ''}" data-strep="${i}" data-v="${k}">${l}</button>`).join('')}</div></div><h3 class="mh3">العيوب المرصودة</h3>`); };
+const _smBindRep = VIEWS.sortm.bind;
+VIEWS.sortm.bind = function(){ _smBindRep.apply(this, arguments); $$('[data-strep]').forEach(b => b.onclick = () => { SM[+b.dataset.strep].opReported = b.dataset.v; rerender(); }); };
+const _saveSortRep = saveSortRound;
+saveSortRound = function(){
+  for(const f of SM.filter(gateHasData)){ const hasIssue = (f.defects || []).length || Object.values(f.checks || {}).includes('n'); if(hasIssue && !f.opReported){ toast(`${f.machine}: حدّد هل اكتشف العامل المشكلة وأبلغ عنها`); return; } }
+  return _saveSortRep.apply(this, arguments);
+};
+const _saveRoundStRep = saveRound;
+saveRound = function(){ const f = F, rep = f && ['sort','asm'].includes(f.stage) ? (f.opReported || 'none') : null, editId = f && f.editId, n0 = S.rounds.length; const res = _saveRoundStRep.apply(this, arguments);
+  if(rep){ const r = res && res.id ? res : (editId ? S.rounds.find(x => x.id === editId) : (S.rounds.length > n0 ? S.rounds[S.rounds.length - 1] : null)); if(r){ r.opReported = rep; save(); } } return res; };
 
 /* ================= [PLAN] خطة الإنتاج: ملف لكل وردية ولكل يوم، والطلبية تظهر جاهزة على الآلة ================= */
 const PLAN_STAGES = ['print','draw','inj','cap','seal'];
@@ -6782,16 +6808,24 @@ VIEWS.orderrep = {
 };
 
 /* ================= [DRAW_SIMPLE] واجهة السحب المبسطة لحساب إيهاب ================= */
-const SIMPLE_DRAW_USERS = ['ايهاب حيدر'];   /* [SIMPLE_DRAW_USERS] الحسابات التي تفتح لها واجهة السحب المبسطة */
+const SIMPLE_DRAW_USERS = ['ايهاب حيدر', 'احمد احمد'];   /* [SIMPLE_DRAW_USERS] الحسابات التي تفتح لها واجهة السحب المبسطة */
 const isSimpleDraw = () => serverMode && CUR && SIMPLE_DRAW_USERS.some(n => sameP(n, CUR.name));
 let SD = null;
 function sdEntry(m){
   const save = F; newRound('draw'); const f = F; F = save; f.machine = m; f.status = ''; f.reason = ''; f.q = ''; f.open = false;
   /* تثبيت الطلبية واسم الموظف من أول جولة اليوم على هذه الآلة (آخر قيمة سُجّلت) */
   const t = todayStr(), last = S.rounds.filter(r => r.stage === 'draw' && r.machine === m && r.date === t).pop();
+  const ls = lastStopNow('draw', m); if(ls){ f.status = 'stop'; f.reason = ls.reason; f.stopRecorded = ls.reason; }
   if(last){ f.items = itemsOf(last).map(i => ({...i})); f.order = String((f.items[0] || {}).order || ''); f.operator = last.operator || ''; f.pinned = true; }
   else { if(typeof applyPlan === 'function') applyPlan(f, 'draw', m); const op = typeof operatorFor === 'function' ? operatorFor('draw', m) : {name: ''}; f.operator = op.name || ''; }
   f.operators = splitNames(f.operator); return f;
+}
+/* [STOP_KEEP] الآلة المسجلة متوقفة تبقى متوقفة طوال الوردية حتى تُسجّل أنها تعمل */
+function lastStopNow(stage, m){
+  const t = todayStr(), sh = typeof shiftForTime === 'function' ? shiftForTime() : S.settings.shift;
+  const st = (S.stops || []).filter(z => z.stage === stage && z.machine === m && z.date === t && z.shift === sh).pop(); if(!st) return null;
+  const lr = S.rounds.filter(r => r.stage === stage && r.machine === m && r.date === t && r.shift === sh).pop();
+  return !lr || (lr.time || '') <= (st.time || '') ? st : null;
 }
 function newSD(){ SD = {}; stageBy('draw').machines.forEach(m => SD[m] = sdEntry(m)); return SD; }
 function sdSearch(q){
@@ -6805,6 +6839,7 @@ function sdSearch(q){
     seen.set(k, o); });
   return [...seen.values()].sort((a, b) => String(b.order_number).localeCompare(String(a.order_number), undefined, {numeric: true})).slice(0, 25);
 }
+function sdImg(o){ const im = o && typeof productImage === 'function' ? productImage(o) : null; return im ? `<div class="sdimg"><img src="${im.thumb}" ${im.id ? `data-iid="${esc(im.id)}"` : ''} alt="صورة المنتج"><span>${esc(im.src || '')}</span></div>` : '<p class="muted" style="margin:0 12px 8px">لا توجد صورة لهذا المنتج في مكتبة التصاميم.</p>'; }
 function sdMachineHtml(m, f){
   const head = `<div class="mhd"><b>${LI('s_draw')} مكنة السحب ${esc(m)}</b><div class="pick mst">${[['run','تعمل'],['stop','متوقفة']].map(([k,l]) => `<button class="${f.status===k?'on':''} ${k}" data-sdst="${k}">${l}</button>`).join('')}</div></div>`;
   if(f.status === 'stop') return head + `<div class="pick">${STOP_REASONS.map(([k,l]) => `<button class="${f.reason===k?'on':''}" data-sdrs="${k}">${l}</button>`).join('')}</div>`;
@@ -6820,13 +6855,16 @@ function sdMachineHtml(m, f){
     <div class="sdsearch"><label class="f">بحث عن الطلبية: رقم، اسم عربي أو إنكليزي، أو قطر<input type="search" data-sdq value="${esc(f.q || '')}" placeholder="مثال: لوفاج 35 أو 260635"></label>
       ${res.length ? `<div class="sdres">${res.map(x => `<button data-sdpick="${esc(x.order_number)}|${esc(x.product_code || '')}"><b class="num">${esc(x.order_number)}</b><span>${esc(x.product_name || '')}${x.product_name_arabic ? ' · ' + esc(x.product_name_arabic) : ''}</span><em>قطر ${esc(x.product_diameter || '—')}</em></button>`).join('')}</div>` : f.q ? '<p class="muted">لا نتائج.</p>' : ''}</div>
     ${it ? `<div class="sdsel">${f.pinned ? '<span class="planbadge">📌 مثبّتة من أول جولة اليوم – يمكنك تغييرها</span>' : f.fromPlan ? '<span class="planbadge">📋 من خطة الإنتاج</span>' : ''}<b>${esc(it.product || (o || {}).product_name || '')}</b><span>طلبية <b class="num">${esc(ord)}</b>${o && o.product_diameter ? ` · قطر <b>${esc(o.product_diameter)}</b>` : ''}</span></div>
-    <details class="sdbox"><summary>📦 معلومات المنتج (اضغط للعرض)</summary><div class="bspec">${info.map(([l, v]) => `<div><span>${esc(l)}</span><b>${esc(bcv(v))}</b></div>`).join('')}</div>${erp ? `<h4>ملاحظات ERP</h4><div class="erpns">${erp}</div>` : ''}</details>
+    <details class="sdbox"><summary>📦 معلومات المنتج (اضغط للعرض)</summary>${sdImg(o)}<div class="bspec">${info.map(([l, v]) => `<div><span>${esc(l)}</span><b>${esc(bcv(v))}</b></div>`).join('')}</div>${erp ? `<h4>ملاحظات ERP</h4><div class="erpns">${erp}</div>` : ''}</details>
     <details class="sdbox"><summary>💬 ملاحظات على الطلبية (${allN.length}) (اضغط للعرض)</summary>${allN.length ? allN.slice(0, 40).map(n => `<div class="bwr"><span class="num">${esc(n.date)} ${esc(n.time)}</span><span><b>${esc(n.by || '')}</b><br><small>${esc(n.kind || '')}</small></span><span>${esc(n.text)}</span><span></span></div>`).join('') : '<p class="muted">لا توجد ملاحظات على هذه الطلبية.</p>'}</details>` : ''}
     <div class="grid sdf"><label class="f">اسم الموظف <span class="req">*</span><input type="text" list="wkAll" data-sdop value="${esc(f.operator || '')}" placeholder="اسم عامل الآلة"></label>
       <label class="f">رقم الصندوق <span class="req">*</span><input type="text" data-sdbox value="${esc(f.box || '')}"></label></div>
     <label class="f" style="margin-top:8px">ملاحظات الجودة<textarea rows="2" data-sdnotes>${esc(f.notes || '')}</textarea></label>
+    <div class="oprep ${(f.decision && f.decision !== 'مقبول' || String(f.notes || '').trim()) && !f.opReported ? 'need' : ''}"><b>هل اكتشف العامل المشكلة وأبلغ عنها؟</b><div class="pick">${REPORTED.map(([k, l]) => `<button class="${f.opReported === k ? 'on' : ''}" data-sdrep="${k}">${l}</button>`).join('')}</div></div>
     <h3 class="mh3">القرار <span class="req">*</span></h3><div class="dec">${DECISIONS.map(d => `<button data-sddec="${d}" data-d="${d}" class="${f.decision===d?'on':''}">${d}</button>`).join('')}</div>`;
 }
+/* [SIMPLE_SEVERITY] تصنيف المشكلة من القرار: مرفوض/محجور = حرج · مقبول بملاحظة = رئيسي · مقبول مع ملاحظة = ثانوي */
+function simpleCls(f){ return f.decision === 'مرفوض' || f.decision === 'محجور' ? 'حرج' : f.decision === 'مقبول بملاحظة' ? 'رئيسي' : (String(f.notes || '').trim() ? 'ثانوي' : ''); }
 VIEWS.drawsimple = {
   html(){
     if(!SD) newSD();
@@ -6847,6 +6885,7 @@ VIEWS.drawsimple = {
       const bx = q('[data-sdbox]'); if(bx) bx.oninput = () => f.box = bx.value;
       const nt = q('[data-sdnotes]'); if(nt) nt.oninput = () => f.notes = nt.value;
       p.querySelectorAll('[data-sddec]').forEach(b => b.onclick = () => { f.decision = b.dataset.sddec; upd(); });
+      p.querySelectorAll('[data-sdrep]').forEach(b => b.onclick = () => { f.opReported = b.dataset.sdrep; upd(); });
     });
     $('#sdSave').onclick = () => {
       const ms = Object.entries(SD); if(ms.every(([, f]) => !f.status)){ toast('اختر حالة الآلات: تعمل أو متوقفة'); return; }
@@ -6857,12 +6896,14 @@ VIEWS.drawsimple = {
         if(!String(f.operator || '').trim()){ toast(`${m}: اكتب اسم الموظف`); return; }
         if(!String(f.box || '').trim()){ toast(`${m}: اكتب رقم الصندوق`); return; }
         if(!f.decision){ toast(`${m}: اختر القرار`); return; }
+        if((f.decision !== 'مقبول' || String(f.notes || '').trim()) && !f.opReported){ toast(`${m}: حدّد هل اكتشف العامل المشكلة وأبلغ عنها`); return; }
       }
       const d = new Date(); let n = 0;
       for(const [m, f] of ms){
+        if(f.status === 'stop' && f.stopRecorded === f.reason){ continue; }
         if(f.status === 'stop'){ S.stops = S.stops || []; S.stops.push({id: uid(), date: todayStr(d), time: timeStr(d), shift: S.settings.shift, inspector: S.settings.inspector, stage: 'draw', machine: m, reason: f.reason, reasonLabel: stopLabel(f.reason), detail: ''}); n++; continue; }
         if(f.status !== 'run') continue;
-        const save = F; F = f; F.__multi = true; F.operators = splitNames(f.operator); F.opReported = f.decision === 'مقبول' ? 'none' : (f.opReported || 'none'); F.cls = f.decision === 'مقبول' ? '' : (f.decision === 'مقبول بملاحظة' ? 'ثانوي' : 'رئيسي');
+        const save = F; F = f; F.__multi = true; F.operators = splitNames(f.operator); F.opReported = f.opReported || 'none'; F.cls = simpleCls(f);
         let r = null; try{ r = saveRound(); } finally { delete f.__multi; F = save; }
         if(!r && !S.rounds.some(x => x.machine === m && x.date === todayStr(d) && x.time === timeStr(d))){ toast(`تعذر حفظ ${m}`); return; }
         n++;
@@ -6878,6 +6919,80 @@ VIEWS.drawsimple = {
 PARENT.drawsimple = 'prod'; NAV_OF.drawsimple = 'prod'; PAGE.drawsimple = ['جولات الإنتاج', 'جولة السحب'];
 const _prodBindSD = VIEWS.prod.bind;
 VIEWS.prod.bind = function(){ _prodBindSD.apply(this, arguments); if(isSimpleDraw()) $$('[data-st="draw"]').forEach(b => b.onclick = () => { if(!SD) newSD(); go('drawsimple'); }); };
+const _newDMStop = newDM;
+newDM = function(stKey){ const d = _newDMStop.apply(this, arguments); Object.entries(d.machines).forEach(([m, f]) => { const ls = lastStopNow(d.stage, m); if(ls){ f.status = 'stop'; f.reason = ls.reason; f.detail = ls.detail || ''; f.stopRecorded = ls.reason; } }); return d; };
+/* صور المنتج: تحميل الدقة الكاملة عند الفتح */
+const _sdBindImg = VIEWS.drawsimple.bind;
+VIEWS.drawsimple.bind = function(){ _sdBindImg.apply(this, arguments); $$('.sdimg img[data-iid]').forEach(async el => { try{ const d = await imgCacheGet(el.dataset.iid); if(d) el.src = d; }catch(e){} }); };
+
+/* ================= [PRINT_SIMPLE] واجهة الطباعة المبسطة (لنفس حسابات السحب المبسط) – دون اسم عامل ================= */
+let SP = null;
+function newSP(){
+  const save = F; newRound('print'); const f = F; F = save; f.machine = 'الطابعة'; f.status = ''; f.q = ''; f.type = 'بدء تشغيل';
+  const t = todayStr(), last = S.rounds.filter(r => r.stage === 'print' && r.date === t).pop();
+  if(last){ f.items = itemsOf(last).map(i => ({...i})); f.order = String((f.items[0] || {}).order || ''); f.pinned = true; f.type = last.type === 'بدء تشغيل' ? 'فحص نهائي' : last.type || 'بدء تشغيل'; }
+  else if(typeof applyPlan === 'function') applyPlan(f, 'print', 'الطابعة');
+  const ls = typeof lastStopNow === 'function' ? lastStopNow('print', 'الطابعة') : null; if(ls){ f.status = 'stop'; f.reason = ls.reason; f.stopRecorded = ls.reason; }
+  SP = f; return f;
+}
+function spHtml(f){
+  const head = `<div class="mhd"><b>${LI('s_print')} الطابعة</b><div class="pick mst">${[['run','تعمل'],['stop','متوقفة']].map(([k,l]) => `<button class="${f.status===k?'on':''} ${k}" data-spst="${k}">${l}</button>`).join('')}</div></div>`;
+  if(f.status === 'stop') return head + `<div class="pick">${STOP_REASONS.map(([k,l]) => `<button class="${f.reason===k?'on':''}" data-sprs="${k}">${l}</button>`).join('')}</div>`;
+  if(f.status !== 'run') return head + '<p class="muted" style="margin:8px 0 0">اختر حالة الطابعة.</p>';
+  const it = (f.items || [])[0], o = it ? specOfItem(it) || ordRows(it.order)[0] : null, ord = it ? String(it.order) : '', res = f.q ? sdSearch(f.q) : [];
+  let rep = {}; try{ rep = o ? repeatInfo(o) : {}; }catch(e){}
+  const varn = o ? ((PF.find(x => x[0] === 'varn') || [])[2] || (() => ''))(o) : '';
+  const info = o ? [['اسم المنتج', o.product_name], ['الاسم العربي', o.product_name_arabic], ['قطر المنتج', o.product_diameter ? o.product_diameter + ' ملم' : ''], ['طول التيوب', o.tube_cylinder_length ? o.tube_cylinder_length + ' ملم' : ''],
+    ['التكرار الطولي', rep.n ? `${rep.n} تيوب (Z ${rep.z})` : ''], ['التكرار العرضي', rep.across ? `${rep.across} (عرض الرول ${rep.rollW || '—'} ÷ ${rep.tw || '—'})` : ''], ['الورنيش', varn || 'غير محدد في التصميم'], ['طباعة 360', o.is360 == 1 ? 'نعم' : o.is360 === 0 || o.is360 === '0' ? 'لا' : ''],
+    ['SET (معلومات الورق)', o.set], ['عرض الرول', rep.rollW ? rep.rollW + ' ملم' : ''], ['الحراري', o.cold_foil == 1 ? 'نعم' : ''], ['عدد الألوان', o.colors_count || o.colors], ['الزبون', o.customer]].filter(([, v]) => bcv(v)) : [];
+  const erp = o ? ERP_NOTES.filter(([k]) => bcv(o[k])).map(([k, l]) => `<div class="erpn"><b>${esc(l)}</b>${esc(bcv(o[k]))}</div>`).join('') : '';
+  const notes = ord && typeof allNotesFeed === 'function' ? allNotesFeed('', '', ord) : [];
+  return head + `<div class="pick" style="margin:8px 0">${['بدء تشغيل','فحص نهائي'].map(t => `<button class="${f.type===t?'on':''}" data-sptype="${t}">${t === 'بدء تشغيل' ? 'بداية التشغيل' : 'الفحص النهائي'}</button>`).join('')}</div>
+    <div class="sdsearch"><label class="f">بحث عن الطلبية: رقم، اسم عربي أو إنكليزي، أو قطر<input type="search" data-spq value="${esc(f.q || '')}" placeholder="مثال: لوفاج 35 أو 260635"></label>
+      ${res.length ? `<div class="sdres">${res.map(x => `<button data-sppick="${esc(x.order_number)}|${esc(x.product_code || '')}"><b class="num">${esc(x.order_number)}</b><span>${esc(x.product_name || '')}${x.product_name_arabic ? ' · ' + esc(x.product_name_arabic) : ''}</span><em>قطر ${esc(x.product_diameter || '—')}</em></button>`).join('')}</div>` : f.q ? '<p class="muted">لا نتائج.</p>' : ''}</div>
+    ${it ? `<div class="sdsel">${f.pinned ? '<span class="planbadge">📌 مثبّتة من آخر جولة اليوم – يمكنك تغييرها</span>' : f.fromPlan ? '<span class="planbadge">📋 من خطة الإنتاج</span>' : ''}<b>${esc(it.product || (o || {}).product_name || '')}</b><span>طلبية <b class="num">${esc(ord)}</b>${o && o.product_diameter ? ` · قطر <b>${esc(o.product_diameter)}</b>` : ''}</span></div>
+    <details class="sdbox"><summary>📦 معلومات المنتج وصورة التصميم (اضغط للعرض)</summary>${sdImg(o)}<div class="bspec">${info.map(([l, v]) => `<div><span>${esc(l)}</span><b>${esc(bcv(v))}</b></div>`).join('')}</div>${erp ? `<h4>ملاحظات ERP</h4><div class="erpns">${erp}</div>` : ''}</details>
+    <details class="sdbox"><summary>💬 ملاحظات على الطلبية (${notes.length}) (اضغط للعرض)</summary>${notes.length ? notes.slice(0, 40).map(n => `<div class="bwr"><span class="num">${esc(n.date)} ${esc(n.time)}</span><span><b>${esc(n.by || '')}</b><br><small>${esc(n.kind || '')}</small></span><span>${esc(n.text)}</span><span></span></div>`).join('') : '<p class="muted">لا توجد ملاحظات على هذه الطلبية.</p>'}</details>` : ''}
+    <label class="f" style="margin-top:8px">رقم الرول ${f.type === 'فحص نهائي' ? '<span class="req">*</span> <small class="muted">(عدة رولات: افصل بفاصلة)</small>' : '<small class="muted">(اختياري)</small>'}<input type="text" data-sproll value="${esc(f.rollsTxt || '')}" placeholder="${f.type === 'فحص نهائي' ? 'مثال: 1، 2، 3' : ''}"></label>
+    <label class="f" style="margin-top:8px">ملاحظات الجودة<textarea rows="2" data-spnotes>${esc(f.notes || '')}</textarea></label>
+    <h3 class="mh3">القرار <span class="req">*</span></h3><div class="dec">${DECISIONS.map(d => `<button data-spdec="${d}" data-d="${d}" class="${f.decision===d?'on':''}">${d}</button>`).join('')}</div>`;
+}
+VIEWS.printsimple = {
+  html(){ if(!SP) newSP();
+    return `<div class="pagehead"><div><h1 style="margin:0;display:flex;align-items:center;gap:12px"><span class="sti big">${LI('s_print')}</span>جولة مرحلة الطباعة</h1><p>الواجهة المبسطة – الطلبية مثبّتة من آخر جولة اليوم ويمكن تغييرها.</p></div><button class="btn" id="spBack">رجوع</button></div>
+      <div class="panel dmach ${SP.status}" data-spm>${spHtml(SP)}</div><div class="sticky-save"><button class="btn p" id="spSave">حفظ جولة الطباعة</button></div>`; },
+  bind(){
+    const f = SP, p = $('[data-spm]'), upd = () => rerender();
+    $('#spBack').onclick = () => go('prod');
+    p.querySelectorAll('[data-spst]').forEach(b => b.onclick = () => { f.status = b.dataset.spst; upd(); });
+    p.querySelectorAll('[data-sprs]').forEach(b => b.onclick = () => { f.reason = b.dataset.sprs; upd(); });
+    p.querySelectorAll('[data-sptype]').forEach(b => b.onclick = () => { f.type = b.dataset.sptype; upd(); });
+    const s = p.querySelector('[data-spq]'); if(s) s.oninput = () => { f.q = s.value; clearTimeout(s._t); s._t = setTimeout(() => { const pos = s.selectionStart; rerender(); const n = document.querySelector('[data-spq]'); if(n){ n.focus(); n.setSelectionRange(pos, pos); } }, 350); };
+    p.querySelectorAll('[data-sppick]').forEach(b => b.onclick = () => { const [o, code] = b.dataset.sppick.split('|'); const r = ordRows(o).find(x => (x.product_code || '') === code) || ordRows(o)[0] || {}; f.items = [{order: o, code: r.product_code || '', product: r.product_name || '', customer: r.customer || ''}]; f.order = o; f.q = ''; f.pinned = false; f.fromPlan = false; upd(); });
+    const rl = p.querySelector('[data-sproll]'); if(rl) rl.oninput = () => f.rollsTxt = rl.value;
+    const nt = p.querySelector('[data-spnotes]'); if(nt) nt.oninput = () => f.notes = nt.value;
+    p.querySelectorAll('[data-spdec]').forEach(b => b.onclick = () => { f.decision = b.dataset.spdec; upd(); });
+    $$('.sdimg img[data-iid]').forEach(async el => { try{ const d = await imgCacheGet(el.dataset.iid); if(d) el.src = d; }catch(e){} });
+    $('#spSave').onclick = () => {
+      if(!f.status){ toast('اختر حالة الطابعة'); return; }
+      const d = new Date();
+      if(f.status === 'stop'){ if(!f.reason){ toast('اختر سبب التوقف'); return; } if(f.stopRecorded !== f.reason){ S.stops = S.stops || []; S.stops.push({id: uid(), date: todayStr(d), time: timeStr(d), shift: S.settings.shift, inspector: S.settings.inspector, stage: 'print', machine: 'الطابعة', reason: f.reason, reasonLabel: stopLabel(f.reason), detail: ''}); save(); } toast('سُجّلت الطابعة متوقفة'); SP = null; go('prod'); return; }
+      if(!(f.items || []).length){ toast('اختر الطلبية'); return; }
+      const rolls = String(f.rollsTxt || '').split(/[،,]+/).map(x => x.trim()).filter(Boolean);
+      if(f.type === 'فحص نهائي' && !rolls.length){ toast('اكتب رقم الرول'); return; }
+      if(!f.decision){ toast('اختر القرار'); return; }
+      const keep = {items: f.items, order: f.order};
+      const save_ = F; F = f; F.extra = F.extra || {}; F.extra.roll = rolls[0] || ''; F.cls = simpleCls(f);
+      if(f.type === 'فحص نهائي') F.rolls = rolls.map(no => ({no, st: f.decision === 'مرفوض' || f.decision === 'محجور' ? 'bad' : f.decision === 'مقبول بملاحظة' ? 'note' : 'ok', note: f.decision === 'مقبول' ? '' : (f.notes || '')}));
+      let ok = false; try{ const before = S.rounds.length; saveRound(); ok = S.rounds.length > before; } finally { F = save_; }
+      if(!ok) return;
+      SP = null; newSP(); if(keep.items) Object.assign(SP, keep, {pinned: true}); go('prod');
+    };
+  }
+};
+PARENT.printsimple = 'prod'; NAV_OF.printsimple = 'prod'; PAGE.printsimple = ['جولات الإنتاج', 'جولة الطباعة'];
+const _prodBindSP = VIEWS.prod.bind;
+VIEWS.prod.bind = function(){ _prodBindSP.apply(this, arguments); if(isSimpleDraw()) $$('[data-st="print"]').forEach(b => b.onclick = () => { if(!SP) newSP(); go('printsimple'); }); };
 
 /* ================= [SHIFT_TIMES] الوردية تُحدد تلقائياً حسب الساعة ================= */
 const SHIFT_TIMES = {morning: [8, 16], evening: [16, 24]};   /* الصباحية 08:00–16:00 · المسائية 16:00–24:00 */
@@ -6890,6 +7005,121 @@ function autoShift(silent){
 setTimeout(() => autoShift(true), 1500); setInterval(() => autoShift(false), 60000);
 /* الوردية الصباحية تُعتبر منتهية بعد الساعة 16:00 */
 shiftClosed = function(date, shift){ const t = todayStr(), h = new Date().getHours(); return date < t || (date === t && shift === 'صباحية' && h >= SHIFT_TIMES.morning[1]); };
+/* الوردية دائماً حسب الساعة: قبل أي ضغطة (حفظ جولة، توقف، مراقبة…) تُصحح الوردية، وزر الوردية للعرض فقط */
+document.addEventListener('click', e => {
+  const s = shiftForTime();
+  if(e.target.closest('#shiftSeg button')){ e.preventDefault(); e.stopPropagation(); if(S.settings.shift !== s){ S.settings.shift = s; try{ renderHeader(); }catch(_){} } toast(`الوردية تُحدد تلقائياً حسب الساعة: الآن ${s} (الصباحية 08:00–16:00 · المسائية 16:00–24:00)`); return; }
+  if(S.settings.shift !== s){ S.settings.shift = s; try{ saveDevicePrefs(); renderHeader(); }catch(_){} }
+}, true);
+/* تصحيح الجولات المسجّلة بوردية خاطئة (حسب وقتها) – يعمل على جهاز مدير ضبط الجودة */
+function fixShiftsByTime(){
+  if(!isMgr() || !serverMode) return 0; let n = 0; const since = addDays(todayStr(), -30);
+  const fix = x => { if(!x || !x.time || !x.date || x.date < since) return; const [h, m] = String(x.time).split(':').map(Number); if(isNaN(h)) return; const s = shiftForTime(new Date(2000, 0, 1, h, m || 0)); if(x.shift !== s){ x.shift = s; n++; } };
+  (S.rounds || []).forEach(fix); (S.stops || []).forEach(fix); (S.holds || []).forEach(fix);
+  if(n){ S.shiftsums = (S.shiftsums || []).filter(x => !x.auto || S.rounds.some(r => r.date === x.date && r.shift === x.shift && sameP(r.inspector, x.inspector))); save(); }
+  return n;
+}
+setTimeout(() => { try{ const n = fixShiftsByTime(); if(n) toast(`صُححت الوردية في ${n} سجل حسب وقت التسجيل`); }catch(e){} }, 6000);
+
+/* ================= [SAMPLES] أرشيف العينات: رقم ثابت لكل زبون، وكرتونة لكل زبون (5، 5.1، 5.2…)، ولصاقة أرشفة ================= */
+const LABEL_SIZE = () => ({w: +(S.settings.labelW || 80), h: +(S.settings.labelH || 35)});   /* [LABEL_SIZE] مقاس اللصاقة بالملم */
+function custNo(customer){ const m = S.settings.custArchive || {}; return m[String(customer || '').trim()] || ''; }
+function ensureCustNo(customer){
+  const c = String(customer || '').trim(); if(!c) return ''; const m = {...(S.settings.custArchive || {})}; if(m[c]) return m[c];
+  const next = Math.max(0, ...Object.values(m).map(v => parseInt(v) || 0)) + 1; m[c] = String(next); S.settings.custArchive = m; return m[c];
+}
+function cartonsOf(customer){ return [...new Set((S.samples || []).filter(x => x.customer === customer).map(x => x.carton))].sort((a, b) => parseFloat(a) - parseFloat(b) || String(a).localeCompare(String(b))); }
+/* ---------- Code128-B باركود ---------- */
+const C128 = ['212222','222122','222221','121223','121322','131222','122213','122312','132212','221213','221312','231212','112232','122132','122231','113222','123122','123221','223211','221132','221231','213212','223112','312131','311222','321122','321221','312212','322112','322211','212123','212321','232121','111323','131123','131321','112313','132113','132311','211313','231113','231311','112133','112331','132131','113123','113321','133121','313121','211331','231131','213113','213311','213131','311123','311321','331121','312113','312311','332111','314111','221411','431111','111224','111422','121124','121421','141122','141221','112214','112412','122114','122411','142112','142211','241211','221114','413111','241112','134111','111242','121142','121241','114212','124112','124211','411212','421112','421211','212141','214121','412121','111143','111341','131141','114113','114311','411113','411311','113141','114131','311141','411131','211412','211214','211232','2331112'];
+function code128Svg(text, hMm){
+  const codes = [104]; String(text).split('').forEach(ch => codes.push(Math.max(0, Math.min(94, ch.charCodeAt(0) - 32))));
+  let sum = codes[0]; for(let i = 1; i < codes.length; i++) sum += codes[i] * i; codes.push(sum % 103); codes.push(106);
+  let x = 10, bars = ''; codes.forEach(c => { const p = C128[c]; for(let i = 0; i < p.length; i++){ const w = +p[i]; if(i % 2 === 0) bars += `<rect x="${x}" y="0" width="${w}" height="40"/>`; x += w; } });
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${x + 10} 40" preserveAspectRatio="none" style="width:100%;height:${hMm}mm">${bars}</svg>`;
+}
+/* ---------- طباعة اللصاقة على طابعة اللصاقات (Rongta RP400H) ---------- */
+function labelHtml(order, extra){
+  const {w, h} = LABEL_SIZE(), bc = S.settings.labelBarcode;
+  return `<div class="lbl" style="width:${w}mm;height:${h}mm"><div class="lg"><img src="${LOGO}" alt=""></div>
+    <div class="lt"><u>order number :</u><b>${esc(order)}</b>${extra ? `<i dir="auto" style="unicode-bidi:plaintext">${esc(extra)}</i>` : ''}${bc ? code128Svg(order, Math.max(6, h * .22)) : ''}</div></div>`;
+}
+function printLabels(list){
+  if(!list.length) return; const {w, h} = LABEL_SIZE();
+  const css = `@page{size:${w}mm ${h}mm;margin:0}html,body{margin:0;padding:0}body{font-family:Arial,Helvetica,sans-serif}
+    .lbl{box-sizing:border-box;display:flex;align-items:center;gap:2mm;padding:1.5mm 2mm;page-break-after:always;overflow:hidden;color:#000}
+    .lg{width:24%;display:flex;flex-direction:column;align-items:center}.lg img{width:100%;filter:grayscale(1) contrast(1.4)}.lg span{font-size:2.2mm;white-space:nowrap}
+    .lt{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1}.lt u{font-size:${(h * .13).toFixed(1)}mm;margin-bottom:1mm}
+    .lt b{font-size:${(h * .38).toFixed(1)}mm;font-weight:900;letter-spacing:.5mm}.lt i{font-style:normal;font-size:${(h * .1).toFixed(1)}mm;margin-top:.8mm}svg{margin-top:1mm}`;
+  let f = document.getElementById('lblFrame'); if(f) f.remove();
+  f = document.createElement('iframe'); f.id = 'lblFrame'; f.style.cssText = 'position:fixed;width:0;height:0;border:0;left:-9999px'; document.body.appendChild(f);
+  const d = f.contentWindow.document; d.open(); d.write(`<!doctype html><html><head><meta charset="utf-8"><style>${css}</style></head><body>${list.map(x => labelHtml(x.order, x.extra)).join('')}</body></html>`); d.close();
+  setTimeout(() => { try{ f.contentWindow.focus(); f.contentWindow.print(); }catch(e){ toast('تعذرت الطباعة من هذا الجهاز'); } }, 400);
+}
+/* ---------- صفحة أرشيف العينات ---------- */
+ICONS.samples = LI('box') || LI('file');
+NAV.find(g => g.g === 'العمليات اليومية').items.push(['samples', 'أرشيف العينات']);
+PAGE.samples = ['العمليات اليومية', 'أرشيف العينات'];
+let SA = {tab: 'add', order: '', carton: '', qty: '', note: '', q: '', cust: ''};
+VIEWS.samples = {
+  html(){
+    const tabs = `<div class="pick" style="margin-bottom:12px">${[['add','أرشفة طلبية'],['list','سجل الأرشيف (' + (S.samples || []).length + ')'],['cust','أرقام الزبائن'],['lbl','إعداد اللصاقة']].map(([k, l]) => `<button class="${SA.tab===k?'on':''}" data-sat="${k}">${l}</button>`).join('')}</div>`;
+    const head = `<div class="pagehead"><div><h1 style="margin:0">أرشيف العينات</h1><p>لكل زبون رقم ثابت، وكرتونة الأرشيف تحمل رقمه (5)، ويمكن فتح كراتين إضافية له (5.1، 5.2…). مع طباعة لصاقة الأرشفة.</p></div></div>` + tabs;
+    if(SA.tab === 'add'){
+      const r = SA.order ? ordRows(SA.order)[0] : null, cust = r ? r.customer : '', no = cust ? (custNo(cust) || '(جديد)') : '', cs = cust ? cartonsOf(cust) : [];
+      if(r && !SA.carton) SA.carton = custNo(cust) || '';
+      const prev = SA.order ? (S.samples || []).filter(x => String(x.order) === String(SA.order)) : [];
+      return head + `<div class="panel"><label class="f">رقم الطلبية أو اسم المنتج (عربي أو إنكليزي)<input type="text" id="saQ" list="ordList" value="${esc(SA.order)}"></label>
+        ${r ? `<div class="sacard"><div><span>المنتج</span><b>${esc(r.product_name || '')}</b><small>${esc(r.product_name_arabic || '')}${r.product_diameter ? ' · قطر ' + esc(r.product_diameter) : ''}</small></div><div><span>الزبون</span><b>${esc(cust)}</b></div><div class="big"><span>رقم الزبون</span><b>${esc(no)}</b></div></div>
+          ${prev.length ? `<div class="banner info">هذه الطلبية مؤرشفة سابقاً في: ${prev.map(x => `كرتونة <b>${esc(x.carton)}</b> (${esc(x.date)})`).join('، ')}</div>` : ''}
+          <div class="grid" style="margin-top:10px"><label class="f">رقم الكرتونة<input type="text" id="saC" value="${esc(SA.carton)}" list="saCList"><datalist id="saCList">${cs.map(c => `<option value="${esc(c)}">`).join('')}${no && no !== '(جديد)' ? `<option value="${esc(no)}.${cs.filter(c => String(c).startsWith(no + '.')).length + 1}">` : ''}</datalist><small class="muted">الكراتين المفتوحة لهذا الزبون: ${cs.map(esc).join('، ') || 'لا يوجد'}</small></label>
+            <label class="f">عدد التيوبات المؤرشفة<input type="number" id="saN" value="${esc(SA.qty)}" min="1"></label></div>
+          <label class="f" style="margin-top:8px">ملاحظة<input type="text" id="saNote" value="${esc(SA.note)}" placeholder="اختياري"></label>
+          <div class="row" style="margin-top:10px"><button class="btn p" id="saSave">حفظ الأرشفة</button><button class="btn" id="saSaveP">حفظ وطباعة اللصاقة 🏷</button><button class="btn" id="saP">طباعة اللصاقة فقط</button></div>` : '<p class="muted" style="margin-top:8px">اختر الطلبية.</p>'}</div>
+        ${typeof orderDatalist === 'function' ? orderDatalist() : ''}`;
+    }
+    if(SA.tab === 'list'){
+      const list = (S.samples || []).filter(x => (!SA.cust || x.customer === SA.cust) && (!SA.q || qMatch(SA.q, x.order, x.product, x.customer, x.carton, orderText(x.order)))).sort((a, b) => (b.date + b.time).localeCompare(a.date + a.time));
+      const custs = [...new Set((S.samples || []).map(x => x.customer))].filter(Boolean);
+      return head + `<div class="panel rafl"><div class="grid"><label class="f">بحث (طلبية، منتج عربي أو إنكليزي، كرتونة)<input type="search" id="saF" value="${esc(SA.q)}"></label><label class="f">الزبون<select id="saCu"><option value="">الكل</option>${custs.map(c => `<option ${SA.cust===c?'selected':''} value="${esc(c)}">${esc(custNo(c) ? custNo(c) + ' – ' : '')}${esc(c)}</option>`).join('')}</select></label></div></div>
+        <div class="tw" style="margin-top:10px"><table class="t"><thead><tr><th>التاريخ</th><th>الكرتونة</th><th>الطلبية</th><th>المنتج</th><th>الزبون</th><th>العدد</th><th>بواسطة</th><th></th></tr></thead><tbody>
+        ${list.map(x => `<tr><td class="num">${esc(x.date)}</td><td class="num"><b class="cartno">${esc(x.carton)}</b></td><td class="num">${esc(x.order)}</td><td>${esc(x.product)}${x.note ? '<div class="muted">' + esc(x.note) + '</div>' : ''}</td><td>${esc(x.customer)}</td><td class="num">${esc(x.qty || '')}</td><td class="sm">${esc(x.by)}</td><td><div class="row" style="flex-wrap:nowrap"><button class="btn sm" data-salbl="${esc(x.id)}">🏷 لصاقة</button>${isMgr() ? `<button class="btn sm d" data-sadel="${esc(x.id)}">حذف</button>` : ''}</div></td></tr>`).join('') || '<tr><td colspan="8" class="muted">لا توجد عينات مؤرشفة.</td></tr>'}</tbody></table></div>`;
+    }
+    if(SA.tab === 'cust'){
+      const m = S.settings.custArchive || {}, rows = Object.entries(m).sort((a, b) => (parseInt(a[1]) || 0) - (parseInt(b[1]) || 0));
+      return head + `<div class="tw"><table class="t"><thead><tr><th>رقم الزبون</th><th>الزبون</th><th>الكراتين</th><th>عدد الطلبيات المؤرشفة</th></tr></thead><tbody>
+        ${rows.map(([c, n]) => `<tr><td>${isMgr() ? `<input type="text" class="num" data-cuno="${esc(c)}" value="${esc(n)}" style="width:80px">` : `<b>${esc(n)}</b>`}</td><td>${esc(c)}</td><td class="num">${cartonsOf(c).map(esc).join('، ')}</td><td class="num">${(S.samples || []).filter(x => x.customer === c).length}</td></tr>`).join('') || '<tr><td colspan="4" class="muted">يُعطى كل زبون رقماً تلقائياً عند أرشفة أول طلبية له.</td></tr>'}</tbody></table></div>
+        <p class="muted">رقم الزبون ثابت. ${isMgr() ? 'يمكن لمدير ضبط الجودة تعديله.' : ''}</p>`;
+    }
+    const {w, h} = LABEL_SIZE();
+    return head + `<div class="panel"><div class="grid"><label class="f">عرض اللصاقة (ملم)<input type="number" id="lbW" value="${w}"></label><label class="f">ارتفاع اللصاقة (ملم)<input type="number" id="lbH" value="${h}"></label>
+        <label class="f chk2"><span><input type="checkbox" id="lbB" ${S.settings.labelBarcode ? 'checked' : ''}> إضافة باركود لرقم الطلبية</span></label></div>
+      <h3>معاينة</h3><div class="lblprev">${labelHtml('260547', 'كرتونة 5 · Madar Co.')}</div>
+      <button class="btn" id="lbTest" style="margin-top:10px">طباعة لصاقة تجريبية</button>
+      <div class="banner info" style="margin-top:12px"><b>طريقة الربط مع طابعة Rongta RP400H:</b><br>1. الطباعة من <b>لابتوب القسم</b> (عليه تعريف الطابعة "Rongta RP4xx Series").<br>2. عند أول طباعة اختر الطابعة <b>Rongta RP4xx Series</b>، والهوامش: <b>بلا</b>، والمقياس: <b>100%</b>، ثم "طباعة". يتذكر Chrome الطابعة في المرات التالية.<br>3. في إعدادات الطابعة على ويندوز: مقاس الورق = مقاس اللصاقة أعلاه.</div></div>`;
+  },
+  bind(){
+    $$('[data-sat]').forEach(b => b.onclick = () => { SA.tab = b.dataset.sat; rerender(); });
+    $('#saQ') && ($('#saQ').onchange = e => { const o = typeof orderFromInput === 'function' ? orderFromInput(e.target) : e.target.value.trim(); if(o === null) return; SA.order = o; SA.carton = ''; setTimeout(rerender, 0); });
+    const keep = () => { SA.carton = ($('#saC') || {}).value || ''; SA.qty = ($('#saN') || {}).value || ''; SA.note = ($('#saNote') || {}).value || ''; };
+    const doSave = printIt => { keep(); const r = ordRows(SA.order)[0]; if(!r){ toast('اختر الطلبية'); return; } const cust = r.customer || ''; const no = ensureCustNo(cust); const carton = SA.carton.trim() || no;
+      if(!String(carton).split('.')[0] || String(carton).split('.')[0] !== String(no)){ toast(`رقم الكرتونة يجب أن يبدأ برقم الزبون ${no} (مثل ${no} أو ${no}.1)`); return; }
+      const d = new Date(); S.samples = S.samples || []; S.samples.push({id: uid(), order: SA.order, product: r.product_name || '', code: r.product_code || '', customer: cust, custNo: no, carton, qty: SA.qty, note: SA.note, by: CUR.name || S.settings.inspector, date: todayStr(d), time: timeStr(d)});
+      save(); toast(`أُرشفت الطلبية ${SA.order} في الكرتونة ${carton}`); if(printIt) printLabels([{order: SA.order, extra: `كرتونة ${carton} · ${cust}`}]); SA = {...SA, order: '', carton: '', qty: '', note: ''}; rerender(); };
+    $('#saSave') && ($('#saSave').onclick = () => doSave(false)); $('#saSaveP') && ($('#saSaveP').onclick = () => doSave(true));
+    $('#saP') && ($('#saP').onclick = () => { keep(); const r = ordRows(SA.order)[0]; printLabels([{order: SA.order, extra: r ? `كرتونة ${SA.carton || custNo(r.customer) || ''} · ${r.customer || ''}` : ''}]); });
+    $('#saF') && ($('#saF').onchange = e => { SA.q = e.target.value; rerender(); }); $('#saCu') && ($('#saCu').onchange = e => { SA.cust = e.target.value; rerender(); });
+    $$('[data-salbl]').forEach(b => b.onclick = () => { const x = S.samples.find(y => y.id === b.dataset.salbl); printLabels([{order: x.order, extra: `كرتونة ${x.carton} · ${x.customer}`}]); });
+    $$('[data-sadel]').forEach(b => b.onclick = () => ask('حذف هذا السجل من الأرشيف؟', 'حذف', () => { S.samples = S.samples.filter(y => y.id !== b.dataset.sadel); save(); rerender(); }, true));
+    $$('[data-cuno]').forEach(el => el.onchange = () => { S.settings.custArchive = {...(S.settings.custArchive || {}), [el.dataset.cuno]: el.value.trim()}; save(); toast('حُفظ رقم الزبون'); });
+    $('#lbW') && ($('#lbW').onchange = e => { S.settings.labelW = +e.target.value || 80; save(); rerender(); }); $('#lbH') && ($('#lbH').onchange = e => { S.settings.labelH = +e.target.value || 35; save(); rerender(); });
+    $('#lbB') && ($('#lbB').onchange = e => { S.settings.labelBarcode = e.target.checked; save(); rerender(); });
+    $('#lbTest') && ($('#lbTest').onclick = () => printLabels([{order: '260547', extra: 'كرتونة 5 · تجربة'}]));
+  }
+};
+/* زر لصاقة في لوحة ملاحظات الطلبيات وتقرير الطلبية */
+const _bdHtmlLbl = VIEWS.board.html;
+VIEWS.board.html = function(){ const h = _bdHtmlLbl.apply(this, arguments); if(!BD.order) return h; return h.replace('<button class="btn sm" id="bdClr">', `<button class="btn sm" data-qlbl="${esc(BD.order)}">🏷 لصاقة أرشفة</button><button class="btn sm" id="bdClr">`); };
+document.addEventListener('click', e => { const b = e.target.closest('[data-qlbl]'); if(!b) return; const r = ordRows(b.dataset.qlbl)[0] || {}; printLabels([{order: b.dataset.qlbl, extra: r.customer ? `${custNo(r.customer) ? 'كرتونة ' + custNo(r.customer) + ' · ' : ''}${r.customer}` : ''}]); });
 
 /* ================= SERVER SYNC (لابتوب القسم) ================= */
 const PWA_API = (typeof window !== 'undefined' && window.PWA_API && /^(https:\/\/|http:\/\/localhost)/.test(window.PWA_API)) ? window.PWA_API : '';
@@ -6912,6 +7142,8 @@ function rpc(fn, arg){
   if(PWA_API && !(typeof google !== 'undefined' && google.script && google.script.run)) return pwaCall(fn, arg);
   return new Promise((res, rej) => { const tm = setTimeout(() => rej(new Error('NET')), RPC_TIMEOUT(fn) + 10000); google.script.run.withSuccessHandler(v => { clearTimeout(tm); res(v); }).withFailureHandler(e => { clearTimeout(tm); rej(e); })[fn](arg); });
 }
+/* [PIN_DIGITS] الأرقام العربية (٠١٢٣) والفارسية تُقبل في الرمز السري */
+function normDigits(v){ return String(v == null ? '' : v).replace(/[\u0660-\u0669]/g, d => String(d.charCodeAt(0) - 0x0660)).replace(/[\u06F0-\u06F9]/g, d => String(d.charCodeAt(0) - 0x06F0)).replace(/\s+/g, ''); }
 async function apiLogin(user, pin){
   if(GAS_MODE) return JSON.parse(await rpc('login', JSON.stringify({user, pin})));
   const r = await fetch('api/login', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({user, pin})});
@@ -6953,7 +7185,7 @@ window.addEventListener('online', () => { if(CUR && CUR.role) syncNow(); });
 window.addEventListener('offline', () => { online = false; updateSyncPill(); render(); });
 let serverMode = false, online = true, syncVer = 0, syncing = false, syncTimer = null, lastSync = null, snap = {}, settingsSnap = '';
 const CLIENT = 'c' + Date.now().toString(36) + Math.random().toString(36).slice(2,6);
-const SYNC_COLS = ['rounds','holds','handovers','mats','ncrs','complaints','audits','cals','ths','aid','coas','reports','pimgs','stops','shiftsums','savedreps','plans','onotes'];
+const SYNC_COLS = ['rounds','holds','handovers','mats','ncrs','complaints','audits','cals','ths','aid','coas','reports','pimgs','stops','shiftsums','savedreps','plans','onotes','samples'];
 const FORM_VIEWS = ['round','matform','ncrform','auditform','compform','data','hand','letter','coaprint'];
 const keyOf = x => String(x.id ?? x.no ?? [x.date,x.time,x.type,x.code,x.loc,x.name,x.from].map(v=>v??'').join('|'));
 const strip = x => { const {_m,_v,_c,...r} = x; return JSON.stringify(r); };
@@ -6972,7 +7204,7 @@ async function askPin(wrong){
     <button class="btn p" id="pinOk" style="width:100%;margin-top:14px">دخول</button>`;
   $('#modal').classList.remove('hide'); $('#modal').classList.add('loginmode'); $('#pinIn').focus();
   const go_ = async () => {
-    const user = $('#uIn').value.trim(), pin = $('#pinIn').value.trim(); LAST_USER = user;
+    const user = $('#uIn').value.trim(), pin = normDigits($('#pinIn').value); LAST_USER = user;
     const h = await sha(user + '|' + pin + '|fet-qc');
     try{ const r = await apiLogin(user, pin); CUR = {name:r.name, role:r.role, title:r.title||''}; GAS_PIN = pin; IDB.set('auth:' + user, {h, role:r.role}); }
     catch(e){
