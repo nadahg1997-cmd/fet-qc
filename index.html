@@ -885,6 +885,10 @@ body.insp [data-st]{transition:transform .15s, box-shadow .15s}body.insp [data-s
 .tkstop{background:#B83227;color:#fff;border-radius:12px;padding:14px;font-size:18px;font-weight:800;margin:12px 0;display:flex;flex-direction:column;gap:10px}.tkstop label{font-size:17px;display:flex;gap:10px;align-items:center}.tkstop input{width:26px;height:26px}
 @media(max-width:1000px){.tkcols,.tkcols.four{grid-template-columns:1fr}}
 .mcsave{width:100%;margin-top:12px}
+.escbox{margin:10px 0;background:#FFF8F1;border:1px dashed #E8A06A;border-radius:12px;padding:8px 10px}.escbox > b{display:block;margin-bottom:6px;color:#8A4B12}
+.escl{margin-top:8px;display:flex;flex-direction:column;gap:4px}.escp{display:flex;gap:6px;align-items:center}.escp input{width:20px;height:20px;min-height:0!important}
+.escadd{display:flex;gap:6px;flex-wrap:wrap;margin-top:4px}.escadd select{min-height:38px}.escadd input{flex:1;min-width:140px;min-height:38px!important}
+.qcesc{border:2px solid #7B4BB7}
 </style>
 </head>
 <body>
@@ -937,6 +941,7 @@ if(document.readyState === 'loading') document.addEventListener('DOMContentLoade
    [MAT_SAMPLE] قاعدة عينة كل مادة واردة · [MATLIB] أرشيف أكواد المواد
    [TH_LOCS] أماكن الحرارة والرطوبة · [CAL_WINDOWS] مواعيد التحقق من أدوات القياس
    [ORDER_SEARCH] البحث برقم الطلبية أو اسم المنتج · [AUDIT_WEEK] المراقبات الأسبوعية
+   [ESCAPE] التسرّب بين المراحل
    [PLAIN_UI_USERS] واجهة بسيطة (حساب إيهاب) · [PER_MACHINE_SAVE] حفظ كل آلة وحدها
    [TICKETS] تذكرة المشكلة بين عمال التشييك والجودة
    [MY_DAY] تقرير عملي اليوم للمراقب
@@ -3996,7 +4001,7 @@ VIEWS.data.bind = function(){
 
 const LUCIDE = {"home": "<path d=\"M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8\" /> <path d=\"M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z\" />", "prod": "<path d=\"M12 16h.01\" /> <path d=\"M16 16h.01\" /> <path d=\"M3 19a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5a.5.5 0 0 0-.769-.422l-4.462 2.844A.5.5 0 0 1 15 10.5v-2a.5.5 0 0 0-.769-.422L9.77 10.922A.5.5 0 0 1 9 10.5V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2z\" /> <path d=\"M8 16h.01\" />", "mat": "<path d=\"M12 22V12\" /> <path d=\"m16 17 2 2 4-4\" /> <path d=\"M21 11.127V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.729l7 4a2 2 0 0 0 2 .001l1.32-.753\" /> <path d=\"M3.29 7 12 12l8.71-5\" /> <path d=\"m7.5 4.27 8.997 5.148\" />", "ncr": "<path d=\"M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z\" /> <path d=\"M12 8v4\" /> <path d=\"M12 16h.01\" />", "hold": "<path d=\"M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z\" /> <path d=\"m3.3 7 8.7 5 8.7-5\" /> <path d=\"M12 22V12\" />", "mon": "<rect width=\"8\" height=\"4\" x=\"8\" y=\"2\" rx=\"1\" ry=\"1\" /> <path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\" /> <path d=\"m9 14 2 2 4-4\" />", "rep": "<path d=\"M3 3v16a2 2 0 0 0 2 2h16\" /> <path d=\"M18 17V9\" /> <path d=\"M13 17V5\" /> <path d=\"M8 17v-3\" />", "team": "<path d=\"M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2\" /> <path d=\"M16 3.128a4 4 0 0 1 0 7.744\" /> <path d=\"M22 21v-2a4 4 0 0 0-3-3.87\" /> <circle cx=\"9\" cy=\"7\" r=\"4\" />", "mgr": "<path d=\"M16 7h6v6\" /> <path d=\"m22 7-8.5 8.5-5-5L2 17\" />", "more": "<rect width=\"7\" height=\"7\" x=\"3\" y=\"3\" rx=\"1\" /> <rect width=\"7\" height=\"7\" x=\"14\" y=\"3\" rx=\"1\" /> <rect width=\"7\" height=\"7\" x=\"14\" y=\"14\" rx=\"1\" /> <rect width=\"7\" height=\"7\" x=\"3\" y=\"14\" rx=\"1\" />", "hand": "<path d=\"M8 3 4 7l4 4\" /> <path d=\"M4 7h16\" /> <path d=\"m16 21 4-4-4-4\" /> <path d=\"M20 17H4\" />", "comp": "<path d=\"M22 17a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 21.286V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2z\" /> <path d=\"M12 15h.01\" /> <path d=\"M12 7v4\" />", "coa": "<path d=\"m15.477 12.89 1.515 8.526a.5.5 0 0 1-.81.47l-3.58-2.687a1 1 0 0 0-1.197 0l-3.586 2.686a.5.5 0 0 1-.81-.469l1.514-8.526\" /> <circle cx=\"12\" cy=\"8\" r=\"6\" />", "sup": "<path d=\"M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2\" /> <path d=\"M15 18H9\" /> <path d=\"M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 17.52 8H14\" /> <circle cx=\"17\" cy=\"18\" r=\"2\" /> <circle cx=\"7\" cy=\"18\" r=\"2\" />", "data": "<ellipse cx=\"12\" cy=\"5\" rx=\"9\" ry=\"3\" /> <path d=\"M3 5V19A9 3 0 0 0 21 19V5\" /> <path d=\"M3 12A9 3 0 0 0 21 12\" />", "bell": "<path d=\"M10.268 21a2 2 0 0 0 3.464 0\" /> <path d=\"M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326\" />", "search": "<path d=\"m21 21-4.34-4.34\" /> <circle cx=\"11\" cy=\"11\" r=\"8\" />", "logout": "<path d=\"m16 17 5-5-5-5\" /> <path d=\"M21 12H9\" /> <path d=\"M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4\" />", "dash": "<rect width=\"7\" height=\"9\" x=\"3\" y=\"3\" rx=\"1\" /> <rect width=\"7\" height=\"5\" x=\"14\" y=\"3\" rx=\"1\" /> <rect width=\"7\" height=\"9\" x=\"14\" y=\"12\" rx=\"1\" /> <rect width=\"7\" height=\"5\" x=\"3\" y=\"16\" rx=\"1\" />", "s_design": "<path d=\"M15.707 21.293a1 1 0 0 1-1.414 0l-1.586-1.586a1 1 0 0 1 0-1.414l5.586-5.586a1 1 0 0 1 1.414 0l1.586 1.586a1 1 0 0 1 0 1.414z\" /> <path d=\"m18 13-1.375-6.874a1 1 0 0 0-.746-.776L3.235 2.028a1 1 0 0 0-1.207 1.207L5.35 15.879a1 1 0 0 0 .776.746L13 18\" /> <path d=\"m2.3 2.3 7.286 7.286\" /> <circle cx=\"11\" cy=\"11\" r=\"2\" />", "s_print": "<path d=\"M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2\" /> <path d=\"M6 9V3a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v6\" /> <rect x=\"6\" y=\"14\" width=\"12\" height=\"8\" rx=\"1\" />", "s_draw": "<ellipse cx=\"12\" cy=\"5\" rx=\"9\" ry=\"3\" /> <path d=\"M3 5v14a9 3 0 0 0 18 0V5\" />", "s_sort": "<path d=\"M2 5h20\" /> <path d=\"M6 12h12\" /> <path d=\"M9 19h6\" />", "s_mix": "<path d=\"M14 2v6a2 2 0 0 0 .245.96l5.51 10.08A2 2 0 0 1 18 22H6a2 2 0 0 1-1.755-2.96l5.51-10.08A2 2 0 0 0 10 8V2\" /> <path d=\"M6.453 15h11.094\" /> <path d=\"M8.5 2h7\" />", "s_inj": "<path d=\"m18 2 4 4\" /> <path d=\"m17 7 3-3\" /> <path d=\"M19 9 8.7 19.3c-1 1-2.5 1-3.4 0l-.6-.6c-1-1-1-2.5 0-3.4L15 5\" /> <path d=\"m9 11 4 4\" /> <path d=\"m5 19-3 3\" /> <path d=\"m14 4 6 6\" />", "s_asm": "<path d=\"M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.106-3.105c.32-.322.863-.22.983.218a6 6 0 0 1-8.259 7.057l-7.91 7.91a1 1 0 0 1-2.999-3l7.91-7.91a6 6 0 0 1 7.057-8.259c.438.12.54.662.219.984z\" />", "s_cap": "<path d=\"M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z\" /> <path d=\"M12 22V12\" /> <polyline points=\"3.29 7 12 12 20.71 7\" /> <path d=\"m7.5 4.27 9 5.15\" />", "s_seal": "<path d=\"M14 13V8.5C14 7 15 7 15 5a3 3 0 0 0-6 0c0 2 1 2 1 3.5V13\" /> <path d=\"M20 15.5a2.5 2.5 0 0 0-2.5-2.5h-11A2.5 2.5 0 0 0 4 15.5V17a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1z\" /> <path d=\"M5 22h14\" />", "s_final": "<path d=\"M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z\" /> <path d=\"m16 9-5.5 5.5L8 12\" />", "thermo": "<path d=\"M14 4v10.54a4 4 0 1 1-4 0V4a2 2 0 0 1 4 0Z\" />", "ruler": "<path d=\"M21.3 15.3a2.4 2.4 0 0 1 0 3.4l-2.6 2.6a2.4 2.4 0 0 1-3.4 0L2.7 8.7a2.41 2.41 0 0 1 0-3.4l2.6-2.6a2.41 2.41 0 0 1 3.4 0Z\" /> <path d=\"m14.5 12.5 2-2\" /> <path d=\"m11.5 9.5 2-2\" /> <path d=\"m8.5 6.5 2-2\" /> <path d=\"m17.5 15.5 2-2\" />", "clean": "<path d=\"M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z\" /> <path d=\"M20 2v4\" /> <path d=\"M22 4h-4\" /> <circle cx=\"4\" cy=\"20\" r=\"2\" />", "plus": "<circle cx=\"12\" cy=\"12\" r=\"10\" /> <path d=\"M8 12h8\" /> <path d=\"M12 8v8\" />", "ok": "<path d=\"M21.801 10A10 10 0 1 1 17 3.335\" /> <path d=\"m9 11 3 3L22 4\" />", "warn": "<path d=\"m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3\" /> <path d=\"M12 9v4\" /> <path d=\"M12 17h.01\" />", "file": "<path d=\"M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z\" /> <path d=\"M14 2v5a1 1 0 0 0 1 1h5\" /> <path d=\"M10 9H8\" /> <path d=\"M16 13H8\" /> <path d=\"M16 17H8\" />", "scan": "<path d=\"M3 7V5a2 2 0 0 1 2-2h2\" /> <path d=\"M17 3h2a2 2 0 0 1 2 2v2\" /> <path d=\"M21 17v2a2 2 0 0 1-2 2h-2\" /> <path d=\"M7 21H5a2 2 0 0 1-2-2v-2\" /> <circle cx=\"12\" cy=\"12\" r=\"3\" /> <path d=\"m16 16-1.9-1.9\" />", "clock": "<circle cx=\"12\" cy=\"12\" r=\"10\" /> <path d=\"M12 6v6l4 2\" />", "alert": "<path d=\"M12 16h.01\" /> <path d=\"M12 8v4\" /> <path d=\"M15.312 2a2 2 0 0 1 1.414.586l4.688 4.688A2 2 0 0 1 22 8.688v6.624a2 2 0 0 1-.586 1.414l-4.688 4.688a2 2 0 0 1-1.414.586H8.688a2 2 0 0 1-1.414-.586l-4.688-4.688A2 2 0 0 1 2 15.312V8.688a2 2 0 0 1 .586-1.414l4.688-4.688A2 2 0 0 1 8.688 2z\" />", "activity": "<path d=\"M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2\" />", "gauge": "<path d=\"m12 14 4-4\" /> <path d=\"M3.34 19a10 10 0 1 1 17.32 0\" />"};
 /* [VERSION] رقم إصدار البرنامج – يظهر أسفل القائمة وفي شاشة الدخول */
-const APP_VERSION = '14.3';
+const APP_VERSION = '14.4';
 let SERVER_VERSION = '';
 async function checkServerVersion(){ if(!GAS_MODE) return; try{ const v = JSON.parse(await rpc('serverVersion', '')); SERVER_VERSION = v.version + (v.ocr ? '' : ' (Drive API غير مفعّل)'); }catch(e){ SERVER_VERSION = /NET/.test(String(e && e.message || e)) ? '' : 'قديم – انشر إصداراً جديداً'; } try{ renderTabs(); }catch(e){} }
 /* [ERRORS] بدل الصفحة الفارغة: رسالة واضحة وزر إعادة تحميل */
@@ -6861,9 +6866,10 @@ VIEWS.orderrep = {
 const SIMPLE_DRAW_USERS = ['ايهاب حيدر', 'احمد احمد'];   /* [SIMPLE_DRAW_USERS] الحسابات التي تفتح لها واجهة السحب المبسطة */
 const isSimpleDraw = () => serverMode && CUR && SIMPLE_DRAW_USERS.some(n => sameP(n, CUR.name));
 /* [SIMPLE_STAGES] المراحل ذات الواجهة المبسطة: السحب، الحقن، التغطية والتعبئة، التركيب غير الآلي، التختيم */
-const SIMPLE_STAGES = ['draw','inj','cap','asm','seal'];
+const SIMPLE_STAGES = ['draw','sort','inj','cap','asm','seal'];
 /* [PER_MACHINE_SAVE] المراحل التي تُحفظ فيها كل آلة وحدها */
-const PER_MACHINE_SAVE = ['inj','cap'];
+const PER_MACHINE_SAVE = ['draw','sort','inj','cap'];   /* الواجهة المبسطة */
+const PER_MACHINE_SAVE_DM = ['inj','cap'];   /* الواجهة العادية */
 function sdSaveOne(m, doSave){
   const all = SD, only = {[m]: all[m]}; SD = only; SDS[SDK] = only;
   try{ doSave(); } catch(e){ console.error(e); }
@@ -6888,7 +6894,8 @@ function lastStopNow(stage, m){
   const lr = S.rounds.filter(r => r.stage === stage && r.machine === m && r.date === t && r.shift === sh).pop();
   return !lr || (lr.time || '') <= (st.time || '') ? st : null;
 }
-function sdMachines(st){ const ms = stageBy(st).machines.filter(m => m !== '—'); const extra = st === 'asm' ? S.rounds.filter(r => r.stage === 'asm' && r.date === todayStr() && /^محطة تركيب/.test(r.machine || '')).map(r => r.machine) : []; return [...new Set(ms.concat(extra))]; }
+function sdMachines(st){ if(st === 'sort'){ const n = typeof SORT_GATES !== 'undefined' ? SORT_GATES : 6; const base = Array.from({length: n}, (_, i) => 'عامل فرز ' + (i + 1)); const extra = S.rounds.filter(r => r.stage === 'sort' && r.date === todayStr() && /^عامل فرز/.test(r.machine || '')).map(r => r.machine); return [...new Set(base.concat(extra))]; }
+  const ms = stageBy(st).machines.filter(m => m !== '—'); const extra = st === 'asm' ? S.rounds.filter(r => r.stage === 'asm' && r.date === todayStr() && /^محطة تركيب/.test(r.machine || '')).map(r => r.machine) : []; return [...new Set(ms.concat(extra))]; }
 function newSD(){ SD = {}; sdMachines(SDK).forEach(m => SD[m] = sdEntry(m)); SDS[SDK] = SD; return SD; }
 function useSD(st){ SDK = st; SD = SDS[st] || null; if(!SD) newSD(); PAGE.drawsimple = ['جولات الإنتاج', 'جولة ' + stageBy(st).name]; }
 /* معلومات المنتج حسب المرحلة */
@@ -6936,7 +6943,7 @@ function sdMachineHtml(m, f){
     <details class="sdbox"><summary>📦 معلومات المنتج ${['draw','seal'].includes(SDK) ? '' : 'وصورة التصميم '}(اضغط للعرض)</summary>${sdImg(o)}<div class="bspec">${info.map(([l, v]) => `<div><span>${esc(l)}</span><b>${esc(bcv(v))}</b></div>`).join('')}</div>${erp ? `<h4>ملاحظات ERP</h4><div class="erpns">${erp}</div>` : ''}</details>
     <details class="sdbox"><summary>💬 ملاحظات على الطلبية (${allN.length}) (اضغط للعرض)</summary>${allN.length ? allN.slice(0, 40).map(n => `<div class="bwr"><span class="num">${esc(n.date)} ${esc(n.time)}</span><span><b>${esc(n.by || '')}</b><br><small>${esc(n.kind || '')}</small></span><span>${esc(n.text)}</span><span></span></div>`).join('') : '<p class="muted">لا توجد ملاحظات على هذه الطلبية.</p>'}</details>` : ''}
     ${it && ['inj','cap','asm'].includes(SDK) && typeof specBoxHtml === 'function' ? specBoxHtml(f, SDK, m, 'sd:' + m) : ''}
-    <div class="grid sdf"><label class="f">${(MIN_WORKERS[SDK] || 1) > 1 ? 'أسماء الموظفين (' + MIN_WORKERS[SDK] + ' على الأقل، افصل بفاصلة)' : 'اسم الموظف'} <span class="req">*</span><input type="text" list="wkAll" data-sdop value="${esc(f.operator || '')}" placeholder="اسم عامل الآلة"></label>
+    <div class="grid sdf"><label class="f">${(MIN_WORKERS[SDK] || 1) > 1 ? 'أسماء الموظفين (' + MIN_WORKERS[SDK] + ' على الأقل، افصل بفاصلة)' : SDK === 'sort' ? 'اسم عامل / عاملة الفرز' : 'اسم الموظف'} <span class="req">*</span><input type="text" list="wkAll" data-sdop value="${esc(f.operator || '')}" placeholder="اسم عامل الآلة"></label>
       <label class="f">رقم الصندوق <span class="req">*</span><input type="text" data-sdbox value="${esc(f.box || '')}"></label></div>
     <label class="f" style="margin-top:8px">ملاحظات الجودة<textarea rows="2" data-sdnotes>${esc(f.notes || '')}</textarea></label>
     <div class="oprep ${(f.decision && f.decision !== 'مقبول' || String(f.notes || '').trim()) && !f.opReported ? 'need' : ''}"><b>هل اكتشف العامل المشكلة وأبلغ عنها؟</b><div class="pick">${REPORTED.map(([k, l]) => `<button class="${f.opReported === k ? 'on' : ''}" data-sdrep="${k}">${l}</button>`).join('')}</div></div>
@@ -6950,7 +6957,7 @@ VIEWS.drawsimple = {
     return `<div class="pagehead"><div><h1 style="margin:0;display:flex;align-items:center;gap:12px"><span class="sti big">${LI('s_' + SDK)}</span>جولة مرحلة ${esc(stageBy(SDK).name)}</h1><p>الواجهة المبسطة – الطلبية واسم الموظف مثبّتان من أول جولة اليوم ويمكن تغييرهما.</p></div><button class="btn" id="sdBack">رجوع</button></div>
       <div class="dmgrid">${Object.entries(SD).map(([m, f]) => `<div class="panel dmach ${f.status}" data-sdm="${esc(m)}">${sdMachineHtml(m, f)}</div>`).join('')}</div>
       ${typeof workerDatalist === 'function' ? workerDatalist() : ''}
-      ${SDK === 'asm' ? '<button class="btn" id="sdAddSt" style="margin-top:10px">+ إضافة محطة تركيب</button>' : ''}${PER_MACHINE_SAVE.includes(SDK) ? '' : `<div class="sticky-save"><button class="btn p" id="sdSave">حفظ جولة ${esc(stageBy(SDK).name)}</button></div>`}`;
+      ${SDK === 'asm' ? '<button class="btn" id="sdAddSt" style="margin-top:10px">+ إضافة محطة تركيب</button>' : SDK === 'sort' ? '<button class="btn" id="sdAddSt" style="margin-top:10px">+ إضافة عامل فرز</button>' : ''}${PER_MACHINE_SAVE.includes(SDK) ? '' : `<div class="sticky-save"><button class="btn p" id="sdSave">حفظ جولة ${esc(stageBy(SDK).name)}</button></div>`}`;
   },
   bind(){
     $('#sdBack').onclick = () => go('prod');
@@ -6967,7 +6974,7 @@ VIEWS.drawsimple = {
       p.querySelectorAll('[data-sdrep]').forEach(b => b.onclick = () => { f.opReported = b.dataset.sdrep; upd(); });
       if(typeof bindSpec === 'function' && ['inj','cap','asm'].includes(SDK)) bindSpec(p, f, SDK, p.dataset.sdm, 'sd:' + p.dataset.sdm);
     });
-    $('#sdAddSt') && ($('#sdAddSt').onclick = () => { const n = 'محطة تركيب ' + (Object.keys(SD).length + 1); SD[n] = sdEntry(n); rerender(); });
+    $('#sdAddSt') && ($('#sdAddSt').onclick = () => { const n = (SDK === 'sort' ? 'عامل فرز ' : 'محطة تركيب ') + (Object.keys(SD).length + 1); SD[n] = sdEntry(n); rerender(); });
     const sdDoSave = () => {
       const ms = Object.entries(SD); if(ms.every(([, f]) => !f.status)){ toast(PER_MACHINE_SAVE.includes(SDK) ? 'اختر حالة الآلة: تعمل أو متوقفة' : 'اختر حالة الآلات: تعمل أو متوقفة'); return; }
       for(const [m, f] of ms){
@@ -6985,8 +6992,9 @@ VIEWS.drawsimple = {
         if(f.status === 'stop' && f.stopRecorded === f.reason){ continue; }
         if(f.status === 'stop'){ S.stops = S.stops || []; S.stops.push({id: uid(), date: todayStr(d), time: timeStr(d), shift: S.settings.shift, inspector: S.settings.inspector, stage: SDK, machine: m, reason: f.reason, reasonLabel: stopLabel(f.reason), detail: ''}); n++; continue; }
         if(f.status !== 'run') continue;
-        const save = F; F = f; F.__multi = true; F.operators = splitNames(f.operator); if(SDK === 'asm') F.worker = f.operator; F.opReported = f.opReported || 'none'; F.cls = simpleCls(f);
+        const save = F; F = f; F.__multi = true; F.operators = splitNames(f.operator); if(SDK === 'asm' || SDK === 'sort') F.worker = f.operator; F.opReported = f.opReported || 'none'; F.cls = simpleCls(f);
         let r = null; try{ r = saveRound(); } finally { delete f.__multi; F = save; }
+        { const rr = r && r.id ? r : S.rounds[S.rounds.length - 1]; if(rr && rr.machine === m && (SDK === 'asm' || SDK === 'sort')){ rr.worker = f.operator; rr.operator = rr.operator || f.operator; } }
         if(!r && !S.rounds.some(x => x.machine === m && x.date === todayStr(d) && x.time === timeStr(d))){ toast(`تعذر حفظ ${m}`); return; }
         n++;
       }
@@ -7010,9 +7018,9 @@ const _sdBindImg = VIEWS.drawsimple.bind;
 VIEWS.drawsimple.bind = function(){ _sdBindImg.apply(this, arguments); $$('.sdimg img[data-iid]').forEach(async el => { try{ const d = await imgCacheGet(el.dataset.iid); if(d) el.src = d; }catch(e){} }); };
 /* الواجهة العادية (الحقن والتغطية): زر حفظ لكل آلة وحدها */
 const _dmHtmlOne = drawMachineHtml;
-drawMachineHtml = function(m, f){ const h = _dmHtmlOne(m, f); if(!PER_MACHINE_SAVE.includes(DM.stage) || !f.status || (f.status === 'stop' && f.stopRecorded === f.reason)) return h; return h + `<button class="btn p big mcsave" data-dmsave="${esc(m)}">💾 حفظ ${f.status === 'stop' ? 'توقف' : 'جولة'} ${esc(m)}</button>`; };
+drawMachineHtml = function(m, f){ const h = _dmHtmlOne(m, f); if(!PER_MACHINE_SAVE_DM.includes(DM.stage) || !f.status || (f.status === 'stop' && f.stopRecorded === f.reason)) return h; return h + `<button class="btn p big mcsave" data-dmsave="${esc(m)}">💾 حفظ ${f.status === 'stop' ? 'توقف' : 'جولة'} ${esc(m)}</button>`; };
 const _dmViewHtmlOne = VIEWS.drawm.html;
-VIEWS.drawm.html = function(){ const h = _dmViewHtmlOne.apply(this, arguments); return DM && PER_MACHINE_SAVE.includes(DM.stage) ? h.replace('<div class="sticky-save">', '<div class="sticky-save" style="display:none">') : h; };
+VIEWS.drawm.html = function(){ const h = _dmViewHtmlOne.apply(this, arguments); return DM && PER_MACHINE_SAVE_DM.includes(DM.stage) ? h.replace('<div class="sticky-save">', '<div class="sticky-save" style="display:none">') : h; };
 const _dmBindOne = VIEWS.drawm.bind;
 VIEWS.drawm.bind = function(){ _dmBindOne.apply(this, arguments); $$('[data-dmsave]').forEach(b => b.onclick = () => {
   const m = b.dataset.dmsave, sk = DM.stage, all = {...DM.machines}, keepOrder = {items: all[m].items, order: all[m].order, operators: all[m].operators, operator: all[m].operator};
@@ -7533,6 +7541,106 @@ const _wkKpiTk = workerKPIs;
 workerKPIs = function(from, to){ const W = _wkKpiTk.apply(this, arguments);
   (S.tickets || []).filter(t => t.date >= from && t.date <= to && t.finder === 'operator' && t.finderName).forEach(t => { const w = W.find(x => sameP(x.name, t.finderName)); if(w){ w.rep++; w.repPct = w.rep + w.norep ? Math.round(w.rep * 100 / (w.rep + w.norep)) : null; } });
   return W; };
+
+/* ================= [ESCAPE] التسرّب: عيب نشأ في مرحلة سابقة ومرّ دون اكتشاف ================= */
+/* المراقب يقترح المصدر والأسماء ويعدّلها · التسرّب على مراقبي الجودة يُحسب تلقائياً ويراه مدير ضبط الجودة والإدارة فقط */
+const ESC_ORDER = ['print','draw','sort','inj','asm','cap','seal','check','final'];
+const DEFECT_ORIGIN = {}; Object.entries(DEFECT_CATALOG).forEach(([st, l]) => l.forEach(([n]) => { if(!DEFECT_ORIGIN[n]) DEFECT_ORIGIN[n] = st; }));
+const escIdx = s => ESC_ORDER.indexOf(s);
+const roundNames = r => [...new Set(splitNames(r.operator).concat(splitNames(r.worker || (r.extra || {}).worker)))];
+/* الجولات السابقة لنفس الطلبية (ونفس الصندوق إن وُجد) في مرحلة معيّنة */
+function upstreamRounds(st, order, box){
+  const rs = S.rounds.filter(r => r.stage === st && itemsOf(r).some(i => String(i.order) === String(order)));
+  const byBox = box ? rs.filter(r => normBox(r.box) === normBox(box)) : [];
+  return (byBox.length ? byBox : rs).slice(-4);
+}
+function suggestEsc(src, cur, f){
+  const order = ((f.items || [])[0] || {}).order; if(!order || escIdx(src) < 0 || escIdx(cur) <= escIdx(src)) return [];
+  const out = [];
+  ESC_ORDER.slice(escIdx(src), escIdx(cur)).forEach(st => upstreamRounds(st, order, f.box).forEach(r => roundNames(r).forEach(n => {
+    if(!out.some(x => x.stage === st && sameP(x.name, n))) out.push({stage: st, name: n, role: st === src ? 'source' : 'passed', on: true, machine: r.machine || ''}); })));
+  return out;
+}
+function qcEsc(src, cur, f){
+  const order = ((f.items || [])[0] || {}).order; if(!order || escIdx(cur) <= escIdx(src)) return [];
+  const out = []; ESC_ORDER.slice(escIdx(src), escIdx(cur)).forEach(st => upstreamRounds(st, order, f.box).forEach(r => { if(r.inspector && !out.some(x => x.stage === st && sameP(x.name, r.inspector))) out.push({stage: st, name: r.inspector, round: r.id, rno: r.no || ''}); }));
+  return out;
+}
+function autoSrc(f, cur){ const d = (f.defects || []).map(x => DEFECT_ORIGIN[x]).find(s => s && escIdx(s) >= 0 && escIdx(s) < escIdx(cur)); return d || ''; }
+function escHtml(f, cur, tag){
+  if(escIdx(cur) <= 0) return '';
+  if(f.srcStage === undefined){ const a = autoSrc(f, cur); if(a){ f.srcStage = a; f.srcAuto = true; } }
+  const prev = ESC_ORDER.slice(0, escIdx(cur)).filter(s => STAGES.some(x => x.key === s));
+  const src = f.srcStage || '';
+  if(src && src !== cur && (!f.escapes || f._escFor !== src + '|' + ((f.items || [])[0] || {}).order + '|' + (f.box || ''))){ const keepManual = (f.escapes || []).filter(x => x.manual); f.escapes = suggestEsc(src, cur, f).concat(keepManual); f._escFor = src + '|' + ((f.items || [])[0] || {}).order + '|' + (f.box || ''); }
+  return `<div class="escbox"><b>مصدر المشكلة</b><div class="pick">${[['', 'هذه المرحلة / لا توجد مشكلة'], ...prev.map(s => [s, stageBy(s).name])].map(([k, l]) => `<button class="${src===k?'on':''}" data-escsrc="${tag}" data-v="${k}">${esc(l)}</button>`).join('')}</div>
+    ${src ? `<div class="escl"><span class="muted">${f.srcAuto ? 'اقتراح تلقائي من نوع العيب – ' : ''}المسؤولون المقترحون (عدّل بالتأشير أو الإضافة):</span>
+      ${(f.escapes || []).map((x, i) => `<label class="escp"><input type="checkbox" data-escon="${tag}" data-i="${i}" ${x.on ? 'checked' : ''}> <b>${esc(x.name)}</b> <span class="muted">${esc(stageBy(x.stage).name)}${x.machine ? ' · ' + esc(x.machine) : ''} · ${x.role === 'source' ? 'مصدر العيب' : 'مرّ من عنده'}</span></label>`).join('') || '<p class="muted">لم يُعثر على جولات سابقة لهذه الطلبية – أضف الاسم يدوياً.</p>'}
+      <div class="escadd"><select data-escst="${tag}">${ESC_ORDER.slice(escIdx(src), escIdx(cur)).filter(s => STAGES.some(x => x.key === s)).map(s => `<option value="${s}">${esc(stageBy(s).name)}</option>`).join('')}</select><input type="text" list="wkAll" data-escnm="${tag}" placeholder="إضافة اسم عامل"><button class="btn sm" data-escadd="${tag}">+ إضافة</button></div></div>` : ''}</div>`;
+}
+function bindEscape(root, f, cur, tag){
+  root.querySelectorAll(`[data-escsrc="${tag}"]`).forEach(b => b.onclick = () => { f.srcStage = b.dataset.v; f.srcAuto = false; f.escapes = null; rerender(); });
+  root.querySelectorAll(`[data-escon="${tag}"]`).forEach(c => c.onchange = () => { f.escapes[+c.dataset.i].on = c.checked; });
+  const add = root.querySelector(`[data-escadd="${tag}"]`); if(add) add.onclick = () => { const nm = root.querySelector(`[data-escnm="${tag}"]`).value.trim(), st = root.querySelector(`[data-escst="${tag}"]`).value; if(!nm) return; f.escapes = (f.escapes || []).concat([{stage: st, name: nm, role: st === f.srcStage ? 'source' : 'passed', on: true, manual: true}]); rerender(); };
+}
+/* ---------- الإدراج في الواجهات ---------- */
+const _sdmEsc = sdMachineHtml;
+sdMachineHtml = function(m, f){ const h = _sdmEsc(m, f); if(f.status !== 'run' || !(f.items || []).length) return h; return h.replace('<h3 class="mh3">القرار <span class="req">*</span></h3>', escHtml(f, SDK, 'sd:' + m) + '<h3 class="mh3">القرار <span class="req">*</span></h3>'); };
+const _sdBindEsc = VIEWS.drawsimple.bind;
+VIEWS.drawsimple.bind = function(){ _sdBindEsc.apply(this, arguments); $$('[data-sdm]').forEach(p => { const f = SD[p.dataset.sdm]; if(f) bindEscape(p, f, SDK, 'sd:' + p.dataset.sdm); }); };
+const _dmEsc = drawMachineHtml;
+drawMachineHtml = function(m, f){ const h = _dmEsc(m, f); if(f.status !== 'run' || !(f.items || []).length) return h; const box = escHtml(f, DM.stage, 'dm:' + m); return h.includes('<button class="btn p big mcsave"') ? h.replace('<button class="btn p big mcsave"', box + '<button class="btn p big mcsave"') : h + box; };
+const _dmBindEsc = VIEWS.drawm.bind;
+VIEWS.drawm.bind = function(){ _dmBindEsc.apply(this, arguments); $$('.dmach[data-m]').forEach(p => { const f = DM && DM.machines[p.dataset.m]; if(f) bindEscape(p, f, DM.stage, 'dm:' + p.dataset.m); }); };
+const _seEsc = sortEntryHtml;
+sortEntryHtml = function(i, f){ const h = _seEsc(i, f); return h.includes('data-openg') || !(f.items || []).length ? h : h + escHtml(f, SMK, 'sm:' + i); };
+const _smBindEsc = VIEWS.sortm.bind;
+VIEWS.sortm.bind = function(){ _smBindEsc.apply(this, arguments); $$('.dmach[data-w]').forEach(p => { const f = SM[+p.dataset.w]; if(f) bindEscape(p, f, SMK, 'sm:' + p.dataset.w); }); };
+const _rhEsc = VIEWS.round.html;
+VIEWS.round.html = function(){ const h = _rhEsc.apply(this, arguments); if(!F || F.viewOnly || !(F.items || []).length || escIdx(F.stage) <= 0) return h; return h.replace(/(<div class="sticky-save"><button class="btn p" id="saveR")/, escHtml(F, F.stage, 'F') + '$1'); };
+const _rbEsc = VIEWS.round.bind;
+VIEWS.round.bind = function(){ _rbEsc.apply(this, arguments); if(F && !F.viewOnly) bindEscape(document, F, F.stage, 'F'); };
+/* ---------- الحفظ ---------- */
+const _saveRoundEsc = saveRound;
+saveRound = function(){
+  const f = F, src = f && f.srcStage, st = f && f.stage, editId = f && f.editId, n0 = S.rounds.length;
+  const people = src && src !== st ? (f.escapes || []).filter(x => x.on).map(({stage, name, role, machine}) => ({stage, name, role, machine: machine || ''})) : [];
+  const qc = src && src !== st ? qcEsc(src, st, f) : [];
+  const res = _saveRoundEsc.apply(this, arguments);
+  if(src && src !== st){ const r = res && res.id ? res : (editId ? S.rounds.find(x => x.id === editId) : (S.rounds.length > n0 ? S.rounds[S.rounds.length - 1] : null));
+    if(r){ r.escape = {src, people, qc, by: CUR.name, at: todayStr() + ' ' + timeStr()}; save(); } }
+  return res;
+};
+/* ---------- المؤشرات ---------- */
+const escRounds = (from, to) => S.rounds.filter(r => r.escape && r.date >= from && r.date <= to);
+const _wkKpiEsc = workerKPIs;
+workerKPIs = function(from, to){ const W = _wkKpiEsc.apply(this, arguments);
+  escRounds(from, to).forEach(r => r.escape.people.forEach(p => { let w = W.find(x => sameP(x.name, p.name)); if(!w){ w = {name: p.name, dept: '', shift: '', rounds: 0, issues: 0, rep: 0, norep: 0, clean: 0, comps: [], orders: new Set(), stages: new Set(), repPct: null, score: 100, grade: ['ممتاز','#1F7A5A']}; W.push(w); }
+    if(p.role === 'source') w.escSrc = (w.escSrc || 0) + 1; else w.escPass = (w.escPass || 0) + 1; }));
+  W.forEach(w => { if(w.escSrc || w.escPass){ w.score = Math.max(0, w.score - (w.escSrc || 0) * 8 - (w.escPass || 0) * 6); w.grade = w.score >= 90 ? ['ممتاز','#1F7A5A'] : w.score >= 75 ? ['جيد','#4C9A2A'] : w.score >= 60 ? ['مقبول','#D99A2B'] : ['يحتاج متابعة','#B83227']; } });
+  return W.sort((a, b) => a.score - b.score); };
+const _wkTblEsc = workerKPITable;
+workerKPITable = function(from, to){ const h = _wkTblEsc.apply(this, arguments); const W = workerKPIs(from, to).filter(w => w.escSrc || w.escPass); if(!W.length) return h;
+  return h + `<h3>التسرّب: عيوب خرجت من عند العامل واكتُشفت في مرحلة لاحقة</h3><div class="tw"><table class="t"><thead><tr><th>العامل</th><th>عيب مصدره عمله</th><th>مرّ من عنده دون اكتشاف</th><th>التقييم بعد التسرّب</th></tr></thead><tbody>${W.map(w => `<tr><td><b>${esc(w.name)}</b></td><td class="num cr">${w.escSrc || ''}</td><td class="num cr">${w.escPass || ''}</td><td><span class="wgrade" style="background:${w.grade[1]}">${w.score} · ${w.grade[0]}</span></td></tr>`).join('')}</tbody></table></div><p class="muted" style="font-size:12px">يُخصم 8 نقاط لكل عيب مصدره عمل العامل، و6 لكل عيب مرّ من عنده دون اكتشاف.</p>`; };
+/* تسرّب مراقبي الجودة – لمدير ضبط الجودة والإدارة فقط */
+function qcEscapeHtml(from, to){
+  if(!canSeeAll()) return ''; const M = {};
+  escRounds(from, to).forEach(r => (r.escape.qc || []).forEach(q => { const k = normName(q.name); M[k] = M[k] || {name: q.name, n: 0, ex: []}; M[k].n++; if(M[k].ex.length < 3) M[k].ex.push(`${stageBy(q.stage).name}${q.rno ? ' ' + q.rno : ''} ← اكتُشف في ${stageBy(r.stage).name} ${r.date}`); }));
+  const L = Object.values(M).sort((a, b) => b.n - a.n);
+  return `<div class="panel qcesc"><h3>🔒 تسرّب من فحص مراقبي الجودة <small class="muted">(لمدير ضبط الجودة والإدارة فقط)</small></h3>${L.length ? `<table class="t"><thead><tr><th>المراقب</th><th>عيوب مرّت من فحصه</th><th>أمثلة</th></tr></thead><tbody>${L.map(x => `<tr><td><b>${esc(x.name)}</b></td><td class="num cr">${x.n}</td><td class="sm">${x.ex.map(esc).join('<br>')}</td></tr>`).join('')}</tbody></table>` : '<p class="muted">لا تسرّب في هذه الفترة.</p>'}</div>`;
+}
+const _teamHtmlEsc = VIEWS.team.html;
+VIEWS.team.html = function(){ const h = _teamHtmlEsc.apply(this, arguments); if(!canSeeAll()) return h; const [from, to] = periodOf(teamP); return h + qcEscapeHtml(from, to); };
+const _svHtmlEsc = VIEWS.sevsum.html;
+VIEWS.sevsum.html = function(){ const h = _svHtmlEsc.apply(this, arguments); const E = escRounds(SV.from, SV.to);
+  const mat = {}; E.forEach(r => { const k = r.escape.src + '→' + r.stage; mat[k] = (mat[k] || 0) + 1; });
+  const tbl = `<div class="panel"><h3>التسرّب بين المراحل (${E.length})</h3>${E.length ? `<table class="t"><thead><tr><th>نشأ في</th><th>اكتُشف في</th><th>العدد</th></tr></thead><tbody>${Object.entries(mat).sort((a, b) => b[1] - a[1]).map(([k, n]) => { const [a, b2] = k.split('→'); return `<tr><td>${esc(stageBy(a).name)}</td><td>${esc(stageBy(b2).name)}</td><td class="num cr">${n}</td></tr>`; }).join('')}</tbody></table>` : '<p class="muted">لا تسرّب في الفترة.</p>'}</div>${qcEscapeHtml(SV.from, SV.to)}`;
+  return h.replace(/<\/div>$/, tbl + '</div>'); };
+/* السجل التفصيلي */
+const _evEsc = eventsLog;
+eventsLog = function(from, to, rf, os){ const E = _evEsc.apply(this, arguments);
+  S.rounds.filter(r => r.escape && r.date >= from && r.date <= to && (!rf || rf(r))).forEach(r => E.push({date: r.date, time: r.time, stage: stageBy(r.stage).name, machine: r.machine || '', who: r.inspector, order: ordersLabel(r), product: itemsLabel(r), kind: 'تسرّب', text: `مصدره ${stageBy(r.escape.src).name}: ${r.escape.people.map(p => p.name + ' (' + stageBy(p.stage).name + (p.role === 'source' ? ' – المصدر' : ' – مرّ منه') + ')').join('، ') || '—'}${canSeeAll() && (r.escape.qc || []).length ? ' · فحص الجودة السابق: ' + r.escape.qc.map(q => q.name).join('، ') : ''}`}));
+  return E.sort((a, b) => (a.date + (a.time || '')).localeCompare(b.date + (b.time || ''))); };
 
 /* ================= [PLAIN_UI_USERS] واجهة بسيطة دون عبارات تشجيعية ولا أداء ولا ملخص ورديات ================= */
 const PLAIN_UI_USERS = ['ايهاب حيدر'];
