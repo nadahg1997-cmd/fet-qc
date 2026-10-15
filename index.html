@@ -868,6 +868,22 @@ body.insp [data-st]{transition:transform .15s, box-shadow .15s}body.insp [data-s
 @media(max-width:900px){.ihero,.mpg{grid-template-columns:1fr}.mphero{flex-direction:column;text-align:center}}
 .mp{max-width:100%;overflow:hidden}.mpg{grid-template-columns:minmax(0,1.3fr) minmax(0,1fr)!important}.mpg > .panel{min-width:0}
 .sbar > div{min-width:40px}
+.svk{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:12px 0}.svc{border:2px solid var(--c);background:#fff;border-radius:18px;padding:14px;display:flex;flex-direction:column;align-items:center;cursor:pointer;font:inherit}
+.svc b{font-size:40px;color:var(--c);line-height:1}.svc span{font-weight:800;font-size:16px}.svc small{color:var(--ink2)}.svc.on{background:var(--c)}.svc.on b,.svc.on span,.svc.on small{color:#fff}
+.mpbar .stk{width:100%;display:flex;flex-direction:column-reverse;border-radius:6px 6px 0 0;overflow:hidden;min-height:2px}.mpbar .stk i{display:block;width:100%}
+.mdh{display:flex;gap:12px;align-items:baseline;margin:6px 0 10px}.mdh b{font-size:20px}.mdh span{color:var(--ink2)}
+.mdtabs{margin:10px 0}.mdst{display:flex;align-items:center;gap:8px;margin:18px 0 8px}.mdst .li{width:18px;height:18px}.mdst small{color:var(--ink2);font-weight:400}
+.sevtag{border-radius:999px;padding:1px 9px;font-size:12px;font-weight:800;color:#fff}.sevtag.s-حرج{background:#B83227}.sevtag.s-رئيسي{background:#D99A2B}.sevtag.s-ثانوي{background:#8A97A3}
+/* tickets */
+.tkhero{display:flex;justify-content:space-between;align-items:center;gap:12px;background:linear-gradient(135deg,#17212B,#2A3B4C);color:#fff;border-radius:18px;padding:16px 20px;margin-bottom:14px}.tkhero h1{margin:0}.tkhero p{margin:2px 0 0;opacity:.8}
+.btn.big{font-size:18px;padding:14px 22px;min-height:56px}
+.tkcols{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.tkcols.four{grid-template-columns:repeat(4,minmax(0,1fr))}.tkcols section{background:#F4F6F8;border-radius:14px;padding:10px;min-height:200px}.tkcols h2{font-size:16px;margin:4px 4px 10px}
+.tk{background:#fff;border-radius:12px;padding:10px 12px;margin-bottom:10px;border-inline-start:6px solid var(--c);box-shadow:0 2px 8px rgba(0,0,0,.05)}.tk.crit{border:2px solid #B83227;border-inline-start-width:8px}.tk.late{animation:pulseb 1.6s infinite}
+.tkh{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center}.tkh .tks{color:var(--c);font-weight:800;font-size:13px}.tkh .muted{margin-inline-start:auto}.tkb{margin-top:6px}.tkb > b{font-size:15px}.tkb small{display:block;color:var(--ink2);margin-top:2px}
+.tka{display:flex;flex-wrap:wrap;gap:8px;align-items:flex-end;margin-top:8px}.tka .f{width:110px}
+.tkform h3{margin:14px 0 6px}.pick.big button{font-size:16px;padding:12px 16px;min-height:50px}.tkdefs button{text-align:right}
+.tkstop{background:#B83227;color:#fff;border-radius:12px;padding:14px;font-size:18px;font-weight:800;margin:12px 0;display:flex;flex-direction:column;gap:10px}.tkstop label{font-size:17px;display:flex;gap:10px;align-items:center}.tkstop input{width:26px;height:26px}
+@media(max-width:1000px){.tkcols,.tkcols.four{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -920,6 +936,9 @@ if(document.readyState === 'loading') document.addEventListener('DOMContentLoade
    [MAT_SAMPLE] قاعدة عينة كل مادة واردة · [MATLIB] أرشيف أكواد المواد
    [TH_LOCS] أماكن الحرارة والرطوبة · [CAL_WINDOWS] مواعيد التحقق من أدوات القياس
    [ORDER_SEARCH] البحث برقم الطلبية أو اسم المنتج · [AUDIT_WEEK] المراقبات الأسبوعية
+   [TICKETS] تذكرة المشكلة بين عمال التشييك والجودة
+   [MY_DAY] تقرير عملي اليوم للمراقب
+   [SEVERITY_SUMMARY] الحالات حسب الدرجة · [SIMPLE_STAGES] المراحل المبسطة
    [INSPECTOR_UI] واجهة المراقب وصفحة أدائي
    [SAMPLES] أرشيف العينات ولصاقة الأرشفة · [LABEL_SIZE] مقاس اللصاقة
    [SHIFT_TIMES] أوقات الورديات (الصباحية 8–16، المسائية 16–24)
@@ -2269,7 +2288,7 @@ STAGES.find(s => s.key==='final').extra = [{k:'cartons',l:'عدد الكراتي
 
 const blank = () => ({settings:{inspectors:[],inspector:'',shift:'صباحية',manager:'ندى حجازي',qa:'محمد براء رحمون',reviewer:'Talal Alraee',ceo:'أيهم سكرية',
   weldMin:1.8,weldMax:3,seamMin:2,seamMax:4,devices:JSON.parse(JSON.stringify(DEVICES)),th:JSON.parse(JSON.stringify(TH_LOC))},
-  orders:DEFAULT_ORDERS, ordersDate:'', reports:[], pimgs:[], stops:[], shiftsums:[], savedreps:[], plans:[], onotes:[], samples:[], rounds:[], holds:[], handovers:[], mats:[], ncrs:[], complaints:[], audits:[], cals:[], ths:[], aid:[], coas:[]});
+  orders:DEFAULT_ORDERS, ordersDate:'', reports:[], pimgs:[], stops:[], shiftsums:[], savedreps:[], plans:[], onotes:[], samples:[], tickets:[], rounds:[], holds:[], handovers:[], mats:[], ncrs:[], complaints:[], audits:[], cals:[], ths:[], aid:[], coas:[]});
 let S = blank();
 let persistent = typeof window.storage !== 'undefined' && window.storage && typeof window.storage.get === 'function';
 let dirty = false;
@@ -3201,7 +3220,7 @@ VIEWS.data = {
         const keep = ['order_number','order_date','order_delivery_date','seller','customer','set','paper_type','roll_color','roll_thickness','roll_width','printshop','stage','product_code','product_name','product_name_arabic','product_diameter','hole_diameter','tooth_type','shoulder_color','is360','cold_foil','cap_code','cap_name','nozzle_code','nozzle_name','quantity','colors_number','total_tubes','tube_cylinder_length','status',
           'quality_notes','gm_notes','production_notes','sales_notes','coordination_notes','design_notes','customer_notes','stock_notes'];  /* cost_notes لا تُستورد (معلومات مالية) */
         /* [ERP_FOIL] أي عمود فويلة يُضاف لاحقاً في ERP يُستورد تلقائياً (غير الحراري cold_foil) */
-        const extraKeys = rows.length ? Object.keys(rows[0]).filter(k => /foil|فويل/i.test(k) && !/cold|cost/i.test(k) && !keep.includes(k)) : [];
+        const extraKeys = rows.length ? Object.keys(rows[0]).filter(k => /foil|فويل|seal|تختيم|ختم/i.test(k) && !/cold|cost/i.test(k) && !keep.includes(k)) : [];
         S.orders = rows.map(o => Object.fromEntries(keep.concat(extraKeys).map(k => [k, o[k] ?? null]))); S.ordersDate = todayStr(); S.ordersM = Date.now(); save(); render(); toast(`تم تحميل ${S.orders.length} طلبية من ERP`);
       }catch(err){ toast('تعذر قراءة الملف – تأكد أنه ملف Excel من ERP'); }
     };
@@ -3975,7 +3994,7 @@ VIEWS.data.bind = function(){
 
 const LUCIDE = {"home": "<path d=\"M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8\" /> <path d=\"M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z\" />", "prod": "<path d=\"M12 16h.01\" /> <path d=\"M16 16h.01\" /> <path d=\"M3 19a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5a.5.5 0 0 0-.769-.422l-4.462 2.844A.5.5 0 0 1 15 10.5v-2a.5.5 0 0 0-.769-.422L9.77 10.922A.5.5 0 0 1 9 10.5V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2z\" /> <path d=\"M8 16h.01\" />", "mat": "<path d=\"M12 22V12\" /> <path d=\"m16 17 2 2 4-4\" /> <path d=\"M21 11.127V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.729l7 4a2 2 0 0 0 2 .001l1.32-.753\" /> <path d=\"M3.29 7 12 12l8.71-5\" /> <path d=\"m7.5 4.27 8.997 5.148\" />", "ncr": "<path d=\"M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z\" /> <path d=\"M12 8v4\" /> <path d=\"M12 16h.01\" />", "hold": "<path d=\"M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z\" /> <path d=\"m3.3 7 8.7 5 8.7-5\" /> <path d=\"M12 22V12\" />", "mon": "<rect width=\"8\" height=\"4\" x=\"8\" y=\"2\" rx=\"1\" ry=\"1\" /> <path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\" /> <path d=\"m9 14 2 2 4-4\" />", "rep": "<path d=\"M3 3v16a2 2 0 0 0 2 2h16\" /> <path d=\"M18 17V9\" /> <path d=\"M13 17V5\" /> <path d=\"M8 17v-3\" />", "team": "<path d=\"M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2\" /> <path d=\"M16 3.128a4 4 0 0 1 0 7.744\" /> <path d=\"M22 21v-2a4 4 0 0 0-3-3.87\" /> <circle cx=\"9\" cy=\"7\" r=\"4\" />", "mgr": "<path d=\"M16 7h6v6\" /> <path d=\"m22 7-8.5 8.5-5-5L2 17\" />", "more": "<rect width=\"7\" height=\"7\" x=\"3\" y=\"3\" rx=\"1\" /> <rect width=\"7\" height=\"7\" x=\"14\" y=\"3\" rx=\"1\" /> <rect width=\"7\" height=\"7\" x=\"14\" y=\"14\" rx=\"1\" /> <rect width=\"7\" height=\"7\" x=\"3\" y=\"14\" rx=\"1\" />", "hand": "<path d=\"M8 3 4 7l4 4\" /> <path d=\"M4 7h16\" /> <path d=\"m16 21 4-4-4-4\" /> <path d=\"M20 17H4\" />", "comp": "<path d=\"M22 17a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 21.286V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2z\" /> <path d=\"M12 15h.01\" /> <path d=\"M12 7v4\" />", "coa": "<path d=\"m15.477 12.89 1.515 8.526a.5.5 0 0 1-.81.47l-3.58-2.687a1 1 0 0 0-1.197 0l-3.586 2.686a.5.5 0 0 1-.81-.469l1.514-8.526\" /> <circle cx=\"12\" cy=\"8\" r=\"6\" />", "sup": "<path d=\"M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2\" /> <path d=\"M15 18H9\" /> <path d=\"M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 17.52 8H14\" /> <circle cx=\"17\" cy=\"18\" r=\"2\" /> <circle cx=\"7\" cy=\"18\" r=\"2\" />", "data": "<ellipse cx=\"12\" cy=\"5\" rx=\"9\" ry=\"3\" /> <path d=\"M3 5V19A9 3 0 0 0 21 19V5\" /> <path d=\"M3 12A9 3 0 0 0 21 12\" />", "bell": "<path d=\"M10.268 21a2 2 0 0 0 3.464 0\" /> <path d=\"M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326\" />", "search": "<path d=\"m21 21-4.34-4.34\" /> <circle cx=\"11\" cy=\"11\" r=\"8\" />", "logout": "<path d=\"m16 17 5-5-5-5\" /> <path d=\"M21 12H9\" /> <path d=\"M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4\" />", "dash": "<rect width=\"7\" height=\"9\" x=\"3\" y=\"3\" rx=\"1\" /> <rect width=\"7\" height=\"5\" x=\"14\" y=\"3\" rx=\"1\" /> <rect width=\"7\" height=\"9\" x=\"14\" y=\"12\" rx=\"1\" /> <rect width=\"7\" height=\"5\" x=\"3\" y=\"16\" rx=\"1\" />", "s_design": "<path d=\"M15.707 21.293a1 1 0 0 1-1.414 0l-1.586-1.586a1 1 0 0 1 0-1.414l5.586-5.586a1 1 0 0 1 1.414 0l1.586 1.586a1 1 0 0 1 0 1.414z\" /> <path d=\"m18 13-1.375-6.874a1 1 0 0 0-.746-.776L3.235 2.028a1 1 0 0 0-1.207 1.207L5.35 15.879a1 1 0 0 0 .776.746L13 18\" /> <path d=\"m2.3 2.3 7.286 7.286\" /> <circle cx=\"11\" cy=\"11\" r=\"2\" />", "s_print": "<path d=\"M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2\" /> <path d=\"M6 9V3a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v6\" /> <rect x=\"6\" y=\"14\" width=\"12\" height=\"8\" rx=\"1\" />", "s_draw": "<ellipse cx=\"12\" cy=\"5\" rx=\"9\" ry=\"3\" /> <path d=\"M3 5v14a9 3 0 0 0 18 0V5\" />", "s_sort": "<path d=\"M2 5h20\" /> <path d=\"M6 12h12\" /> <path d=\"M9 19h6\" />", "s_mix": "<path d=\"M14 2v6a2 2 0 0 0 .245.96l5.51 10.08A2 2 0 0 1 18 22H6a2 2 0 0 1-1.755-2.96l5.51-10.08A2 2 0 0 0 10 8V2\" /> <path d=\"M6.453 15h11.094\" /> <path d=\"M8.5 2h7\" />", "s_inj": "<path d=\"m18 2 4 4\" /> <path d=\"m17 7 3-3\" /> <path d=\"M19 9 8.7 19.3c-1 1-2.5 1-3.4 0l-.6-.6c-1-1-1-2.5 0-3.4L15 5\" /> <path d=\"m9 11 4 4\" /> <path d=\"m5 19-3 3\" /> <path d=\"m14 4 6 6\" />", "s_asm": "<path d=\"M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.106-3.105c.32-.322.863-.22.983.218a6 6 0 0 1-8.259 7.057l-7.91 7.91a1 1 0 0 1-2.999-3l7.91-7.91a6 6 0 0 1 7.057-8.259c.438.12.54.662.219.984z\" />", "s_cap": "<path d=\"M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z\" /> <path d=\"M12 22V12\" /> <polyline points=\"3.29 7 12 12 20.71 7\" /> <path d=\"m7.5 4.27 9 5.15\" />", "s_seal": "<path d=\"M14 13V8.5C14 7 15 7 15 5a3 3 0 0 0-6 0c0 2 1 2 1 3.5V13\" /> <path d=\"M20 15.5a2.5 2.5 0 0 0-2.5-2.5h-11A2.5 2.5 0 0 0 4 15.5V17a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1z\" /> <path d=\"M5 22h14\" />", "s_final": "<path d=\"M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z\" /> <path d=\"m16 9-5.5 5.5L8 12\" />", "thermo": "<path d=\"M14 4v10.54a4 4 0 1 1-4 0V4a2 2 0 0 1 4 0Z\" />", "ruler": "<path d=\"M21.3 15.3a2.4 2.4 0 0 1 0 3.4l-2.6 2.6a2.4 2.4 0 0 1-3.4 0L2.7 8.7a2.41 2.41 0 0 1 0-3.4l2.6-2.6a2.41 2.41 0 0 1 3.4 0Z\" /> <path d=\"m14.5 12.5 2-2\" /> <path d=\"m11.5 9.5 2-2\" /> <path d=\"m8.5 6.5 2-2\" /> <path d=\"m17.5 15.5 2-2\" />", "clean": "<path d=\"M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z\" /> <path d=\"M20 2v4\" /> <path d=\"M22 4h-4\" /> <circle cx=\"4\" cy=\"20\" r=\"2\" />", "plus": "<circle cx=\"12\" cy=\"12\" r=\"10\" /> <path d=\"M8 12h8\" /> <path d=\"M12 8v8\" />", "ok": "<path d=\"M21.801 10A10 10 0 1 1 17 3.335\" /> <path d=\"m9 11 3 3L22 4\" />", "warn": "<path d=\"m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3\" /> <path d=\"M12 9v4\" /> <path d=\"M12 17h.01\" />", "file": "<path d=\"M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z\" /> <path d=\"M14 2v5a1 1 0 0 0 1 1h5\" /> <path d=\"M10 9H8\" /> <path d=\"M16 13H8\" /> <path d=\"M16 17H8\" />", "scan": "<path d=\"M3 7V5a2 2 0 0 1 2-2h2\" /> <path d=\"M17 3h2a2 2 0 0 1 2 2v2\" /> <path d=\"M21 17v2a2 2 0 0 1-2 2h-2\" /> <path d=\"M7 21H5a2 2 0 0 1-2-2v-2\" /> <circle cx=\"12\" cy=\"12\" r=\"3\" /> <path d=\"m16 16-1.9-1.9\" />", "clock": "<circle cx=\"12\" cy=\"12\" r=\"10\" /> <path d=\"M12 6v6l4 2\" />", "alert": "<path d=\"M12 16h.01\" /> <path d=\"M12 8v4\" /> <path d=\"M15.312 2a2 2 0 0 1 1.414.586l4.688 4.688A2 2 0 0 1 22 8.688v6.624a2 2 0 0 1-.586 1.414l-4.688 4.688a2 2 0 0 1-1.414.586H8.688a2 2 0 0 1-1.414-.586l-4.688-4.688A2 2 0 0 1 2 15.312V8.688a2 2 0 0 1 .586-1.414l4.688-4.688A2 2 0 0 1 8.688 2z\" />", "activity": "<path d=\"M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2\" />", "gauge": "<path d=\"m12 14 4-4\" /> <path d=\"M3.34 19a10 10 0 1 1 17.32 0\" />"};
 /* [VERSION] رقم إصدار البرنامج – يظهر أسفل القائمة وفي شاشة الدخول */
-const APP_VERSION = '13.8';
+const APP_VERSION = '14.1';
 let SERVER_VERSION = '';
 async function checkServerVersion(){ if(!GAS_MODE) return; try{ const v = JSON.parse(await rpc('serverVersion', '')); SERVER_VERSION = v.version + (v.ocr ? '' : ' (Drive API غير مفعّل)'); }catch(e){ SERVER_VERSION = /NET/.test(String(e && e.message || e)) ? '' : 'قديم – انشر إصداراً جديداً'; } try{ renderTabs(); }catch(e){} }
 /* [ERRORS] بدل الصفحة الفارغة: رسالة واضحة وزر إعادة تحميل */
@@ -4104,7 +4123,7 @@ VIEWS.data.bind = function(){
   let list = [];
   const draw = () => {
     $('#uBox').innerHTML = `<div class="tw"><table class="t"><thead><tr><th>الاسم</th><th>الصلاحية</th><th>الرمز السري</th><th>الحالة</th><th></th></tr></thead><tbody>
-      ${list.map((u,i)=>`<tr><td><input type="text" data-u="${i}" data-f="name" value="${esc(u.name)}"></td><td><select data-u="${i}" data-f="role"><option value="inspector" ${u.role==='inspector'?'selected':''}>مراقب جودة</option><option value="manager" ${u.role==='manager'?'selected':''}>مدير القسم</option><option value="viewer" ${u.role==='viewer'?'selected':''}>الإدارة – مشاهدة فقط</option><option value="production" ${u.role==='production'?'selected':''}>الإنتاج – لوحة الملاحظات فقط</option></select>${u.role==='production' ? `<input type="text" data-u="${i}" data-f="title" value="${esc(u.title||titleOf(u.name,'production'))}" placeholder="الصفة: مشرف الوردية…" style="margin-top:4px">` : ''}</td>
+      ${list.map((u,i)=>`<tr><td><input type="text" data-u="${i}" data-f="name" value="${esc(u.name)}"></td><td><select data-u="${i}" data-f="role"><option value="inspector" ${u.role==='inspector'?'selected':''}>مراقب جودة</option><option value="manager" ${u.role==='manager'?'selected':''}>مدير القسم</option><option value="viewer" ${u.role==='viewer'?'selected':''}>الإدارة – مشاهدة فقط</option><option value="production" ${u.role==='production'?'selected':''}>الإنتاج – لوحة الملاحظات فقط</option><option value="checker" ${u.role==='checker'?'selected':''}>عامل تشييك – التذاكر واللوحة</option></select>${u.role==='production' ? `<input type="text" data-u="${i}" data-f="title" value="${esc(u.title||titleOf(u.name,'production'))}" placeholder="الصفة: مشرف الوردية…" style="margin-top:4px">` : ''}</td>
         <td><input type="text" inputmode="numeric" data-u="${i}" data-f="pin" value="${esc(u.pin)}" style="max-width:120px"></td><td><select data-u="${i}" data-f="active"><option value="1" ${u.active!==false?'selected':''}>فعّال</option><option value="0" ${u.active===false?'selected':''}>موقوف</option></select></td>
         <td><button class="btn sm d" data-ud="${i}">حذف</button></td></tr>`).join('')}</tbody></table></div>
       <div class="row" style="margin-top:10px"><button class="btn" id="uAdd">${LI('plus')} إضافة مستخدم</button><button class="btn p" id="uSave">حفظ المستخدمين</button></div>`;
@@ -6836,14 +6855,16 @@ VIEWS.orderrep = {
 /* ================= [DRAW_SIMPLE] واجهة السحب المبسطة لحساب إيهاب ================= */
 const SIMPLE_DRAW_USERS = ['ايهاب حيدر', 'احمد احمد'];   /* [SIMPLE_DRAW_USERS] الحسابات التي تفتح لها واجهة السحب المبسطة */
 const isSimpleDraw = () => serverMode && CUR && SIMPLE_DRAW_USERS.some(n => sameP(n, CUR.name));
-let SD = null;
-function sdEntry(m){
-  const save = F; newRound('draw'); const f = F; F = save; f.machine = m; f.status = ''; f.reason = ''; f.q = ''; f.open = false;
+/* [SIMPLE_STAGES] المراحل ذات الواجهة المبسطة: السحب، الحقن، التغطية والتعبئة، التركيب غير الآلي، التختيم */
+const SIMPLE_STAGES = ['draw','inj','cap','asm','seal'];
+let SDK = 'draw', SD = null; const SDS = {};
+function sdEntry(m, st){
+  st = st || SDK; const save = F; newRound(st); const f = F; F = save; f.machine = m; f.status = ''; f.reason = ''; f.q = ''; f.open = false;
   /* تثبيت الطلبية واسم الموظف من أول جولة اليوم على هذه الآلة (آخر قيمة سُجّلت) */
-  const t = todayStr(), last = S.rounds.filter(r => r.stage === 'draw' && r.machine === m && r.date === t).pop();
-  const ls = lastStopNow('draw', m); if(ls){ f.status = 'stop'; f.reason = ls.reason; f.stopRecorded = ls.reason; }
+  const t = todayStr(), last = S.rounds.filter(r => r.stage === st && r.machine === m && r.date === t).pop();
+  const ls = lastStopNow(st, m); if(ls){ f.status = 'stop'; f.reason = ls.reason; f.stopRecorded = ls.reason; }
   if(last){ f.items = itemsOf(last).map(i => ({...i})); f.order = String((f.items[0] || {}).order || ''); f.operator = last.operator || ''; f.pinned = true; }
-  else { if(typeof applyPlan === 'function') applyPlan(f, 'draw', m); const op = typeof operatorFor === 'function' ? operatorFor('draw', m) : {name: ''}; f.operator = op.name || ''; }
+  else { if(typeof applyPlan === 'function') applyPlan(f, st, m); const op = typeof operatorFor === 'function' ? operatorFor(st, m) : {name: ''}; f.operator = op.name || ''; }
   f.operators = splitNames(f.operator); return f;
 }
 /* [STOP_KEEP] الآلة المسجلة متوقفة تبقى متوقفة طوال الوردية حتى تُسجّل أنها تعمل */
@@ -6853,7 +6874,24 @@ function lastStopNow(stage, m){
   const lr = S.rounds.filter(r => r.stage === stage && r.machine === m && r.date === t && r.shift === sh).pop();
   return !lr || (lr.time || '') <= (st.time || '') ? st : null;
 }
-function newSD(){ SD = {}; stageBy('draw').machines.forEach(m => SD[m] = sdEntry(m)); return SD; }
+function sdMachines(st){ const ms = stageBy(st).machines.filter(m => m !== '—'); const extra = st === 'asm' ? S.rounds.filter(r => r.stage === 'asm' && r.date === todayStr() && /^محطة تركيب/.test(r.machine || '')).map(r => r.machine) : []; return [...new Set(ms.concat(extra))]; }
+function newSD(){ SD = {}; sdMachines(SDK).forEach(m => SD[m] = sdEntry(m)); SDS[SDK] = SD; return SD; }
+function useSD(st){ SDK = st; SD = SDS[st] || null; if(!SD) newSD(); PAGE.drawsimple = ['جولات الإنتاج', 'جولة ' + stageBy(st).name]; }
+/* معلومات المنتج حسب المرحلة */
+function sealFromErp(o){ const k = Object.keys(o || {}).find(x => /seal|تختيم|ختم/i.test(x)); if(!k) return ''; const v = String(o[k] ?? '').trim(); if(!v || /^(null|undefined|none|-)$/i.test(v)) return ''; if(/^(1|yes|true|نعم|يوجد)/i.test(v)) return 'نعم'; if(/^(0|no|false|لا|بدون)/i.test(v)) return 'لا'; return v; }
+function sdInfoRows(st, o){
+  if(!o) return []; const noz = bcv(o.nozzle_name) ? o.nozzle_name : 'لا يوجد', cap = o.cap_name ? o.cap_name + (o.cap_code ? ' (' + o.cap_code + ')' : '') : '';
+  const base = [['اسم المنتج', o.product_name], ['الاسم العربي', o.product_name_arabic], ['قطر المنتج', o.product_diameter ? o.product_diameter + ' ملم' : '']];
+  const foil = (typeof foilFromErp === 'function' ? foilFromErp(o) : '') || ((S.settings.pspec || {})[o.product_code] || {}).foil || 'بانتظار إضافتها في ERP';
+  const map = {
+    draw: [['الطول', o.tube_cylinder_length ? o.tube_cylinder_length + ' ملم' : ''], ['SET (معلومات الورق)', o.set], ['سماكة الورق', typeof setThickness === 'function' ? setThickness(o.set) : ''], ['عرض الرول', typeof rollWidthOf === 'function' && rollWidthOf(o) ? rollWidthOf(o) + ' ملم' : ''], ['طباعة 360', o.is360 == 1 ? 'نعم' : o.is360 === 0 || o.is360 === '0' ? 'لا' : ''], ['الغطاء', o.cap_name], ['كود الغطاء', o.cap_code], ['النوزل', bcv(o.nozzle_name) ? o.nozzle_name : ''], ['الزبون', o.customer]],
+    inj: [['لون الحقنة', (typeof colorOf === 'function' && colorOf(o.shoulder_color)) || o.shoulder_color], ['السن / الفوهة', [o.tooth_type, o.hole_diameter != null && o.hole_diameter !== '' ? o.hole_diameter + ' ملم' : ''].filter(Boolean).join(' / ')], ['النوزل', noz], ['الغطاء', cap]],
+    cap: [['الفويلة', foil], ['الغطاء', cap], ['النوزل', noz]],
+    asm: [['النوزل', noz], ['الغطاء', cap]],
+    seal: [['الطول', o.tube_cylinder_length ? o.tube_cylinder_length + ' ملم' : ''], ['بحاجة تختيم', sealFromErp(o) || 'بانتظار إضافتها في ERP']]};
+  return base.concat(map[st] || []).filter(([, v]) => bcv(v));
+}
+
 function sdSearch(q){
   if(!String(q || '').trim()) return [];
   /* رقم من خانتين (10–60) يُعامل كقطر المنتج، والباقي اسم أو رقم طلبية */
@@ -6867,12 +6905,12 @@ function sdSearch(q){
 }
 function sdImg(o){ const im = o && typeof productImage === 'function' ? productImage(o) : null; return im ? `<div class="sdimg"><img src="${im.thumb}" ${im.id ? `data-iid="${esc(im.id)}"` : ''} alt="صورة المنتج"><span>${esc(im.src || '')}</span></div>` : '<p class="muted" style="margin:0 12px 8px">لا توجد صورة لهذا المنتج في مكتبة التصاميم.</p>'; }
 function sdMachineHtml(m, f){
-  const head = `<div class="mhd"><b>${LI('s_draw')} مكنة السحب ${esc(m)}</b><div class="pick mst">${[['run','تعمل'],['stop','متوقفة']].map(([k,l]) => `<button class="${f.status===k?'on':''} ${k}" data-sdst="${k}">${l}</button>`).join('')}</div></div>`;
+  const head = `<div class="mhd"><b>${LI('s_' + SDK)} ${esc(stageBy(SDK).name)} – ${esc(m)}</b><div class="pick mst">${[['run','تعمل'],['stop','متوقفة']].map(([k,l]) => `<button class="${f.status===k?'on':''} ${k}" data-sdst="${k}">${l}</button>`).join('')}</div></div>`;
   if(f.status === 'stop') return head + `<div class="pick">${STOP_REASONS.map(([k,l]) => `<button class="${f.reason===k?'on':''}" data-sdrs="${k}">${l}</button>`).join('')}</div>`;
   if(f.status !== 'run') return head + '<p class="muted" style="margin:8px 0 0">اختر حالة الآلة.</p>';
   const it = (f.items || [])[0], o = it ? specOfItem(it) || ordRows(it.order)[0] : null, ord = it ? String(it.order) : '';
   const res = f.q ? sdSearch(f.q) : [];
-  const info = o ? [['اسم المنتج', o.product_name], ['الاسم العربي', o.product_name_arabic], ['قطر المنتج', o.product_diameter ? o.product_diameter + ' ملم' : ''], ['الطول', o.tube_cylinder_length ? o.tube_cylinder_length + ' ملم' : ''], ['SET (معلومات الورق)', o.set], ['سماكة الورق', typeof setThickness === 'function' ? setThickness(o.set) : ''], ['عرض الرول', typeof rollWidthOf === 'function' && rollWidthOf(o) ? rollWidthOf(o) + ' ملم' : ''], ['طباعة 360', o.is360 == 1 ? 'نعم' : o.is360 === 0 || o.is360 === '0' ? 'لا' : ''], ['الغطاء', o.cap_name], ['كود الغطاء', o.cap_code], ['النوزل', bcv(o.nozzle_name) ? o.nozzle_name : ''], ['الزبون', o.customer]].filter(([, v]) => bcv(v)) : [];
+  const info = sdInfoRows(SDK, o);
   const erp = o ? ERP_NOTES.filter(([k]) => bcv(o[k])).map(([k, l]) => `<div class="erpn"><b>${esc(l)}</b>${esc(bcv(o[k]))}</div>`).join('') : '';
   const notes = ord && typeof allNotesFeed === 'function' ? allNotesFeed('', '', ord) : [];
   const roundIss = ord ? S.rounds.filter(r => itemsOf(r).some(i => String(i.order) === ord) && (r.defects || []).length && !String(r.notes || '').trim()).map(r => ({date: r.date, time: r.time, by: r.inspector, kind: stageBy(r.stage).name, text: r.defects.join('، ')})) : [];
@@ -6881,9 +6919,10 @@ function sdMachineHtml(m, f){
     <div class="sdsearch"><label class="f">بحث عن الطلبية: رقم، اسم عربي أو إنكليزي، أو قطر<input type="search" data-sdq value="${esc(f.q || '')}" placeholder="مثال: لوفاج 35 أو 260635"></label>
       ${res.length ? `<div class="sdres">${res.map(x => `<button data-sdpick="${esc(x.order_number)}|${esc(x.product_code || '')}"><b class="num">${esc(x.order_number)}</b><span>${esc(x.product_name || '')}${x.product_name_arabic ? ' · ' + esc(x.product_name_arabic) : ''}</span><em>قطر ${esc(x.product_diameter || '—')}</em></button>`).join('')}</div>` : f.q ? '<p class="muted">لا نتائج.</p>' : ''}</div>
     ${it ? `<div class="sdsel">${f.pinned ? '<span class="planbadge">📌 مثبّتة من أول جولة اليوم – يمكنك تغييرها</span>' : f.fromPlan ? '<span class="planbadge">📋 من خطة الإنتاج</span>' : ''}<b>${esc(it.product || (o || {}).product_name || '')}</b><span>طلبية <b class="num">${esc(ord)}</b>${o && o.product_diameter ? ` · قطر <b>${esc(o.product_diameter)}</b>` : ''}</span></div>
-    <details class="sdbox"><summary>📦 معلومات المنتج (اضغط للعرض)</summary>${sdImg(o)}<div class="bspec">${info.map(([l, v]) => `<div><span>${esc(l)}</span><b>${esc(bcv(v))}</b></div>`).join('')}</div>${erp ? `<h4>ملاحظات ERP</h4><div class="erpns">${erp}</div>` : ''}</details>
+    <details class="sdbox"><summary>📦 معلومات المنتج ${['draw','seal'].includes(SDK) ? '' : 'وصورة التصميم '}(اضغط للعرض)</summary>${sdImg(o)}<div class="bspec">${info.map(([l, v]) => `<div><span>${esc(l)}</span><b>${esc(bcv(v))}</b></div>`).join('')}</div>${erp ? `<h4>ملاحظات ERP</h4><div class="erpns">${erp}</div>` : ''}</details>
     <details class="sdbox"><summary>💬 ملاحظات على الطلبية (${allN.length}) (اضغط للعرض)</summary>${allN.length ? allN.slice(0, 40).map(n => `<div class="bwr"><span class="num">${esc(n.date)} ${esc(n.time)}</span><span><b>${esc(n.by || '')}</b><br><small>${esc(n.kind || '')}</small></span><span>${esc(n.text)}</span><span></span></div>`).join('') : '<p class="muted">لا توجد ملاحظات على هذه الطلبية.</p>'}</details>` : ''}
-    <div class="grid sdf"><label class="f">اسم الموظف <span class="req">*</span><input type="text" list="wkAll" data-sdop value="${esc(f.operator || '')}" placeholder="اسم عامل الآلة"></label>
+    ${it && ['inj','cap','asm'].includes(SDK) && typeof specBoxHtml === 'function' ? specBoxHtml(f, SDK, m, 'sd:' + m) : ''}
+    <div class="grid sdf"><label class="f">${(MIN_WORKERS[SDK] || 1) > 1 ? 'أسماء الموظفين (' + MIN_WORKERS[SDK] + ' على الأقل، افصل بفاصلة)' : 'اسم الموظف'} <span class="req">*</span><input type="text" list="wkAll" data-sdop value="${esc(f.operator || '')}" placeholder="اسم عامل الآلة"></label>
       <label class="f">رقم الصندوق <span class="req">*</span><input type="text" data-sdbox value="${esc(f.box || '')}"></label></div>
     <label class="f" style="margin-top:8px">ملاحظات الجودة<textarea rows="2" data-sdnotes>${esc(f.notes || '')}</textarea></label>
     <div class="oprep ${(f.decision && f.decision !== 'مقبول' || String(f.notes || '').trim()) && !f.opReported ? 'need' : ''}"><b>هل اكتشف العامل المشكلة وأبلغ عنها؟</b><div class="pick">${REPORTED.map(([k, l]) => `<button class="${f.opReported === k ? 'on' : ''}" data-sdrep="${k}">${l}</button>`).join('')}</div></div>
@@ -6894,10 +6933,10 @@ function simpleCls(f){ return f.decision === 'مرفوض' || f.decision === 'م�
 VIEWS.drawsimple = {
   html(){
     if(!SD) newSD();
-    return `<div class="pagehead"><div><h1 style="margin:0;display:flex;align-items:center;gap:12px"><span class="sti big">${LI('s_draw')}</span>جولة مرحلة السحب</h1><p>الواجهة المبسطة – الطلبية واسم الموظف مثبّتان من أول جولة اليوم ويمكن تغييرهما.</p></div><button class="btn" id="sdBack">رجوع</button></div>
+    return `<div class="pagehead"><div><h1 style="margin:0;display:flex;align-items:center;gap:12px"><span class="sti big">${LI('s_' + SDK)}</span>جولة مرحلة ${esc(stageBy(SDK).name)}</h1><p>الواجهة المبسطة – الطلبية واسم الموظف مثبّتان من أول جولة اليوم ويمكن تغييرهما.</p></div><button class="btn" id="sdBack">رجوع</button></div>
       <div class="dmgrid">${Object.entries(SD).map(([m, f]) => `<div class="panel dmach ${f.status}" data-sdm="${esc(m)}">${sdMachineHtml(m, f)}</div>`).join('')}</div>
       ${typeof workerDatalist === 'function' ? workerDatalist() : ''}
-      <div class="sticky-save"><button class="btn p" id="sdSave">حفظ جولة السحب</button></div>`;
+      ${SDK === 'asm' ? '<button class="btn" id="sdAddSt" style="margin-top:10px">+ إضافة محطة تركيب</button>' : ''}<div class="sticky-save"><button class="btn p" id="sdSave">حفظ جولة ${esc(stageBy(SDK).name)}</button></div>`;
   },
   bind(){
     $('#sdBack').onclick = () => go('prod');
@@ -6912,14 +6951,17 @@ VIEWS.drawsimple = {
       const nt = q('[data-sdnotes]'); if(nt) nt.oninput = () => f.notes = nt.value;
       p.querySelectorAll('[data-sddec]').forEach(b => b.onclick = () => { f.decision = b.dataset.sddec; upd(); });
       p.querySelectorAll('[data-sdrep]').forEach(b => b.onclick = () => { f.opReported = b.dataset.sdrep; upd(); });
+      if(typeof bindSpec === 'function' && ['inj','cap','asm'].includes(SDK)) bindSpec(p, f, SDK, p.dataset.sdm, 'sd:' + p.dataset.sdm);
     });
+    $('#sdAddSt') && ($('#sdAddSt').onclick = () => { const n = 'محطة تركيب ' + (Object.keys(SD).length + 1); SD[n] = sdEntry(n); rerender(); });
     $('#sdSave').onclick = () => {
       const ms = Object.entries(SD); if(ms.every(([, f]) => !f.status)){ toast('اختر حالة الآلات: تعمل أو متوقفة'); return; }
       for(const [m, f] of ms){
         if(f.status === 'stop' && !f.reason){ toast(`اختر سبب توقف ${m}`); return; }
         if(f.status !== 'run') continue;
         if(!(f.items || []).length){ toast(`${m}: اختر الطلبية`); return; }
-        if(!String(f.operator || '').trim()){ toast(`${m}: اكتب اسم الموظف`); return; }
+        const minW = MIN_WORKERS[SDK] || 1; if(splitNames(f.operator).length < minW){ toast(`${m}: اكتب ${minW > 1 ? 'أسماء ' + minW + ' موظفين على الأقل' : 'اسم الموظف'}`); return; }
+        if(['inj','cap','asm'].includes(SDK) && typeof specRequired === 'function'){ const miss = specRequired(f, SDK, m); if(miss.length){ toast(`${m}: أكمل التحقق من المواصفات الحرجة (${miss.map(x => x.l).join('، ')})`); return; } }
         if(!String(f.box || '').trim()){ toast(`${m}: اكتب رقم الصندوق`); return; }
         if(!f.decision){ toast(`${m}: اختر القرار`); return; }
         if((f.decision !== 'مقبول' || String(f.notes || '').trim()) && !f.opReported){ toast(`${m}: حدّد هل اكتشف العامل المشكلة وأبلغ عنها`); return; }
@@ -6927,9 +6969,9 @@ VIEWS.drawsimple = {
       const d = new Date(); let n = 0;
       for(const [m, f] of ms){
         if(f.status === 'stop' && f.stopRecorded === f.reason){ continue; }
-        if(f.status === 'stop'){ S.stops = S.stops || []; S.stops.push({id: uid(), date: todayStr(d), time: timeStr(d), shift: S.settings.shift, inspector: S.settings.inspector, stage: 'draw', machine: m, reason: f.reason, reasonLabel: stopLabel(f.reason), detail: ''}); n++; continue; }
+        if(f.status === 'stop'){ S.stops = S.stops || []; S.stops.push({id: uid(), date: todayStr(d), time: timeStr(d), shift: S.settings.shift, inspector: S.settings.inspector, stage: SDK, machine: m, reason: f.reason, reasonLabel: stopLabel(f.reason), detail: ''}); n++; continue; }
         if(f.status !== 'run') continue;
-        const save = F; F = f; F.__multi = true; F.operators = splitNames(f.operator); F.opReported = f.opReported || 'none'; F.cls = simpleCls(f);
+        const save = F; F = f; F.__multi = true; F.operators = splitNames(f.operator); if(SDK === 'asm') F.worker = f.operator; F.opReported = f.opReported || 'none'; F.cls = simpleCls(f);
         let r = null; try{ r = saveRound(); } finally { delete f.__multi; F = save; }
         if(!r && !S.rounds.some(x => x.machine === m && x.date === todayStr(d) && x.time === timeStr(d))){ toast(`تعذر حفظ ${m}`); return; }
         n++;
@@ -6938,13 +6980,13 @@ VIEWS.drawsimple = {
       /* إبقاء الطلبية واسم الموظف مثبّتين للجولة التالية */
       const keep = Object.fromEntries(ms.map(([m, f]) => [m, {items: f.items, order: f.order, operator: f.operator}]));
       newSD(); Object.entries(keep).forEach(([m, k]) => { if((k.items || []).length){ Object.assign(SD[m], k, {pinned: true, operators: splitNames(k.operator)}); } });
-      toast(`تم حفظ جولة السحب (${n})`); go('prod');
+      toast(`تم حفظ جولة ${stageBy(SDK).name} (${n})`); go('prod');
     };
   }
 };
 PARENT.drawsimple = 'prod'; NAV_OF.drawsimple = 'prod'; PAGE.drawsimple = ['جولات الإنتاج', 'جولة السحب'];
 const _prodBindSD = VIEWS.prod.bind;
-VIEWS.prod.bind = function(){ _prodBindSD.apply(this, arguments); if(isSimpleDraw()) $$('[data-st="draw"]').forEach(b => b.onclick = () => { if(!SD) newSD(); go('drawsimple'); }); };
+VIEWS.prod.bind = function(){ _prodBindSD.apply(this, arguments); if(isSimpleDraw()) SIMPLE_STAGES.forEach(st => $$(`[data-st="${st}"]`).forEach(b => b.onclick = () => { useSD(st); go('drawsimple'); })); };
 const _newDMStop = newDM;
 newDM = function(stKey){ const d = _newDMStop.apply(this, arguments); Object.entries(d.machines).forEach(([m, f]) => { const ls = lastStopNow(d.stage, m); if(ls){ f.status = 'stop'; f.reason = ls.reason; f.detail = ls.detail || ''; f.stopRecorded = ls.reason; } }); return d; };
 /* صور المنتج: تحميل الدقة الكاملة عند الفتح */
@@ -7219,6 +7261,250 @@ VIEWS.prod.html = function(){
 const _prodBindInsp = VIEWS.prod.bind;
 VIEWS.prod.bind = function(){ _prodBindInsp.apply(this, arguments); $$('[data-ihgo]').forEach(b => b.onclick = () => go(b.dataset.ihgo)); $$('[data-ihst]').forEach(b => b.onclick = () => { const el = document.querySelector(`[data-st="${b.dataset.ihst}"]`); if(el) el.click(); }); };
 
+/* ================= [SEVERITY_SUMMARY] ملخص الحالات الحرجة والرئيسية والثانوية – لإدارة القسم فقط ================= */
+ICONS.sevsum = LI('warn');
+(NAV.find(g => g.g === 'التحليل والتقارير') || NAV[NAV.length - 1]).items.unshift(['sevsum', 'الحالات حسب الدرجة']);
+PAGE.sevsum = ['التحليل والتقارير', 'الحالات حسب الدرجة'];
+REPORT_VIEWS.push('sevsum');
+let SV = {p: 'w', from: '', to: '', open: 'حرج'};
+const SEV_LIST = [['حرج', '#B83227'], ['رئيسي', '#D99A2B'], ['ثانوي', '#8A97A3']];
+const sevOf = r => r.cls && r.cls !== '—' ? r.cls : '';
+VIEWS.sevsum = {
+  html(){
+    const t = todayStr(); if(SV.p !== 'c'){ SV.to = t; SV.from = {d: t, w: addDays(t, -6), m: addDays(t, -29), q: addDays(t, -89)}[SV.p]; }
+    const rs = S.rounds.filter(r => r.date >= SV.from && r.date <= SV.to && sevOf(r));
+    const by = k => rs.filter(r => sevOf(r) === k);
+    const days = []; for(let d = SV.from; d <= SV.to && days.length < 92; d = addDays(d, 1)) days.push(d);
+    const mx = Math.max(1, ...days.map(d => rs.filter(r => r.date === d).length));
+    const stRows = STAGES.map(s => [s, SEV_LIST.map(([k]) => rs.filter(r => r.stage === s.key && sevOf(r) === k).length)]).filter(x => x[1].some(Boolean));
+    const mach = Object.entries(rs.reduce((a, r) => { const k = stageBy(r.stage).name + ' – ' + (r.machine || '—'); a[k] = a[k] || [0, 0, 0]; a[k][SEV_LIST.findIndex(x => x[0] === sevOf(r))]++; return a; }, {})).sort((a, b) => (b[1][0] * 100 + b[1][1] * 10 + b[1][2]) - (a[1][0] * 100 + a[1][1] * 10 + a[1][2])).slice(0, 10);
+    const list = by(SV.open).slice().reverse();
+    return `<div class="pagehead"><div><h1 style="margin:0">الحالات حسب الدرجة</h1><p>كل ما اكتُشف في الجولات مصنّفاً: حرج، رئيسي، ثانوي. لإدارة القسم فقط.</p></div><button class="btn p noprint" id="svPdf">تصدير PDF</button></div>
+      <div class="panel noprint"><div class="pick">${[['d','اليوم'],['w','آخر 7 أيام'],['m','آخر 30 يوماً'],['q','آخر 3 أشهر'],['c','فترة محددة']].map(([k, l]) => `<button class="${SV.p===k?'on':''}" data-svp="${k}">${l}</button>`).join('')}</div>
+        ${SV.p === 'c' ? `<div class="grid" style="margin-top:8px"><label class="f">من<input type="date" id="svF" value="${SV.from}"></label><label class="f">إلى<input type="date" id="svT" value="${SV.to}"></label></div>` : ''}</div>
+      <div id="svBody"><div class="svk">${SEV_LIST.map(([k, c]) => `<button class="svc ${SV.open===k?'on':''}" data-svo="${k}" style="--c:${c}"><b class="num">${by(k).length}</b><span>${k}</span><small>${rs.length ? Math.round(by(k).length * 100 / rs.length) : 0}%</small></button>`).join('')}</div>
+      <div class="mpg"><div class="panel"><h3>الاتجاه اليومي</h3><div class="mpbars">${days.map(d => { const c = SEV_LIST.map(([k]) => rs.filter(r => r.date === d && sevOf(r) === k).length); const tot = c.reduce((a, b) => a + b, 0);
+          return `<div class="mpbar" title="${d}: ${tot}"><div class="stk" style="height:${Math.round(tot * 100 / mx)}%">${c.map((n, i) => n ? `<i style="flex:${n};background:${SEV_LIST[i][1]}"></i>` : '').join('')}</div><span>${days.length <= 31 ? d.slice(8) : ''}</span></div>`; }).join('')}</div></div>
+        <div class="panel"><h3>حسب المرحلة</h3><table class="t"><thead><tr><th>المرحلة</th>${SEV_LIST.map(([k, c]) => `<th style="color:${c}">${k}</th>`).join('')}</tr></thead><tbody>${stRows.map(([s, n]) => `<tr><td>${esc(s.name)}</td>${n.map((v, i) => `<td class="num" style="${v && i === 0 ? 'color:#B83227;font-weight:800' : ''}">${v || ''}</td>`).join('')}</tr>`).join('') || '<tr><td colspan="4" class="muted">لا حالات.</td></tr>'}</tbody></table></div></div>
+      <div class="panel"><h3>الآلات الأكثر حالات</h3><table class="t"><thead><tr><th>الآلة</th>${SEV_LIST.map(([k, c]) => `<th style="color:${c}">${k}</th>`).join('')}</tr></thead><tbody>${mach.map(([m, n]) => `<tr><td>${esc(m)}</td>${n.map(v => `<td class="num">${v || ''}</td>`).join('')}</tr>`).join('') || '<tr><td colspan="4" class="muted">لا حالات.</td></tr>'}</tbody></table></div>
+      <div class="panel"><h3>الحالات ${esc(SV.open)} (${list.length})</h3><div class="tw"><table class="t"><thead><tr><th>التاريخ</th><th>المرحلة / الآلة</th><th>الطلبية / المنتج</th><th>العامل</th><th>العيب والملاحظة</th><th>القرار</th><th>المراقب</th></tr></thead><tbody>
+        ${list.map(r => `<tr><td class="num">${esc(r.date)} ${esc(r.time)}</td><td>${esc(stageBy(r.stage).name)}<div class="mu">${esc(r.machine || '')}</div></td><td class="num">${esc(ordersLabel(r))}<div class="mu">${esc(itemsLabel(r))}</div></td><td>${esc(r.operator || r.worker || '')}${r.opReported === 'no' ? '<div class="cr">لم يبلغ</div>' : r.opReported === 'yes' ? '<div class="cg">أبلغ</div>' : ''}</td><td>${esc([...(r.failed || []), ...(r.defects || [])].join('، '))}${r.notes ? '<div>' + esc(r.notes) + '</div>' : ''}${r.box ? '<div class="mu">صندوق ' + esc(r.box) + '</div>' : ''}</td><td>${decPill(r.decision)}</td><td class="sm">${esc(r.inspector)}</td></tr>`).join('') || '<tr><td colspan="7" class="muted">لا حالات بهذه الدرجة في الفترة.</td></tr>'}</tbody></table></div></div></div>`;
+  },
+  bind(){
+    $$('[data-svp]').forEach(b => b.onclick = () => { SV.p = b.dataset.svp; rerender(); });
+    $$('[data-svo]').forEach(b => b.onclick = () => { SV.open = b.dataset.svo; rerender(); });
+    $('#svF') && ($('#svF').onchange = e => { SV.from = e.target.value; rerender(); }); $('#svT') && ($('#svT').onchange = e => { SV.to = e.target.value; rerender(); });
+    $('#svPdf').onclick = () => printDoc(`ملخص الحالات حسب الدرجة ${SV.from} – ${SV.to}`, $('#svBody').innerHTML);
+  }
+};
+
+/* ================= [MY_DAY] تقرير عملي اليوم: ما سجّله المراقب في كل مرحلة، والمواد، والمراقبات، والملاحظات ================= */
+ICONS.myday = LI('rep');
+NAV.find(g => g.g === 'العمليات اليومية').items.splice(1, 0, ['myday', 'تقرير عملي اليوم']);
+PAGE.myday = ['العمليات اليومية', 'تقرير عملي اليوم'];
+INSPECTOR_VIEWS.push('myday'); INSPECTOR_NAV.splice(1, 0, 'myday');
+let MD = {date: '', st: 'all', who: ''};
+VIEWS.myday = {
+  html(){
+    MD.date = MD.date || todayStr(); const who = isMgr() || (typeof isViewer === 'function' && isViewer()) ? (MD.who || CUR.name) : CUR.name;
+    const mine = x => sameP(x, who), rs = S.rounds.filter(r => r.date === MD.date && mine(r.inspector)).sort((a, b) => (a.time || '').localeCompare(b.time || ''));
+    const stCounts = STAGES.map(s => [s, rs.filter(r => r.stage === s.key)]).filter(x => x[1].length);
+    const show = MD.st === 'all' ? rs : rs.filter(r => r.stage === MD.st);
+    const sev = k => rs.filter(r => r.cls === k).length, iss = rs.filter(r => r.decision !== 'مقبول' || (r.defects || []).length || String(r.notes || '').trim());
+    const mats = S.mats.filter(m => m.date === MD.date && mine(m.inspector)), auds = S.audits.filter(a => a.date === MD.date && mine(a.inspector));
+    const ths = (S.ths || []).filter(x => x.date === MD.date && mine(x.inspector || x.by)), cals = (S.cals || []).filter(x => x.date === MD.date && mine(x.inspector || x.by));
+    const stops = (S.stops || []).filter(z => z.date === MD.date && mine(z.inspector)), notes = (S.onotes || []).filter(n => n.date === MD.date && mine(n.by));
+    const insps = [...new Set(S.rounds.filter(r => r.date === MD.date).map(r => r.inspector))].filter(Boolean);
+    const row = r => `<tr><td class="num">${esc(r.time)}<div class="mu">${esc(r.no || '')}</div></td><td>${esc(stageBy(r.stage).name)}${r.type && r.stage === 'print' ? '<div class="mu">' + esc(r.type) + '</div>' : ''}</td><td>${esc(r.machine && r.machine !== '—' ? r.machine : '')}</td><td class="num">${esc(ordersLabel(r))}<div class="mu">${esc(itemsLabel(r))}</div></td><td>${esc(r.operator || r.worker || (r.extra || {}).worker || '')}${r.opReported === 'yes' ? '<div class="cg">أبلغ</div>' : r.opReported === 'no' ? '<div class="cr">لم يبلغ</div>' : ''}</td><td class="num">${esc(r.box || '')}${(r.rolls || []).length ? '<div class="mu">رول ' + esc(r.rolls.map(x => x.no).join('، ')) + '</div>' : (r.extra || {}).roll ? '<div class="mu">رول ' + esc(r.extra.roll) + '</div>' : ''}</td><td>${esc([...(r.failed || []), ...(r.defects || [])].join('، '))}${r.notes ? '<div>' + esc(r.notes) + '</div>' : ''}${r.gnotes ? '<div class="gn">📝 ' + esc(r.gnotes) + '</div>' : ''}</td><td>${r.cls ? `<span class="sevtag s-${esc(r.cls)}">${esc(r.cls)}</span>` : ''}</td><td>${decPill(r.decision)}</td></tr>`;
+    return `<div class="pagehead"><div><h1 style="margin:0">تقرير عملي اليوم</h1><p>كل ما سجّلته: الجولات في كل مرحلة، والمواد الأولية، والمراقبات العامة، وملاحظاتك في لوحة الطلبيات.</p></div><button class="btn p noprint" id="mdPdf">طباعة / PDF</button></div>
+      <div class="panel noprint"><div class="grid"><label class="f">اليوم<input type="date" id="mdD" value="${MD.date}"></label>${isMgr() || (typeof isViewer === 'function' && isViewer()) ? `<label class="f">المراقب<select id="mdW">${[...new Set([CUR.name, ...insps])].map(n => `<option ${sameP(n, who)?'selected':''}>${esc(n)}</option>`).join('')}</select></label>` : ''}</div></div>
+      <div id="mdBody">
+      <div class="mdh"><b>${esc(who)}</b><span>${esc(titleOf(who, sameP(who, CUR.name) ? CUR.role : ''))} · ${esc(MD.date)}</span></div>
+      <div class="mpk">${[['🧪', rs.length, 'جولة'], ['🔍', iss.length, 'فيها مشكلة أو ملاحظة'], ['⛔', sev('حرج'), 'حرج'], ['⚠️', sev('رئيسي'), 'رئيسي'], ['ℹ️', sev('ثانوي'), 'ثانوي'], ['⏸', stops.length, 'توقف آلة'], ['📦', mats.length, 'فحص مادة'], ['📝', notes.length, 'ملاحظة في اللوحة']].map(([i, v, l]) => `<div class="mpc"><i>${i}</i><b class="num">${v}</b><span>${l}</span></div>`).join('')}</div>
+      <div class="pick noprint mdtabs"><button class="${MD.st==='all'?'on':''}" data-mds="all">كل المراحل (${rs.length})</button>${stCounts.map(([s, x]) => `<button class="${MD.st===s.key?'on':''}" data-mds="${s.key}">${esc(s.name)} (${x.length})</button>`).join('')}</div>
+      ${MD.st === 'all' ? stCounts.map(([s, x]) => `<h3 class="mdst">${LI('s_' + s.key)} ${esc(s.name)} <small>${x.length} جولة</small></h3><div class="tw"><table class="t"><thead><tr><th>الوقت</th><th>المرحلة</th><th>الآلة</th><th>الطلبية / المنتج</th><th>العامل</th><th>صندوق / رول</th><th>العيوب والملاحظات</th><th>الدرجة</th><th>القرار</th></tr></thead><tbody>${x.map(row).join('')}</tbody></table></div>`).join('') || '<p class="muted">لا جولات مسجّلة في هذا اليوم.</p>'
+        : `<div class="tw"><table class="t"><thead><tr><th>الوقت</th><th>المرحلة</th><th>الآلة</th><th>الطلبية / المنتج</th><th>العامل</th><th>صندوق / رول</th><th>العيوب والملاحظات</th><th>الدرجة</th><th>القرار</th></tr></thead><tbody>${show.map(row).join('') || '<tr><td colspan="9" class="muted">لا جولات.</td></tr>'}</tbody></table></div>`}
+      ${stops.length ? `<h3 class="mdst">⏸ توقف الآلات</h3><table class="t"><tbody>${stops.map(z => `<tr><td class="num">${esc(z.time)}</td><td>${esc(stageBy(z.stage).name)} – ${esc(z.machine)}</td><td><b>${esc(z.reasonLabel || z.reason)}</b> ${esc(z.detail || '')}</td></tr>`).join('')}</tbody></table>` : ''}
+      <h3 class="mdst">📦 المواد الأولية (${mats.length})</h3>${mats.length ? `<table class="t"><thead><tr><th>الرقم</th><th>المادة</th><th>المورد</th><th>الكمية</th><th>القرار</th></tr></thead><tbody>${mats.map(m => `<tr><td class="num">${esc(m.no || '')}</td><td>${esc((matBy(m.type) || {}).name || '')} ${esc(m.name || m.code || '')}</td><td>${esc(m.supplier || '')}</td><td class="num">${esc(m.qty || '')}</td><td>${decPill(m.decision)}</td></tr>`).join('')}</tbody></table>` : '<p class="muted">لا فحوص مواد.</p>'}
+      <h3 class="mdst">🧹 المراقبات العامة</h3>${auds.length || ths.length || cals.length ? `<table class="t"><tbody>${auds.map(a => `<tr><td>${esc((AUDITS.find(x => x.key === a.type) || {}).name || 'مراقبة')}</td><td>${(a.failed || []).length ? '<b class="cr">' + esc(a.failed.join('، ')) + '</b>' : 'كل البنود صح'}</td></tr>`).join('')}${ths.map(x => `<tr><td>الحرارة والرطوبة – ${esc(x.slot || x.time || '')}</td><td>${esc((x.rows || x.readings || []).length ? (x.rows || x.readings).map(y => (y.loc || y.l || '') + ': ' + (y.t ?? y.temp ?? '') + '° / ' + (y.h ?? y.hum ?? '') + '%').join(' · ') : '')}</td></tr>`).join('')}${cals.map(x => `<tr><td>التحقق من أدوات القياس</td><td>${esc(x.window || x.period || '')} ${(x.bad || []).length ? '<b class="cr">خارج الحد: ' + esc(x.bad.length) + '</b>' : ''}</td></tr>`).join('')}</tbody></table>` : '<p class="muted">لا مراقبات مسجّلة في هذا اليوم.</p>'}
+      <h3 class="mdst">💬 ملاحظاتي في لوحة الطلبيات (${notes.length})</h3>${notes.length ? `<table class="t"><tbody>${notes.map(n => `<tr><td class="num">${esc(n.time)}</td><td class="num">${esc(n.order)}<div class="mu">${esc(n.product || '')}</div></td><td>${esc(n.text)}</td></tr>`).join('')}</tbody></table>` : '<p class="muted">لا ملاحظات.</p>'}
+      </div>`;
+  },
+  bind(){
+    $('#mdD').onchange = e => { MD.date = e.target.value; rerender(); };
+    $('#mdW') && ($('#mdW').onchange = e => { MD.who = e.target.value; rerender(); });
+    $$('[data-mds]').forEach(b => b.onclick = () => { MD.st = b.dataset.mds; rerender(); });
+    $('#mdPdf').onclick = () => printDoc(`تقرير عملي اليوم – ${MD.who || CUR.name} – ${MD.date}`, $('#mdBody').innerHTML);
+  }
+};
+/* زر سريع في واجهة الجولات للمراقب */
+const _prodHtmlMD = VIEWS.prod.html;
+VIEWS.prod.html = function(){ const h = _prodHtmlMD.apply(this, arguments); return isInspectorRole() ? h.replace('<button class="ihc go" data-ihgo="myperf"><b>📈</b><span>أدائي</span></button>', '<button class="ihc go" data-ihgo="myday"><b>📋</b><span>تقرير عملي اليوم</span></button>') : h; };
+
+/* ================= [TICKETS] تذكرة المشكلة: عامل التشييك (تابلت) ↔ مراقب الجودة ================= */
+/* حرج = إيقاف الآلة فوراً · رئيسي وثانوي = بانتظار قرار الجودة · الجودة وحدها تقرر وتغلق */
+const isChecker = () => serverMode && CUR && CUR.role === 'checker';
+ROLE_TITLES.checker = 'عامل تشييك';
+const TK_STATUS = {new: ['بانتظار قرار الجودة', '#E8772E'], todo: ['بانتظار التنفيذ', '#1D4E89'], verify: ['بانتظار تحقق الجودة', '#7B4BB7'], closed: ['مغلقة', '#1F7A5A']};
+const TK_DEC = {none: 'لا يلزم إجراء', sort: 'فرز 100%', stop: 'إيقاف الآلة حتى الإصلاح', reject: 'رفض الكمية'};
+const TK_STAGES = ['print','draw','sort','inj','asm','cap','seal'];
+const TK_LIMIT = {'حرج': 10, 'رئيسي': 15, 'ثانوي': 30};
+function tkNo(){ const y = todayStr().slice(0, 4), n = (S.tickets || []).filter(t => String(t.no || '').startsWith('T-' + y)).length + 1; return `T-${y}-${String(n).padStart(3, '0')}`; }
+function tkLog(t, action){ t.log = (t.log || []).concat([{at: todayStr() + ' ' + timeStr(), by: CUR.name || S.settings.inspector, action}]); }
+function tkMins(t){ const [h, m] = String(t.time || '0:0').split(':').map(Number), d = new Date(); return t.date === todayStr() ? (d.getHours() * 60 + d.getMinutes()) - (h * 60 + (m || 0)) : 9999; }
+/* ---------- إنشاء ---------- */
+function newTicket(o){
+  S.tickets = S.tickets || []; const d = new Date();
+  const t = {id: uid(), no: tkNo(), date: todayStr(d), time: timeStr(d), shift: typeof shiftForTime === 'function' ? shiftForTime() : S.settings.shift, status: 'new', decision: '', by: CUR.name || S.settings.inspector, byRole: CUR.role || '', ...o};
+  tkLog(t, o.status === 'todo' ? `أنشأها مراقب الجودة بقرار: ${TK_DEC[o.decision] || ''}` : `رُصدت – المكتشف: ${t.finder === 'operator' ? 'مشغل الآلة ' + (t.finderName || '') : t.finder === 'qc' ? 'مراقب الجودة' : 'عامل التشييك'}`);
+  S.tickets.push(t);
+  S.onotes = S.onotes || []; S.onotes.push({id: uid(), order: t.order || '', product: t.product || '', stage: t.stage, text: `🎫 ${t.no}: ${t.defect} – ${t.machine}${t.box ? ' صندوق ' + t.box : ''}${t.stopped ? ' – أوقفت الآلة' : ''}`, by: CUR.name, role: CUR.role || '', title: titleOf(CUR.name, CUR.role, CUR.title), date: t.date, time: t.time});
+  save(); return t;
+}
+/* ---------- قرار الجودة والتحقق ---------- */
+function tkDecide(t, dec){
+  t.decision = dec; t.decidedBy = CUR.name; t.decidedAt = todayStr() + ' ' + timeStr(); tkLog(t, 'قرار الجودة: ' + TK_DEC[dec]);
+  if(dec === 'none'){ t.status = 'closed'; t.closedAt = t.decidedAt; }
+  else if(dec === 'reject'){ t.status = 'closed'; t.closedAt = t.decidedAt; tkHold(t, 'مرفوض'); }
+  else { t.status = 'todo'; tkHold(t, 'محجور'); }
+  save();
+}
+function tkHold(t, kind){
+  if(t.hold) return; const no = typeof nextHoldNo === 'function' ? nextHoldNo(todayStr()) : 'H-' + uid(); t.hold = no;
+  S.holds.push({id: uid(), no, date: todayStr(), time: timeStr(), shift: t.shift, inspector: CUR.name, stage: t.stage, machine: t.machine, order: t.order || '', items: t.order ? [{order: t.order, product: t.product || ''}] : [], product: t.product || '', qty: t.qty || '', desc: `${t.no}: ${t.defect}`, cls: t.sev, status: 'مفتوح', disposition: kind === 'مرفوض' ? 'إتلاف' : '', good: '', bad: '', closed: '', ncr: '', ticket: t.no});
+}
+function tkVerify(t, ok){
+  t.verifiedBy = CUR.name; t.verifiedAt = todayStr() + ' ' + timeStr();
+  if(ok){ t.status = 'closed'; t.verify = 'ok'; t.closedAt = t.verifiedAt; tkLog(t, 'تحقق الجودة بعينة 20 تيوباً: مطابق – أُغلقت');
+    const h = S.holds.find(x => x.no === t.hold); if(h && h.status !== 'مغلق'){ h.status = 'مغلق'; h.disposition = h.disposition || 'فرز'; h.good = t.sortOk || h.good; h.bad = t.sortBad || h.bad; h.closed = todayStr(); } }
+  else { t.status = 'todo'; t.verify = 'fail'; t.escapes = (t.escapes || 0) + 1; tkLog(t, 'تحقق الجودة: غير مطابق – إعادة فرز (تسرّب)'); }
+  save();
+}
+/* ---------- بطاقة التذكرة ---------- */
+function tkCard(t, mode){
+  const st = TK_STATUS[t.status] || ['', '#999'], late = t.status === 'new' && tkMins(t) > (TK_LIMIT[t.sev] || 30);
+  const fnd = t.finder === 'operator' ? `المشغل ${esc(t.finderName || '')}` : t.finder === 'qc' ? 'مراقب الجودة' : `عامل التشييك ${esc(t.by || '')}`;
+  let act = '';
+  if(mode === 'qc' && t.status === 'new') act = `<div class="tka">${Object.entries(TK_DEC).map(([k, l]) => `<button class="btn ${k === 'stop' || k === 'reject' ? 'd' : k === 'sort' ? 'p' : ''}" data-tkdec="${t.id}" data-v="${k}">${l}</button>`).join('')}</div>`;
+  if(mode === 'qc' && t.status === 'verify') act = `<div class="tka"><span class="muted">افحص عينة 20 تيوباً:</span><button class="btn k" data-tkver="${t.id}" data-v="1">✓ مطابق – أغلق</button><button class="btn d" data-tkver="${t.id}" data-v="0">✗ غير مطابق – أعد الفرز</button></div>`;
+  if(mode === 'chk' && t.status === 'todo') act = t.decision === 'stop'
+    ? `<div class="tka"><button class="btn p big" data-tkdone="${t.id}">✓ تم الإصلاح وفحصت أول 20 تيوباً – سليمة</button></div>`
+    : `<div class="tka"><label class="f">سليم<input type="number" class="num" data-tkok="${t.id}" value="${esc(t.sortOk || '')}"></label><label class="f">معيب<input type="number" class="num" data-tkbad="${t.id}" value="${esc(t.sortBad || '')}"></label><button class="btn p big" data-tkdone="${t.id}">✓ تم الفرز</button></div>`;
+  return `<div class="tk ${t.sev === 'حرج' ? 'crit' : ''} ${late ? 'late' : ''}" style="--c:${st[1]}"><div class="tkh"><b class="num">${esc(t.no)}</b><span class="sevtag s-${esc(t.sev)}">${esc(t.sev)}</span><span class="tks">${st[0]}</span><span class="muted num">${esc(t.time)}${t.date !== todayStr() ? ' ' + esc(t.date) : ''}</span></div>
+    <div class="tkb"><b>${esc(stageBy(t.stage).name)} – ${esc(t.machine)}</b>${t.stopped ? ' <span class="pill p-مرفوض">⛔ الآلة متوقفة</span>' : ''}<div>${esc(t.defect)}</div><small>طلبية ${esc(t.order || '—')} ${esc(t.product || '')}${t.box ? ' · صندوق ' + esc(t.box) : ''}${t.qty ? ' · معزول ' + esc(t.qty) : ''}</small><small>المكتشف: ${fnd}${t.decision ? ' · القرار: <b>' + esc(TK_DEC[t.decision]) + '</b> (' + esc(t.decidedBy || '') + ')' : ''}${t.sortOk || t.sortBad ? ` · الفرز: سليم ${esc(t.sortOk || 0)} / معيب ${esc(t.sortBad || 0)}` : ''}${t.escapes ? ` · <b class="cr">تسرّب ${t.escapes}</b>` : ''}</small>${late ? `<div class="cr"><b>⏰ تأخر قرار الجودة ${tkMins(t)} دقيقة</b></div>` : ''}</div>${act}</div>`;
+}
+function tkBindActions(){
+  $$('[data-tkdec]').forEach(b => b.onclick = () => { const t = S.tickets.find(x => String(x.id) === b.dataset.tkdec); if(b.dataset.v === 'reject' || b.dataset.v === 'stop'){ ask(`${TK_DEC[b.dataset.v]}؟`, 'تأكيد', () => { tkDecide(t, b.dataset.v); rerender(); }, b.dataset.v === 'reject'); } else { tkDecide(t, b.dataset.v); rerender(); } toast('حُفظ قرار الجودة – وصل لعامل التشييك'); });
+  $$('[data-tkver]').forEach(b => b.onclick = () => { tkVerify(S.tickets.find(x => String(x.id) === b.dataset.tkver), b.dataset.v === '1'); rerender(); });
+  $$('[data-tkok]').forEach(el => el.oninput = () => { S.tickets.find(x => String(x.id) === el.dataset.tkok).sortOk = el.value; });
+  $$('[data-tkbad]').forEach(el => el.oninput = () => { S.tickets.find(x => String(x.id) === el.dataset.tkbad).sortBad = el.value; });
+  $$('[data-tkdone]').forEach(b => b.onclick = () => { const t = S.tickets.find(x => String(x.id) === b.dataset.tkdone);
+    if(t.decision === 'sort' && (t.sortOk === undefined || t.sortOk === '' || t.sortBad === undefined || t.sortBad === '')){ toast('اكتب عدد السليم والمعيب'); return; }
+    t.status = 'verify'; t.doneBy = CUR.name; t.doneAt = todayStr() + ' ' + timeStr(); tkLog(t, t.decision === 'stop' ? 'تم الإصلاح وفحص أول 20 تيوباً' : `تم الفرز: سليم ${t.sortOk} / معيب ${t.sortBad}`); save(); rerender(); toast('أُبلغ مراقب الجودة للتحقق'); });
+}
+/* ---------- شاشة عامل التشييك: تذاكري ---------- */
+let TKF = null;
+function tkFormHtml(){
+  const f = TKF, ms = f.stage ? stageBy(f.stage).machines.filter(m => m !== '—') : [], defs = f.stage ? defectsFor(f.stage) : [], sev = f.defect ? defectSev(f.defect) : '';
+  const res = f.q ? (typeof sdSearch === 'function' ? sdSearch(f.q) : []) : [];
+  return `<div class="panel tkform"><h2>مشكلة جديدة</h2>
+    <h3>1. المرحلة</h3><div class="pick big">${TK_STAGES.map(s => `<button class="${f.stage===s?'on':''}" data-tfs="${s}">${esc(stageBy(s).name)}</button>`).join('')}</div>
+    ${f.stage ? `<h3>2. الآلة</h3><div class="pick big">${ms.map(m => `<button class="${f.machine===m?'on':''}" data-tfm="${esc(m)}">${esc(m)}</button>`).join('')}</div>` : ''}
+    ${f.machine ? `<h3>3. الطلبية</h3>${f.order ? `<div class="sdsel"><b>${esc(f.product || '')}</b><span>طلبية <b class="num">${esc(f.order)}</b> ${f.fromPlan ? '· من خطة الإنتاج' : ''}</span><button class="btn sm" data-tfclr>تغيير</button></div>` : `<input type="search" data-tfq value="${esc(f.q || '')}" placeholder="رقم الطلبية أو اسم المنتج أو القطر">${res.length ? `<div class="sdres">${res.map(x => `<button data-tfo="${esc(x.order_number)}|${esc(x.product_code || '')}"><b class="num">${esc(x.order_number)}</b><span>${esc(x.product_name || '')}</span><em>قطر ${esc(x.product_diameter || '—')}</em></button>`).join('')}</div>` : ''}`}
+      <h3>4. العيب</h3><div class="pick big tkdefs">${defs.map(x => `<button class="${f.defect===x?'on':''}" data-tfd="${esc(x)}" data-dv="${esc(x)}">${esc(x)}</button>`).join('')}</div>` : ''}
+    ${f.defect ? `${sev === 'حرج' ? `<div class="tkstop">⛔ عيب حرج: أوقف الآلة ${esc(f.machine)} فوراً<label><input type="checkbox" data-tfstop ${f.stopped ? 'checked' : ''}> تم إيقاف الآلة</label></div>` : `<div class="banner info">العيب ${esc(sev)}: اعزل الكمية، والآلة تستمر حتى قرار الجودة.</div>`}
+      <h3>5. من اكتشف المشكلة؟</h3><div class="pick big">${[['checker','أنا (عامل التشييك)'],['operator','مشغل الآلة']].map(([k, l]) => `<button class="${f.finder===k?'on':''}" data-tff="${k}">${l}</button>`).join('')}</div>
+      ${f.finder === 'operator' ? `<input type="text" list="wkAll" data-tffn value="${esc(f.finderName || '')}" placeholder="اسم المشغل">` : ''}
+      <div class="grid" style="margin-top:10px"><label class="f">رقم الصندوق<input type="text" data-tfb value="${esc(f.box || '')}"></label><label class="f">الكمية المعزولة<input type="number" data-tfqty value="${esc(f.qty || '')}"></label></div>
+      <label class="f" style="margin-top:8px">ملاحظة (اختياري)<input type="text" data-tfn value="${esc(f.note || '')}"></label>
+      <button class="btn p big" id="tfSave" style="margin-top:12px;width:100%">إرسال للجودة 📣</button>` : ''}
+    <button class="btn" id="tfCancel" style="margin-top:8px">إلغاء</button></div>${typeof workerDatalist === 'function' ? workerDatalist() : ''}`;
+}
+ICONS.tickets = LI('alert'); ICONS.tkqc = LI('alert');
+PAGE.tickets = ['التشييك', 'تذاكري']; PAGE.tkqc = ['العمليات اليومية', 'متابعة المشاكل'];
+NAV.find(g => g.g === 'العمليات اليومية').items.splice(1, 0, ['tkqc', 'متابعة المشاكل']);
+INSPECTOR_VIEWS.push('tkqc'); INSPECTOR_NAV.splice(1, 0, 'tkqc');
+VIEWS.tickets = {
+  html(){
+    if(TKF) return tkFormHtml();
+    const T = (S.tickets || []), mine = T.filter(t => t.status !== 'closed'), todo = mine.filter(t => t.status === 'todo'), wait = mine.filter(t => t.status === 'new' || t.status === 'verify'), closed = T.filter(t => t.status === 'closed' && (t.closedAt || '').startsWith(todayStr()));
+    return `<div class="tkhero"><div><h1>تذاكر المشاكل</h1><p>${esc(CUR.name)} · ${esc(titleOf(CUR.name, CUR.role, CUR.title))}</p></div><button class="btn p big" id="tkNew">+ مشكلة جديدة</button></div>
+      <div class="tkcols"><section><h2>🔧 مطلوب مني (${todo.length})</h2>${todo.map(t => tkCard(t, 'chk')).join('') || '<p class="muted">لا مهام.</p>'}</section>
+        <section><h2>⏳ بانتظار الجودة (${wait.length})</h2>${wait.map(t => tkCard(t, '')).join('') || '<p class="muted">لا شيء.</p>'}</section>
+        <section><h2>✅ مغلقة اليوم (${closed.length})</h2>${closed.slice().reverse().map(t => tkCard(t, '')).join('') || '<p class="muted">لا شيء.</p>'}</section></div>`;
+  },
+  bind(){
+    if(TKF){ const f = TKF, upd = () => rerender();
+      $$('[data-tfs]').forEach(b => b.onclick = () => { TKF = {stage: b.dataset.tfs}; upd(); });
+      $$('[data-tfm]').forEach(b => b.onclick = () => { f.machine = b.dataset.tfm; const p = typeof currentPlanned === 'function' ? currentPlanned(f.stage, f.machine) : null; if(p){ const r = ordRows(p.order)[0] || {}; f.order = p.order; f.product = r.product_name || ''; f.fromPlan = true; } else { const last = S.rounds.filter(r => r.stage === f.stage && r.machine === f.machine && r.date === todayStr()).pop(); if(last){ const it = itemsOf(last)[0] || {}; f.order = it.order; f.product = it.product || ''; } } upd(); });
+      $('[data-tfclr]') && ($('[data-tfclr]').onclick = () => { f.order = ''; f.product = ''; f.fromPlan = false; upd(); });
+      const q = $('[data-tfq]'); if(q) q.oninput = () => { f.q = q.value; clearTimeout(q._t); q._t = setTimeout(() => { const pos = q.selectionStart; rerender(); const n = $('[data-tfq]'); if(n){ n.focus(); n.setSelectionRange(pos, pos); } }, 350); };
+      $$('[data-tfo]').forEach(b => b.onclick = () => { const [o, c] = b.dataset.tfo.split('|'); const r = ordRows(o).find(x => (x.product_code || '') === c) || ordRows(o)[0] || {}; f.order = o; f.product = r.product_name || ''; f.code = r.product_code || ''; f.q = ''; upd(); });
+      $$('[data-tfd]').forEach(b => b.onclick = () => { f.defect = b.dataset.tfd; upd(); });
+      $$('[data-tff]').forEach(b => b.onclick = () => { f.finder = b.dataset.tff; upd(); });
+      const fn = $('[data-tffn]'); if(fn) fn.oninput = () => f.finderName = fn.value;
+      const bx = $('[data-tfb]'); if(bx) bx.oninput = () => f.box = bx.value; const qt = $('[data-tfqty]'); if(qt) qt.oninput = () => f.qty = qt.value; const nt = $('[data-tfn]'); if(nt) nt.oninput = () => f.note = nt.value;
+      const sp = $('[data-tfstop]'); if(sp) sp.onchange = () => f.stopped = sp.checked;
+      $('#tfCancel').onclick = () => { TKF = null; upd(); };
+      $('#tfSave') && ($('#tfSave').onclick = () => {
+        const sev = defectSev(f.defect);
+        if(!f.finder){ toast('حدّد من اكتشف المشكلة'); return; } if(f.finder === 'operator' && !String(f.finderName || '').trim()){ toast('اكتب اسم المشغل'); return; }
+        if(sev === 'حرج' && !f.stopped){ toast('⛔ عيب حرج: أوقف الآلة أولاً ثم أشّر "تم إيقاف الآلة"'); return; }
+        const t = newTicket({stage: f.stage, machine: f.machine, order: f.order || '', product: f.product || '', code: f.code || '', defect: f.defect + (f.note ? ' – ' + f.note : ''), sev, finder: f.finder, finderName: f.finderName || '', box: f.box || '', qty: f.qty || '', stopped: !!f.stopped});
+        if(t.stopped){ S.stops = S.stops || []; S.stops.push({id: uid(), date: t.date, time: t.time, shift: t.shift, inspector: CUR.name, stage: t.stage, machine: t.machine, reason: 'other', reasonLabel: 'إيقاف لعيب حرج', detail: `${t.no}: ${f.defect}`}); save(); }
+        TKF = null; rerender(); toast(`أُرسلت ${t.no} للجودة 📣`); }); return; }
+    $('#tkNew').onclick = () => { TKF = {}; rerender(); };
+    tkBindActions();
+  }
+};
+/* ---------- شاشة الجودة: متابعة المشاكل ---------- */
+VIEWS.tkqc = {
+  html(){
+    const T = (S.tickets || []), col = s => T.filter(t => t.status === s).sort((a, b) => (TK_LIMIT[a.sev] || 30) - (TK_LIMIT[b.sev] || 30) || (a.date + a.time).localeCompare(b.date + b.time));
+    const closed = T.filter(t => t.status === 'closed' && (t.closedAt || '').startsWith(todayStr()));
+    return `<div class="pagehead"><div><h1 style="margin:0">متابعة المشاكل</h1><p>تذاكر عمال التشييك: قرّر، ثم تحقّق بعينة 20 تيوباً وأغلق. الحرج أولاً.</p></div></div>
+      <div class="tkcols four"><section><h2>🆕 بانتظار قراري (${col('new').length})</h2>${col('new').map(t => tkCard(t, 'qc')).join('') || '<p class="muted">لا شيء.</p>'}</section>
+        <section><h2>🔧 عند عامل التشييك (${col('todo').length})</h2>${col('todo').map(t => tkCard(t, '')).join('') || '<p class="muted">لا شيء.</p>'}</section>
+        <section><h2>🔍 بانتظار تحققي (${col('verify').length})</h2>${col('verify').map(t => tkCard(t, 'qc')).join('') || '<p class="muted">لا شيء.</p>'}</section>
+        <section><h2>✅ مغلقة اليوم (${closed.length})</h2>${closed.slice().reverse().map(t => tkCard(t, '')).join('') || '<p class="muted">لا شيء.</p>'}</section></div>`;
+  },
+  bind(){ tkBindActions(); }
+};
+/* ---------- قرار المراقب في الجولة (محجور) يُنشئ تذكرة لعامل التشييك ---------- */
+const _saveRoundTk = saveRound;
+saveRound = function(){
+  const f = F, editId = f && f.editId, n0 = S.rounds.length; const res = _saveRoundTk.apply(this, arguments);
+  if(f && !editId && !f.fromTicket){ const r = res && res.id ? res : (S.rounds.length > n0 ? S.rounds[S.rounds.length - 1] : null);
+    if(r && r.decision === 'محجور' && TK_STAGES.includes(r.stage) && !(S.tickets || []).some(t => t.round === r.id)){
+      const it = itemsOf(r)[0] || {}; newTicket({status: 'todo', decision: 'sort', decidedBy: r.inspector, decidedAt: r.date + ' ' + r.time, stage: r.stage, machine: r.machine, order: it.order || '', product: it.product || '', defect: [...(r.defects || []), r.notes].filter(Boolean).join(' – ') || 'محجور', sev: r.cls || 'رئيسي', finder: 'qc', box: r.box || '', round: r.id, hold: r.hold || ''}); } }
+  return res;
+};
+/* ---------- تنبيه المراقب: جرس + صوت عند تذكرة جديدة أو "تم الفرز" ---------- */
+const _todosTk = todos;
+todos = function(){ const L = _todosTk.apply(this, arguments); if(isChecker()) return L;
+  const n = (S.tickets || []).filter(t => t.status === 'new'), v = (S.tickets || []).filter(t => t.status === 'verify');
+  if(n.length) L.unshift([n.some(t => t.sev === 'حرج') ? 'bad' : 'warn', `🎫 ${n.length} تذكرة بانتظار قرار الجودة${n.some(t => t.sev === 'حرج') ? ' (منها حرج)' : ''}`, 'tkqc']);
+  if(v.length) L.unshift(['warn', `🎫 ${v.length} تذكرة بانتظار تحقق الجودة`, 'tkqc']); return L; };
+let _tkSeen = null;
+function tkBeep(){ try{ const a = new (window.AudioContext || window.webkitAudioContext)(), o = a.createOscillator(), g = a.createGain(); o.connect(g); g.connect(a.destination); o.frequency.value = 880; g.gain.value = .15; o.start(); setTimeout(() => { o.frequency.value = 660; }, 180); setTimeout(() => { o.stop(); a.close(); }, 420); }catch(e){} }
+setInterval(() => { if(!serverMode || !CUR || !CUR.role) return; const forMe = isChecker() ? (S.tickets || []).filter(t => t.status === 'todo') : (S.tickets || []).filter(t => t.status === 'new' || t.status === 'verify');
+  const key = forMe.map(t => t.id + t.status).sort().join(','); if(_tkSeen !== null && key !== _tkSeen && forMe.length && key.length > 0){ const added = forMe.filter(t => !_tkSeen.includes(t.id + t.status)); if(added.length){ tkBeep(); toast(isChecker() ? `🔧 مهمة جديدة: ${added[0].no} – ${TK_DEC[added[0].decision] || ''}` : `🎫 ${added[0].no}: ${added[0].defect} – ${added[0].machine}`); if(['tickets','tkqc'].includes(view)) rerender(); } }
+  _tkSeen = key; }, 5000);
+/* ---------- حساب عامل التشييك: تذاكري + لوحة الملاحظات فقط ---------- */
+const _goTk = go;
+go = function(v, a){ if(isChecker() && !['tickets','board'].includes(v)) v = 'tickets'; return _goTk(v, a); };
+const _renderTk = render;
+render = function(){ if(isChecker() && !['tickets','board'].includes(view)) view = 'tickets'; const r = _renderTk.apply(this, arguments); document.body.classList.toggle('prodmode', !!(isProdRole() || isChecker())); document.body.classList.toggle('chkmode', !!isChecker()); return r; };
+/* ---------- الربط: السجل التفصيلي، لوحة الملاحظات، مؤشرات العمال ---------- */
+const _evLogTk = eventsLog;
+eventsLog = function(from, to, roundFilter, orderSet){ const E = _evLogTk.apply(this, arguments);
+  (S.tickets || []).filter(t => t.date >= from && t.date <= to && (!orderSet || orderSet.has(String(t.order)))).forEach(t => E.push({date: t.date, time: t.time, stage: stageBy(t.stage).name, machine: t.machine, who: t.by, order: t.order, product: t.product, kind: 'تذكرة ' + t.no, text: `${t.defect} · المكتشف: ${t.finder === 'operator' ? 'المشغل ' + t.finderName : t.finder === 'qc' ? 'الجودة' : 'عامل التشييك'} · ${TK_DEC[t.decision] || 'بانتظار القرار'} · ${TK_STATUS[t.status][0]}${t.sortOk || t.sortBad ? ` · فرز: ${t.sortOk || 0}/${t.sortBad || 0}` : ''}`, dec: t.status === 'closed' ? '' : 'محجور'}));
+  return E.sort((a, b) => (a.date + (a.time || '')).localeCompare(b.date + (b.time || ''))); };
+const _wkKpiTk = workerKPIs;
+workerKPIs = function(from, to){ const W = _wkKpiTk.apply(this, arguments);
+  (S.tickets || []).filter(t => t.date >= from && t.date <= to && t.finder === 'operator' && t.finderName).forEach(t => { const w = W.find(x => sameP(x.name, t.finderName)); if(w){ w.rep++; w.repPct = w.rep + w.norep ? Math.round(w.rep * 100 / (w.rep + w.norep)) : null; } });
+  return W; };
+
 /* ================= SERVER SYNC (لابتوب القسم) ================= */
 const PWA_API = (typeof window !== 'undefined' && window.PWA_API && /^(https:\/\/|http:\/\/localhost)/.test(window.PWA_API)) ? window.PWA_API : '';
 const GAS_MODE = (typeof google !== 'undefined' && !!(google.script && google.script.run)) || !!PWA_API;
@@ -7283,7 +7569,7 @@ window.addEventListener('online', () => { if(CUR && CUR.role) syncNow(); });
 window.addEventListener('offline', () => { online = false; updateSyncPill(); render(); });
 let serverMode = false, online = true, syncVer = 0, syncing = false, syncTimer = null, lastSync = null, snap = {}, settingsSnap = '';
 const CLIENT = 'c' + Date.now().toString(36) + Math.random().toString(36).slice(2,6);
-const SYNC_COLS = ['rounds','holds','handovers','mats','ncrs','complaints','audits','cals','ths','aid','coas','reports','pimgs','stops','shiftsums','savedreps','plans','onotes','samples'];
+const SYNC_COLS = ['rounds','holds','handovers','mats','ncrs','complaints','audits','cals','ths','aid','coas','reports','pimgs','stops','shiftsums','savedreps','plans','onotes','samples','tickets'];
 const FORM_VIEWS = ['round','matform','ncrform','auditform','compform','data','hand','letter','coaprint'];
 const keyOf = x => String(x.id ?? x.no ?? [x.date,x.time,x.type,x.code,x.loc,x.name,x.from].map(v=>v??'').join('|'));
 const strip = x => { const {_m,_v,_c,...r} = x; return JSON.stringify(r); };
@@ -7372,7 +7658,8 @@ async function syncNow(){
   if(!serverMode || syncing) return; syncing = true;
   const {body, sent, ss, any} = collect();
   if(typeof isViewer === 'function' && isViewer()){ body.cols = {}; body.deleted = []; delete body.settings; delete body.orders; }
-  if(typeof isProdRole === 'function' && isProdRole()){ body.cols = {onotes: (body.cols || {}).onotes || []}; body.deleted = (body.deleted || []).filter(d => d[0] === 'onotes'); delete body.settings; delete body.settingsPatch; delete body.orders; }   /* حساب الإدارة: لا يرسل أي تعديل */
+  if(typeof isChecker === 'function' && isChecker()){ const cc = body.cols || {}; body.cols = {onotes: cc.onotes || [], tickets: cc.tickets || [], stops: cc.stops || []}; body.deleted = []; delete body.settings; delete body.settingsPatch; delete body.orders; }
+  else if(typeof isProdRole === 'function' && isProdRole()){ body.cols = {onotes: (body.cols || {}).onotes || []}; body.deleted = (body.deleted || []).filter(d => d[0] === 'onotes'); delete body.settings; delete body.settingsPatch; delete body.orders; }   /* حساب الإدارة: لا يرسل أي تعديل */
   try{
     let d;
     if(GAS_MODE){
