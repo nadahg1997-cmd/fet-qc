@@ -1382,6 +1382,10 @@ body.exec.dark .lvk div,body.exec.dark .lvmach,body.exec.dark .lvfeed{background
 body.exec .tw{overflow-x:visible!important}body.exec table.t{width:100%;table-layout:auto}body.exec table.t th,body.exec table.t td{white-space:normal!important;word-break:break-word;overflow-wrap:anywhere}
 body.exec .wchip,body.exec #syncPill,body.exec .lvm{max-width:none!important;overflow:visible!important;text-overflow:clip!important;white-space:normal!important}
 body.exec main{overflow-x:hidden}
+.aldiff{font-size:12.5px;max-width:520px}.aldiff div{margin:2px 0}.aldiff s{color:#B83227;background:#FDECEA;text-decoration:line-through;padding:0 3px;border-radius:4px}.aldiff ins{color:#1F7A5A;background:#E3F2EB;text-decoration:none;padding:0 3px;border-radius:4px}
+.deedit{border-inline-start:5px solid #E8772E}.degrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:10px}.degrid label span{display:flex;justify-content:space-between;gap:6px}.degrid textarea{font-family:monospace;font-size:12.5px}
+.defin{margin-top:14px;border-top:2px dashed #E4E8ED;padding-top:10px}
+body.exec.dark .aldiff s{background:rgba(231,76,60,.15)}body.exec.dark .aldiff ins{background:rgba(46,204,143,.15)}
 </style>
 </head>
 <body>
@@ -3572,10 +3576,10 @@ VIEWS.coaprint = {
     const fmtD = d => new Date(d).toLocaleDateString('en-GB');
     const rows = [
       ['Tube Diameter', rng('dia', s=>`${s.min.toFixed(2)} - ${s.max.toFixed(2)} mm`), val('dia','mm')],
-      ['Tube Thickness', o.roll_thickness ? `${o.roll_thickness} µm ±10%` : 'µm ±10%', val('thick','µm')],
+      ['Tube Thickness', COA_OV && COA_OV.thick && COA_OV.thick[0] !== '' ? `${COA_OV.thick[0]} - ${COA_OV.thick[1]} µm` : o.roll_thickness ? `${o.roll_thickness} µm ±10%` : 'µm ±10%', val('thick','µm')],
       ['Tube Length', rng('len', s=>`${s.min.toFixed(2)} - ${s.max.toFixed(2)} mm`), val('len','mm')],
       ['Tube Ovality', '0 – 15 %', val('oval','%')],
-      ['Side Seam Overlap', `${S.settings.seamMin} - ${S.settings.seamMax} mm`, val('seam','mm')],
+      ['Side Seam Overlap', COA_OV && COA_OV.seam && COA_OV.seam[0] !== '' ? `${COA_OV.seam[0]} - ${COA_OV.seam[1]} mm` : `${S.settings.seamMin} - ${S.settings.seamMax} mm`, val('seam','mm')],
       ['White Line Diameter Of the Side Seam', noWhite(o) ? 'N/A' : '0.25 – 1.00 mm', noWhite(o) ? 'N/A' : val('white','mm')],
       ['Pinch Unzip', 'No cracking of the side seam', ok('pinch')],
       ['Leakage Test', 'No evidence of leakage from the cap or shoulder', ok('leak')],
@@ -4497,7 +4501,7 @@ VIEWS.data.bind = function(){
 
 const LUCIDE = {"home": "<path d=\"M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8\" /> <path d=\"M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z\" />", "prod": "<path d=\"M12 16h.01\" /> <path d=\"M16 16h.01\" /> <path d=\"M3 19a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5a.5.5 0 0 0-.769-.422l-4.462 2.844A.5.5 0 0 1 15 10.5v-2a.5.5 0 0 0-.769-.422L9.77 10.922A.5.5 0 0 1 9 10.5V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2z\" /> <path d=\"M8 16h.01\" />", "mat": "<path d=\"M12 22V12\" /> <path d=\"m16 17 2 2 4-4\" /> <path d=\"M21 11.127V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.729l7 4a2 2 0 0 0 2 .001l1.32-.753\" /> <path d=\"M3.29 7 12 12l8.71-5\" /> <path d=\"m7.5 4.27 8.997 5.148\" />", "ncr": "<path d=\"M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z\" /> <path d=\"M12 8v4\" /> <path d=\"M12 16h.01\" />", "hold": "<path d=\"M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z\" /> <path d=\"m3.3 7 8.7 5 8.7-5\" /> <path d=\"M12 22V12\" />", "mon": "<rect width=\"8\" height=\"4\" x=\"8\" y=\"2\" rx=\"1\" ry=\"1\" /> <path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\" /> <path d=\"m9 14 2 2 4-4\" />", "rep": "<path d=\"M3 3v16a2 2 0 0 0 2 2h16\" /> <path d=\"M18 17V9\" /> <path d=\"M13 17V5\" /> <path d=\"M8 17v-3\" />", "team": "<path d=\"M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2\" /> <path d=\"M16 3.128a4 4 0 0 1 0 7.744\" /> <path d=\"M22 21v-2a4 4 0 0 0-3-3.87\" /> <circle cx=\"9\" cy=\"7\" r=\"4\" />", "mgr": "<path d=\"M16 7h6v6\" /> <path d=\"m22 7-8.5 8.5-5-5L2 17\" />", "more": "<rect width=\"7\" height=\"7\" x=\"3\" y=\"3\" rx=\"1\" /> <rect width=\"7\" height=\"7\" x=\"14\" y=\"3\" rx=\"1\" /> <rect width=\"7\" height=\"7\" x=\"14\" y=\"14\" rx=\"1\" /> <rect width=\"7\" height=\"7\" x=\"3\" y=\"14\" rx=\"1\" />", "hand": "<path d=\"M8 3 4 7l4 4\" /> <path d=\"M4 7h16\" /> <path d=\"m16 21 4-4-4-4\" /> <path d=\"M20 17H4\" />", "comp": "<path d=\"M22 17a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 21.286V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2z\" /> <path d=\"M12 15h.01\" /> <path d=\"M12 7v4\" />", "coa": "<path d=\"m15.477 12.89 1.515 8.526a.5.5 0 0 1-.81.47l-3.58-2.687a1 1 0 0 0-1.197 0l-3.586 2.686a.5.5 0 0 1-.81-.469l1.514-8.526\" /> <circle cx=\"12\" cy=\"8\" r=\"6\" />", "sup": "<path d=\"M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2\" /> <path d=\"M15 18H9\" /> <path d=\"M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 17.52 8H14\" /> <circle cx=\"17\" cy=\"18\" r=\"2\" /> <circle cx=\"7\" cy=\"18\" r=\"2\" />", "data": "<ellipse cx=\"12\" cy=\"5\" rx=\"9\" ry=\"3\" /> <path d=\"M3 5V19A9 3 0 0 0 21 19V5\" /> <path d=\"M3 12A9 3 0 0 0 21 12\" />", "bell": "<path d=\"M10.268 21a2 2 0 0 0 3.464 0\" /> <path d=\"M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326\" />", "search": "<path d=\"m21 21-4.34-4.34\" /> <circle cx=\"11\" cy=\"11\" r=\"8\" />", "logout": "<path d=\"m16 17 5-5-5-5\" /> <path d=\"M21 12H9\" /> <path d=\"M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4\" />", "dash": "<rect width=\"7\" height=\"9\" x=\"3\" y=\"3\" rx=\"1\" /> <rect width=\"7\" height=\"5\" x=\"14\" y=\"3\" rx=\"1\" /> <rect width=\"7\" height=\"9\" x=\"14\" y=\"12\" rx=\"1\" /> <rect width=\"7\" height=\"5\" x=\"3\" y=\"16\" rx=\"1\" />", "s_design": "<path d=\"M15.707 21.293a1 1 0 0 1-1.414 0l-1.586-1.586a1 1 0 0 1 0-1.414l5.586-5.586a1 1 0 0 1 1.414 0l1.586 1.586a1 1 0 0 1 0 1.414z\" /> <path d=\"m18 13-1.375-6.874a1 1 0 0 0-.746-.776L3.235 2.028a1 1 0 0 0-1.207 1.207L5.35 15.879a1 1 0 0 0 .776.746L13 18\" /> <path d=\"m2.3 2.3 7.286 7.286\" /> <circle cx=\"11\" cy=\"11\" r=\"2\" />", "s_print": "<path d=\"M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2\" /> <path d=\"M6 9V3a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v6\" /> <rect x=\"6\" y=\"14\" width=\"12\" height=\"8\" rx=\"1\" />", "s_draw": "<ellipse cx=\"12\" cy=\"5\" rx=\"9\" ry=\"3\" /> <path d=\"M3 5v14a9 3 0 0 0 18 0V5\" />", "s_sort": "<path d=\"M2 5h20\" /> <path d=\"M6 12h12\" /> <path d=\"M9 19h6\" />", "s_mix": "<path d=\"M14 2v6a2 2 0 0 0 .245.96l5.51 10.08A2 2 0 0 1 18 22H6a2 2 0 0 1-1.755-2.96l5.51-10.08A2 2 0 0 0 10 8V2\" /> <path d=\"M6.453 15h11.094\" /> <path d=\"M8.5 2h7\" />", "s_inj": "<path d=\"m18 2 4 4\" /> <path d=\"m17 7 3-3\" /> <path d=\"M19 9 8.7 19.3c-1 1-2.5 1-3.4 0l-.6-.6c-1-1-1-2.5 0-3.4L15 5\" /> <path d=\"m9 11 4 4\" /> <path d=\"m5 19-3 3\" /> <path d=\"m14 4 6 6\" />", "s_asm": "<path d=\"M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.106-3.105c.32-.322.863-.22.983.218a6 6 0 0 1-8.259 7.057l-7.91 7.91a1 1 0 0 1-2.999-3l7.91-7.91a6 6 0 0 1 7.057-8.259c.438.12.54.662.219.984z\" />", "s_cap": "<path d=\"M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z\" /> <path d=\"M12 22V12\" /> <polyline points=\"3.29 7 12 12 20.71 7\" /> <path d=\"m7.5 4.27 9 5.15\" />", "s_seal": "<path d=\"M14 13V8.5C14 7 15 7 15 5a3 3 0 0 0-6 0c0 2 1 2 1 3.5V13\" /> <path d=\"M20 15.5a2.5 2.5 0 0 0-2.5-2.5h-11A2.5 2.5 0 0 0 4 15.5V17a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1z\" /> <path d=\"M5 22h14\" />", "s_final": "<path d=\"M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z\" /> <path d=\"m16 9-5.5 5.5L8 12\" />", "thermo": "<path d=\"M14 4v10.54a4 4 0 1 1-4 0V4a2 2 0 0 1 4 0Z\" />", "ruler": "<path d=\"M21.3 15.3a2.4 2.4 0 0 1 0 3.4l-2.6 2.6a2.4 2.4 0 0 1-3.4 0L2.7 8.7a2.41 2.41 0 0 1 0-3.4l2.6-2.6a2.41 2.41 0 0 1 3.4 0Z\" /> <path d=\"m14.5 12.5 2-2\" /> <path d=\"m11.5 9.5 2-2\" /> <path d=\"m8.5 6.5 2-2\" /> <path d=\"m17.5 15.5 2-2\" />", "clean": "<path d=\"M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z\" /> <path d=\"M20 2v4\" /> <path d=\"M22 4h-4\" /> <circle cx=\"4\" cy=\"20\" r=\"2\" />", "plus": "<circle cx=\"12\" cy=\"12\" r=\"10\" /> <path d=\"M8 12h8\" /> <path d=\"M12 8v8\" />", "ok": "<path d=\"M21.801 10A10 10 0 1 1 17 3.335\" /> <path d=\"m9 11 3 3L22 4\" />", "warn": "<path d=\"m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3\" /> <path d=\"M12 9v4\" /> <path d=\"M12 17h.01\" />", "file": "<path d=\"M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z\" /> <path d=\"M14 2v5a1 1 0 0 0 1 1h5\" /> <path d=\"M10 9H8\" /> <path d=\"M16 13H8\" /> <path d=\"M16 17H8\" />", "scan": "<path d=\"M3 7V5a2 2 0 0 1 2-2h2\" /> <path d=\"M17 3h2a2 2 0 0 1 2 2v2\" /> <path d=\"M21 17v2a2 2 0 0 1-2 2h-2\" /> <path d=\"M7 21H5a2 2 0 0 1-2-2v-2\" /> <circle cx=\"12\" cy=\"12\" r=\"3\" /> <path d=\"m16 16-1.9-1.9\" />", "clock": "<circle cx=\"12\" cy=\"12\" r=\"10\" /> <path d=\"M12 6v6l4 2\" />", "alert": "<path d=\"M12 16h.01\" /> <path d=\"M12 8v4\" /> <path d=\"M15.312 2a2 2 0 0 1 1.414.586l4.688 4.688A2 2 0 0 1 22 8.688v6.624a2 2 0 0 1-.586 1.414l-4.688 4.688a2 2 0 0 1-1.414.586H8.688a2 2 0 0 1-1.414-.586l-4.688-4.688A2 2 0 0 1 2 15.312V8.688a2 2 0 0 1 .586-1.414l4.688-4.688A2 2 0 0 1 8.688 2z\" />", "activity": "<path d=\"M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2\" />", "gauge": "<path d=\"m12 14 4-4\" /> <path d=\"M3.34 19a10 10 0 1 1 17.32 0\" />"};
 /* [VERSION] رقم إصدار البرنامج – يظهر أسفل القائمة وفي شاشة الدخول */
-const APP_VERSION = '18.5';
+const APP_VERSION = '18.6';
 let SERVER_VERSION = '';
 async function checkServerVersion(){ if(!GAS_MODE) return; try{ const v = JSON.parse(await rpc('serverVersion', '')); SERVER_VERSION = v.version + (v.ocr ? '' : ' (Drive API غير مفعّل)'); }catch(e){ SERVER_VERSION = /NET/.test(String(e && e.message || e)) ? '' : 'قديم – انشر إصداراً جديداً'; } try{ renderTabs(); }catch(e){} }
 /* [ERRORS] بدل الصفحة الفارغة: رسالة واضحة وزر إعادة تحميل */
@@ -7947,14 +7951,14 @@ function tkFormHtml(){
   const f = TKF, ms = f.stage ? stageBy(f.stage).machines.filter(m => m !== '—') : [], defs = f.stage ? defectsFor(f.stage) : [], sev = f.defect ? defectSev(f.defect) : '';
   const res = f.q ? (typeof sdSearch === 'function' ? sdSearch(f.q) : []) : [];
   return `<div class="panel tkform"><h2>مشكلة جديدة</h2>
-    <h3>1. المرحلة</h3><div class="pick big">${TK_STAGES.map(s => `<button class="${f.stage===s?'on':''}" data-tfs="${s}">${esc(stageBy(s).name)}</button>`).join('')}</div>
-    ${f.stage ? `<h3>2. الآلة</h3><div class="pick big">${ms.map(m => `<button class="${f.machine===m?'on':''}" data-tfm="${esc(m)}">${esc(m)}</button>`).join('')}</div>` : ''}
+    <h3>1. المرحلة</h3><div class="pick big">${TK_STAGES.filter(s => s !== 'print').map(s => `<button class="${f.stage===s?'on':''}" data-tfs="${s}">${esc(stageBy(s).name)}</button>`).join('')}</div>
+    ${f.stage && f.machine !== '—' ? `<h3>2. الآلة</h3><div class="pick big">${ms.map(m => `<button class="${f.machine===m?'on':''}" data-tfm="${esc(m)}">${esc(m)}</button>`).join('')}</div>` : ''}
     ${f.machine ? `<h3>3. الطلبية</h3>${f.order ? `<div class="sdsel"><b>${esc(f.product || '')}</b><span>طلبية <b class="num">${esc(f.order)}</b> ${f.fromPlan ? '· من خطة الإنتاج' : ''}</span><button class="btn sm" data-tfclr>تغيير</button></div>` : `<input type="search" data-tfq value="${esc(f.q || '')}" placeholder="رقم الطلبية أو اسم المنتج أو القطر">${res.length ? `<div class="sdres">${res.map(x => `<button data-tfo="${esc(x.order_number)}|${esc(x.product_code || '')}"><b class="num">${esc(x.order_number)}</b><span>${esc(x.product_name || '')}</span><em>قطر ${esc(x.product_diameter || '—')}</em></button>`).join('')}</div>` : ''}`}
       <h3>4. العيب</h3><div class="pick big tkdefs">${defs.map(x => `<button class="${f.defect===x?'on':''}" data-tfd="${esc(x)}" data-dv="${esc(x)}">${esc(x)}</button>`).join('')}</div>` : ''}
-    ${f.defect ? `${sev === 'حرج' ? `<div class="tkstop">⛔ عيب حرج: أوقف الآلة ${esc(f.machine)} فوراً<label><input type="checkbox" data-tfstop ${f.stopped ? 'checked' : ''}> تم إيقاف الآلة</label></div>` : `<div class="banner info">العيب ${esc(sev)}: اعزل الكمية، والآلة تستمر حتى قرار الجودة.</div>`}
+    ${f.defect ? `${sev === 'حرج' && f.machine !== '—' ? `<div class="tkstop">⛔ عيب حرج: أوقف الآلة ${esc(f.machine)} فوراً<label><input type="checkbox" data-tfstop ${f.stopped ? 'checked' : ''}> تم إيقاف الآلة</label></div>` : `<div class="banner info">العيب ${esc(sev)}: اعزل الكمية، والآلة تستمر حتى قرار الجودة.</div>`}
       <h3>5. من اكتشف المشكلة؟</h3><div class="pick big">${[['checker','أنا (عامل التشييك)'],['operator','مشغل الآلة']].map(([k, l]) => `<button class="${f.finder===k?'on':''}" data-tff="${k}">${l}</button>`).join('')}</div>
       ${f.finder === 'operator' ? `<input type="text" list="wkAll" data-tffn value="${esc(f.finderName || '')}" placeholder="اسم المشغل">` : ''}
-      <div class="grid" style="margin-top:10px"><label class="f">رقم الصندوق<input type="text" data-tfb value="${esc(f.box || '')}"></label><label class="f">الكمية المعزولة<input type="number" data-tfqty value="${esc(f.qty || '')}"></label></div>
+      <div class="grid" style="margin-top:10px"><label class="f">رقم الصندوق <span class="req">*</span><input type="text" data-tfb value="${esc(f.box || '')}"></label><label class="f">الكمية المعزولة (اختياري)<input type="number" data-tfqty value="${esc(f.qty || '')}"></label></div>
       <label class="f" style="margin-top:8px">ملاحظة (اختياري)<input type="text" data-tfn value="${esc(f.note || '')}"></label>
       <button class="btn p big" id="tfSave" style="margin-top:12px;width:100%">إرسال للجودة 📣</button>` : ''}
     <button class="btn" id="tfCancel" style="margin-top:8px">إلغاء</button></div>${typeof workerDatalist === 'function' ? workerDatalist() : ''}`;
@@ -7974,7 +7978,7 @@ VIEWS.tickets = {
   },
   bind(){
     if(TKF){ const f = TKF, upd = () => rerender();
-      $$('[data-tfs]').forEach(b => b.onclick = () => { TKF = {stage: b.dataset.tfs}; upd(); });
+      $$('[data-tfs]').forEach(b => b.onclick = () => { TKF = {stage: b.dataset.tfs}; if(['sort', 'asm', 'seal'].includes(TKF.stage)) TKF.machine = '—'; upd(); });
       $$('[data-tfm]').forEach(b => b.onclick = () => { f.machine = b.dataset.tfm; const p = typeof currentPlanned === 'function' ? currentPlanned(f.stage, f.machine) : null; if(p){ const r = ordRows(p.order)[0] || {}; f.order = p.order; f.product = r.product_name || ''; f.fromPlan = true; } else { const last = S.rounds.filter(r => r.stage === f.stage && r.machine === f.machine && r.date === todayStr()).pop(); if(last){ const it = itemsOf(last)[0] || {}; f.order = it.order; f.product = it.product || ''; } } upd(); });
       $('[data-tfclr]') && ($('[data-tfclr]').onclick = () => { f.order = ''; f.product = ''; f.fromPlan = false; upd(); });
       const q = $('[data-tfq]'); if(q) q.oninput = () => { f.q = q.value; clearTimeout(q._t); q._t = setTimeout(() => { const pos = q.selectionStart; rerender(); const n = $('[data-tfq]'); if(n){ n.focus(); n.setSelectionRange(pos, pos); } }, 350); };
@@ -7988,7 +7992,8 @@ VIEWS.tickets = {
       $('#tfSave') && ($('#tfSave').onclick = () => {
         const sev = defectSev(f.defect);
         if(!f.finder){ toast('حدّد من اكتشف المشكلة'); return; } if(f.finder === 'operator' && !String(f.finderName || '').trim()){ toast('اكتب اسم المشغل'); return; }
-        if(sev === 'حرج' && !f.stopped){ toast('⛔ عيب حرج: أوقف الآلة أولاً ثم أشّر "تم إيقاف الآلة"'); return; }
+        if(!String(f.box || '').trim()){ toast('اكتب رقم الصندوق'); return; }
+        if(sev === 'حرج' && f.machine !== '—' && !f.stopped){ toast('⛔ عيب حرج: أوقف الآلة أولاً ثم أشّر "تم إيقاف الآلة"'); return; }
         const t = newTicket({stage: f.stage, machine: f.machine, order: f.order || '', product: f.product || '', code: f.code || '', defect: f.defect + (f.note ? ' – ' + f.note : ''), sev, finder: f.finder, finderName: f.finderName || '', box: f.box || '', qty: f.qty || '', stopped: !!f.stopped});
         if(t.stopped){ S.stops = S.stops || []; S.stops.push({id: uid(), date: t.date, time: t.time, shift: t.shift, inspector: CUR.name, stage: t.stage, machine: t.machine, reason: 'other', reasonLabel: 'إيقاف لعيب حرج', detail: `${t.no}: ${f.defect}`}); save(); }
         TKF = null; rerender(); toast(`أُرسلت ${t.no} للجودة 📣`); }); return; }
@@ -10224,7 +10229,7 @@ VIEWS.iso = {
 };
 
 /* ---------- 11) سجل التعديلات ---------- */
-const ALOG_COLS = ['rounds', 'holds', 'ncrs', 'complaints', 'tickets', 'stops', 'coas', 'mats', 'scraps', 'cals'], ALOG_N = {rounds: 'جولة', holds: 'حجز', ncrs: 'عدم مطابقة', complaints: 'شكوى', tickets: 'تذكرة', stops: 'توقف آلة', coas: 'شهادة تحليل', mats: 'مادة واردة', scraps: 'محضر سكراب', cals: 'معايرة'};
+const ALOG_COLS = ['rounds', 'holds', 'ncrs', 'complaints', 'tickets', 'stops', 'coas', 'mats', 'scraps', 'cals', 'onotes', 'audits', 'ths', 'samples', 'plans', 'shiftsums'], ALOG_N = {rounds: 'جولة', holds: 'حجز', ncrs: 'عدم مطابقة', complaints: 'شكوى', tickets: 'تذكرة', stops: 'توقف آلة', coas: 'شهادة تحليل', mats: 'مادة واردة', scraps: 'محضر سكراب', cals: 'معايرة', onotes: 'ملاحظة إنتاج', audits: 'مراقبة عامة', ths: 'حرارة ورطوبة', samples: 'عينة أرشيف', plans: 'خطة إنتاج', shiftsums: 'ملخص وردية'};
 S.alog = S.alog || [];
 if(!SYNC_COLS.includes('alog')) SYNC_COLS.push('alog');
 const ALOGGED = {};
@@ -10232,8 +10237,9 @@ const _collectAL = collect;
 collect = function(){ const r = _collectAL.apply(this, arguments);
   try{ if(!serverMode || !CUR || !CUR.name || CUR.role === 'viewer') return r; S.alog = S.alog || []; const d = new Date(), date = todayStr(d), time = timeStr(d);
     Object.entries(r.body.cols || {}).forEach(([c, arr]) => { if(!ALOG_COLS.includes(c)) return; if(arr.length > 25){ const sig = 'bulk|' + c + '|' + arr.length; if(!ALOGGED[sig]){ ALOGGED[sig] = 1; S.alog.push({id: 'L' + uid(), date, time, who: CUR.name, col: c, ref: arr.length + ' سجل', act: 'مزامنة دفعة', info: ''}); } return; } arr.forEach(x => { const k = keyOf(x), sig = c + '|' + k + '|' + (r.sent[c] || {})[k]; if(ALOGGED[sig]) return; ALOGGED[sig] = 1;
-      S.alog.push({id: 'L' + uid(), date, time, who: CUR.name, col: c, ref: x.no || x.order || (x.stage ? stageBy(x.stage).name + ' ' + (x.machine || '') : '') || k, act: x._v ? 'تعديل' : 'إضافة', info: x.decision || x.status || ''}); }); });
-    (r.body.deleted || []).forEach(([c, k]) => { if(!ALOG_COLS.includes(c) || ALOGGED['del|' + c + k]) return; ALOGGED['del|' + c + k] = 1; S.alog.push({id: 'L' + uid(), date, time, who: CUR.name, col: c, ref: k, act: 'حذف', info: ''}); });
+      let diff = null; try{ const prev = (typeof snap !== 'undefined' && snap[c]) ? snap[c][k] : null; if(prev){ diff = alogDiff(JSON.parse(prev), x); if(!diff.length) return; } }catch(e){}
+      S.alog.push({id: 'L' + uid(), date, time, who: CUR.name, role: CUR.role, col: c, ref: x.no || x.order || (x.stage ? stageBy(x.stage).name + ' ' + (x.machine || '') : '') || k, act: diff ? 'تعديل' : 'إضافة', info: x.decision || x.status || '', diff: diff || undefined}); }); });
+    (r.body.deleted || []).forEach(([c, k]) => { if(!ALOG_COLS.includes(c) || ALOGGED['del|' + c + k]) return; ALOGGED['del|' + c + k] = 1; let before = null, ref = k; try{ const pv = JSON.parse((typeof snap !== 'undefined' && snap[c] || {})[k] || 'null'); if(pv){ ref = pv.no || pv.order || ref; before = alogDiff(pv, {}).slice(0, 25); } }catch(e){} S.alog.push({id: 'L' + uid(), date, time, who: CUR.name, role: CUR.role, col: c, ref, act: 'حذف', info: '', diff: before || undefined}); });
     if(CUR.role === 'manager'){ const old = addDays(date, -90); if(S.alog.some(x => x.date < old)) S.alog = S.alog.filter(x => x.date >= old); }
   }catch(e){ console.warn(e); } return r; };
 let AL = {q: '', who: '', act: ''};
@@ -11393,8 +11399,8 @@ Object.assign(TK_DEC, {watch: 'متابعة على الآلة (مقبول بمل
 const _saveP19 = saveRound;
 saveRound = function(){ const f = F, n0 = S.rounds.length, ret = _saveP19.apply(this, arguments);
   try{ if(ret !== null && f && !f.editId && S.rounds.length > n0 && serverMode){ const r = S.rounds[S.rounds.length - 1];
-      if(r && r.decision && r.decision !== 'مقبول' && TK_STAGES.includes(r.stage)){ const it = (r.items || [])[0] || {}, dec = r.decision === 'محجور' ? 'sort' : r.decision === 'مرفوض' ? 'isolate' : 'watch';
-        S.tickets = S.tickets || []; S.tickets.push({id: uid(), no: tkNo(), date: r.date, time: r.time, shift: r.shift, stage: r.stage, machine: r.machine || '—', order: ordersLabel(r), product: it.product || '', box: r.box || '', qty: '', defect: drDefs(r).join('، ') || r.notes || r.decision, sev: r.cls === 'حرج' ? 'حرج' : r.decision === 'مقبول بملاحظة' ? 'ثانوي' : 'رئيسي',
+      if(r && r.stage !== 'print' && TK_STAGES.includes(r.stage) && ((r.decision && r.decision !== 'مقبول') || drDefs(r).length)){ const it = (r.items || [])[0] || {}, dec = r.decision === 'محجور' ? 'sort' : r.decision === 'مرفوض' ? 'isolate' : 'watch';
+        S.tickets = S.tickets || []; S.tickets.push({id: uid(), no: tkNo(), date: r.date, time: r.time, shift: r.shift, stage: r.stage, machine: r.machine || '—', order: ordersLabel(r), product: it.product || '', box: r.box || '', qty: '', defect: drDefs(r).join('، ') || r.notes || r.decision, sev: r.cls === 'حرج' ? 'حرج' : r.cls === 'رئيسي' ? 'رئيسي' : r.cls === 'ثانوي' ? 'ثانوي' : r.decision === 'مقبول بملاحظة' || r.decision === 'مقبول' ? 'ثانوي' : 'رئيسي',
           finder: 'qc', by: r.inspector || CUR.name, byRole: 'qc', status: 'todo', decision: dec, decidedBy: r.inspector || CUR.name, decidedAt: r.date + ' ' + r.time, hold: r.hold || '', round: r.id, note: r.action || '',
           log: [{at: r.date + ' ' + r.time, by: r.inspector || CUR.name, action: 'من جولة الجودة ' + (r.no || '') + ': ' + TK_DEC[dec]}]}); save(); } } }catch(e){ console.warn(e); }
   return ret; };
@@ -11406,7 +11412,86 @@ tkCard = function(t, mode){ let h = _tkCardP19(t, mode);
   if(t.finder === 'qc' && t.round) h = h.replace('<div class="tkb">', '<div class="tkb"><span class="tkauto">من قرار مراقب الجودة</span>');
   return h; };
 document.addEventListener('click', e => { const b = e.target.closest && e.target.closest('[data-tkfol]'); if(!b) return; const t = (S.tickets || []).find(x => String(x.id) === b.dataset.tkfol); if(!t) return;
-  t.status = 'closed'; t.doneBy = CUR.name; t.doneAt = todayStr() + ' ' + timeStr(); t.closedAt = t.doneAt; tkLog(t, TK_DEC[t.decision] + ' – تم'); save(); rerender(); toast('✓ تم – سُجّلت المتابعة'); });
+  t.status = 'verify'; t.doneBy = CUR.name; t.doneAt = todayStr() + ' ' + timeStr(); tkLog(t, TK_DEC[t.decision] + ' – تم، بانتظار تحقق الجودة'); save(); rerender(); toast('✓ تم – أُبلغ مراقب الجودة'); });
+
+
+/* ================= [PHASE20] مدير الجودة: تعديل وحذف أي سجل من أي حساب + سجل التعديلات قبل/بعد + مجال شهادة التحليل ================= */
+const FLD_AR = {date: 'التاريخ', time: 'الوقت', shift: 'الوردية', inspector: 'المراقب', by: 'بواسطة', who: 'الشخص', stage: 'المرحلة', machine: 'الآلة', order: 'الطلبية', product: 'المنتج', items: 'الطلبيات', box: 'الصندوق', operator: 'العامل', worker: 'العامل', decision: 'القرار', cls: 'الدرجة', defects: 'العيوب', failed: 'البنود المخالفة', notes: 'الملاحظات', note: 'ملاحظة', action: 'الإجراء المتخذ', qty: 'الكمية', status: 'الحالة', defect: 'العيب', sev: 'الدرجة', vals: 'القياسات', checks: 'البنود', extra: 'بيانات إضافية', blame: 'العامل المسؤول', no: 'الرقم', type: 'النوع', text: 'النص', customer: 'الزبون', desc: 'الوصف', supplier: 'المورد', lot: 'الدفعة', result: 'النتيجة', carton: 'الكرتونة', sortOk: 'سليم بعد الفرز', sortBad: 'معيب بعد الفرز', doneBy: 'نفّذه', decidedBy: 'قرّره', specOv: 'مجال شهادة التحليل', rolls: 'الرول', cartonsInsp: 'الكراتين المعاينة', closed: 'تاريخ الإغلاق', hold: 'الحجز', ncr: 'عدم المطابقة', reasonLabel: 'السبب', detail: 'التفاصيل', score: 'النتيجة %'};
+const fldAr = k => FLD_AR[k] || k;
+const fmtV = v => v == null ? '' : typeof v === 'object' ? JSON.stringify(v) : String(v);
+function alogDiff(a, b){ const out = [], keys = new Set(Object.keys(a || {}).concat(Object.keys(b || {})));
+  keys.forEach(k => { if(k[0] === '_' || k === 'id') return; const x = fmtV((a || {})[k]), y = fmtV((b || {})[k]); if(x !== y) out.push({k, b: x.slice(0, 220), a: y.slice(0, 220)}); }); return out; }
+/* عرض قبل/بعد في سجل التعديلات */
+const _alHtmlP20 = VIEWS.alog.html;
+VIEWS.alog.html = function(){ let h = _alHtmlP20.apply(this, arguments);
+  h = h.replace('<th>الحالة</th></tr></thead>', '<th>الحالة</th><th>قبل ← بعد</th></tr></thead>').replace('<p>من أضاف أو عدّل أو حذف ماذا ومتى – آخر 90 يوماً.</p>', '<p>كل إضافة وتعديل وحذف من كل الحسابات، مع القيمة قبل التعديل وبعده – آخر 90 يوماً.</p>');
+  const L = (S.alog || []).filter(x => (!AL.who || x.who === AL.who) && (!AL.act || x.act === AL.act) && (!AL.q || qMatch(AL.q, x.ref, ALOG_N[x.col], x.info))).sort((a, b) => (b.date + b.time).localeCompare(a.date + a.time)).slice(0, 400);
+  let i = 0; return h.replace(/(<tr><td class="num">[^<]*<\/td><td class="num">[^<]*<\/td>[\s\S]*?)<\/tr>/g, (m, row) => { const x = L[i++]; if(!x) return m; const d = x.diff || [];
+    return row + `<td class="aldiff">${d.length ? d.slice(0, 8).map(z => `<div><b>${esc(fldAr(z.k))}:</b> ${x.act === 'حذف' ? `<s>${esc(z.b)}</s>` : `<s>${esc(z.b || '—')}</s> ← <ins>${esc(z.a || '—')}</ins>`}</div>`).join('') + (d.length > 8 ? `<small>+${d.length - 8} حقول</small>` : '') : '<span class="muted">—</span>'}</td></tr>`; }); };
+
+/* ---------- محرر كل البيانات (مدير ضبط الجودة فقط) ---------- */
+const DE_COLS = [['rounds', 'جولات الجودة'], ['tickets', 'تذاكر عمال التشييك'], ['onotes', 'ملاحظات الإنتاج (مدير الإنتاج، المعاون، مشرف الوردية)'], ['stops', 'توقف الآلات'], ['holds', 'الحجز'], ['ncrs', 'عدم المطابقة'], ['complaints', 'شكاوى الزبائن'], ['mats', 'المواد الأولية'], ['audits', 'المراقبات العامة'], ['ths', 'الحرارة والرطوبة'], ['cals', 'المعايرة'], ['samples', 'أرشيف العينات'], ['shiftsums', 'ملخصات الورديات'], ['coas', 'شهادات التحليل'], ['scraps', 'السكراب']];
+let DE = {c: 'rounds', q: '', who: '', f: '', t: '', sel: ''};
+const deWho = x => x.inspector || x.by || x.who || x.author || x.doneBy || '';
+const deSum = (c, x) => c === 'rounds' ? `${stageBy(x.stage).name}${x.machine && x.machine !== '—' ? ' · ' + x.machine : ''} · ${ordersLabel(x) || ''} · ${x.decision || ''}` : c === 'tickets' ? `${x.no || ''} · ${x.defect || ''} · ${(TK_STATUS[x.status] || [''])[0]}` : c === 'onotes' ? `${x.order || ''} · ${String(x.text || x.note || '').slice(0, 60)}` : String(x.no || x.order || x.name || x.reasonLabel || x.desc || x.customer || '').slice(0, 70);
+const FIN_K = [['len', 'الطول (mm)'], ['dia', 'القطر (mm)'], ['thick', 'السماكة (µm)'], ['seam', 'اللحام الجانبي (mm)']];
+VIEWS.dataed = {
+  html(){
+    const A = (S[DE.c] || []).map(x => ({x, w: deWho(x)})), whos = [...new Set(A.map(a => a.w).filter(Boolean))].sort();
+    const L = A.filter(({x, w}) => (!DE.who || w === DE.who) && (!DE.f || (x.date || '') >= DE.f) && (!DE.t || (x.date || '') <= DE.t) && (!DE.q || JSON.stringify(x).includes(DE.q))).sort((a, b) => String((b.x.date || '') + (b.x.time || '')).localeCompare(String((a.x.date || '') + (a.x.time || '')))).slice(0, 300);
+    const sel = DE.sel && (S[DE.c] || []).find(x => String(keyOf(x)) === DE.sel);
+    let det = '';
+    if(sel){ const keys = Object.keys(sel).filter(k => k[0] !== '_' && k !== 'id');
+      det = `<div class="panel deedit"><div class="row" style="justify-content:space-between;align-items:center"><h3 style="margin:0">${esc(DE_COLS.find(z => z[0] === DE.c)[1])} · ${esc(deSum(DE.c, sel))}</h3><div class="row" style="gap:6px"><button class="btn p" id="deSave">💾 حفظ التعديلات</button><button class="btn d" id="deDel">🗑 حذف السجل</button><button class="btn" id="deX">إغلاق</button></div></div>
+        <p class="muted" style="margin:6px 0 10px">كل التعديلات تُسجّل في سجل التعديلات بالقيمة قبل وبعد.</p>
+        <div class="degrid">${keys.map(k => { const v = sel[k], obj = v !== null && typeof v === 'object'; return `<label class="f"><span>${esc(fldAr(k))} <small class="muted" dir="ltr">${esc(k)}</small></span>${obj ? `<textarea data-dek="${esc(k)}" data-dej="1" rows="${Math.min(10, Math.max(2, JSON.stringify(v, null, 1).split('\n').length))}" dir="ltr">${esc(JSON.stringify(v, null, 1))}</textarea>` : `<input data-dek="${esc(k)}" value="${esc(fmtV(v))}" data-detype="${typeof v}">`}</label>`; }).join('')}</div>
+        ${DE.c === 'rounds' && sel.stage === 'final' ? deFinal(sel) : ''}</div>`; }
+    return `<div class="pagehead"><div><h1 style="margin:0">كل البيانات – مراجعة وتعديل</h1><p>كل ما سجّله المراقبون وعمال التشييك ومدير الإنتاج ومعاونه ومشرفو الورديات: مشاهدة كاملة، تعديل، حذف.</p></div></div>
+      <div class="panel noprint"><div class="row" style="gap:8px;flex-wrap:wrap"><select id="deC">${DE_COLS.map(([k, l]) => `<option value="${k}" ${DE.c === k ? 'selected' : ''}>${l} (${(S[k] || []).length})</option>`).join('')}</select>
+        <select id="deW"><option value="">كل الحسابات</option>${whos.map(w => `<option ${DE.who === w ? 'selected' : ''}>${esc(w)}</option>`).join('')}</select>
+        <input type="date" id="deF" value="${esc(DE.f)}"><input type="date" id="deT" value="${esc(DE.t)}"><input type="search" id="deQ" value="${esc(DE.q)}" placeholder="بحث"></div></div>
+      ${det}
+      <div class="panel"><div class="tw"><table class="t"><thead><tr><th>التاريخ</th><th>الوقت</th><th>الحساب</th><th>الملخص</th><th class="noprint"></th></tr></thead><tbody>${L.map(({x, w}) => `<tr class="${DE.sel === String(keyOf(x)) ? 'flag' : ''}"><td class="num">${esc(x.date || '')}</td><td class="num">${esc(x.time || '')}</td><td>${esc(w)}</td><td>${esc(deSum(DE.c, x))}</td><td class="noprint"><button class="btn sm" data-desel="${esc(String(keyOf(x)))}">فتح / تعديل</button></td></tr>`).join('') || '<tr><td colspan="5">لا سجلات.</td></tr>'}</tbody></table></div></div>`;
+  },
+  bind(){
+    $('#deC').onchange = e => { DE.c = e.target.value; DE.sel = ''; rerender(); }; $('#deW').onchange = e => { DE.who = e.target.value; rerender(); };
+    $('#deF').onchange = e => { DE.f = e.target.value; rerender(); }; $('#deT').onchange = e => { DE.t = e.target.value; rerender(); }; $('#deQ').onchange = e => { DE.q = e.target.value.trim(); rerender(); };
+    $$('[data-desel]').forEach(b => b.onclick = () => { DE.sel = b.dataset.desel; rerender(); window.scrollTo(0, 0); });
+    const x = $('#deX'); if(x) x.onclick = () => { DE.sel = ''; rerender(); };
+    const cur = () => (S[DE.c] || []).find(z => String(keyOf(z)) === DE.sel);
+    const sv = $('#deSave'); if(sv) sv.onclick = () => { const r = cur(); if(!r) return; const before = JSON.parse(JSON.stringify(r));
+      for(const el of $$('[data-dek]')){ const k = el.dataset.dek; if(el.dataset.dej){ try{ r[k] = JSON.parse(el.value); }catch(e){ toast(`الحقل ${fldAr(k)}: صيغة غير صحيحة`); return; } } else { const t = el.dataset.detype; r[k] = t === 'number' ? (el.value === '' ? '' : +el.value) : t === 'boolean' ? el.value === 'true' : el.value; } }
+      deSpecSave(r);
+      const d = alogDiff(before, r); if(!d.length){ toast('لا تغييرات'); return; }
+      S.alog = S.alog || []; S.alog.push({id: 'L' + uid(), date: todayStr(), time: timeStr(), who: CUR.name, role: CUR.role, col: DE.c, ref: r.no || r.order || deSum(DE.c, r).slice(0, 40), act: 'تعديل', info: 'تعديل مدير الجودة', diff: d});
+      save(); toast('✅ حُفظ التعديل وسُجّل في سجل التعديلات'); rerender(); };
+    const dl = $('#deDel'); if(dl) dl.onclick = () => { const r = cur(); if(!r) return; ask('حذف هذا السجل نهائياً؟ سيُسجّل الحذف في سجل التعديلات.', 'حذف', () => { const i = S[DE.c].indexOf(r); if(i < 0) return; S[DE.c].splice(i, 1);
+      S.alog = S.alog || []; S.alog.push({id: 'L' + uid(), date: todayStr(), time: timeStr(), who: CUR.name, role: CUR.role, col: DE.c, ref: r.no || r.order || deSum(DE.c, r).slice(0, 40), act: 'حذف', info: 'حذف مدير الجودة', diff: alogDiff(r, {}).slice(0, 25)});
+      DE.sel = ''; save(); toast('حُذف السجل'); rerender(); }, true); };
+  }
+};
+/* الفحص النهائي: كل ما أدخله المراقب + مجال شهادة التحليل (ندى فقط) */
+function deFinal(r){ const it = (r.items || [])[0], o = it ? ((typeof specOfItem === 'function' ? specOfItem(it) : null) || ordRows(it.order)[0]) : null, v = r.vals || {}, rel = (r.extra || {}).rel || {}, ov = r.specOv || {};
+  return `<div class="defin"><h3>📏 الفحص النهائي كما أدخله المراقب</h3>
+    <div class="tw"><table class="t"><thead><tr><th>القياس</th><th>القراءات</th><th>المتوسط</th><th>المجال المعتمد (من ERP)</th><th>مجال شهادة التحليل (ندى)</th></tr></thead><tbody>${FIN_K.map(([k, l]) => { const ch = FINAL_CHECKS.find(c => c.k === k), sp = o && ch ? specFor(ch, o) : null, cur = ov[k] || (k === 'seam' ? [S.settings.seamMin ?? '', S.settings.seamMax ?? ''] : k === 'thick' && o && +o.roll_thickness ? [Math.round(o.roll_thickness * 0.9), Math.round(o.roll_thickness * 1.1)] : sp && !sp.skip ? [sp.min, sp.max] : ['', '']);
+      return `<tr><td><b>${l}</b></td><td class="num">${(v[k + '_r'] || []).map(esc).join(' · ') || '—'}</td><td class="num"><b>${esc(v[k] ?? '—')}</b></td><td class="num">${sp && !sp.skip ? `${sp.min} – ${sp.max}` : '—'}</td><td class="num"><input type="number" step="any" data-dsp="${k}|0" value="${esc(cur[0] ?? '')}" style="width:90px"> – <input type="number" step="any" data-dsp="${k}|1" value="${esc(cur[1] ?? '')}" style="width:90px"></td></tr>`; }).join('')}</tbody></table></div>
+    <p class="muted" style="font-size:12.5px">مجال شهادة التحليل يُستخدم في شهادة هذه الجولة وفي حكم "ضمن/خارج المجال" فيها. اتركيه كما هو لاعتماد مواصفة ERP.</p>
+    ${rel.total != null ? `<p><b>التحرير:</b> سليم ${esc(rel.good)} · معيب ${esc(rel.bad)} · المجموع ${esc(rel.total)} · ${rel.finished === 'yes' ? 'تحرير نهائي' : 'تحرير جزئي'}${rel.badNote ? ' · العيب: ' + esc(rel.badNote) : ''}</p>` : ''}
+    ${(rel.cartons || r.cartonsInsp || []).length ? `<p><b>الكراتين المعاينة:</b> ${(rel.cartons || r.cartonsInsp).map(c => `${esc(c.no)}${c.st === 'bad' || c.issues ? ' (معيب: ' + esc(c.note || c.issues) + ')' : ' ✓'}`).join(' · ')}</p>` : ''}</div>`; }
+function deSpecSave(r){ const ins = $$('[data-dsp]'); if(!ins.length) return; const ov = {}; ins.forEach(i => { const [k, j] = i.dataset.dsp.split('|'); ov[k] = ov[k] || ['', '']; ov[k][+j] = i.value === '' ? '' : +i.value; });
+  Object.keys(ov).forEach(k => { if(ov[k][0] === '' && ov[k][1] === '') delete ov[k]; }); if(Object.keys(ov).length) r.specOv = ov; else delete r.specOv; }
+/* شهادة التحليل تعتمد مجال ندى إن وُجد */
+let COA_OV = null;
+const _specForP20 = specFor;
+specFor = function(ch, o){ if(COA_OV && ch && COA_OV[ch.k] && COA_OV[ch.k][0] !== '' && COA_OV[ch.k][1] !== ''){ const b = _specForP20(ch, o) || {}; return {...b, min: +COA_OV[ch.k][0], max: +COA_OV[ch.k][1], skip: false}; } return _specForP20(ch, o); };
+{ const _h = VIEWS.coaprint.html; VIEWS.coaprint.html = function(){ const r = S.rounds.find(x => x.id === arg.round); COA_OV = r && r.specOv || null; try{ return _h.apply(this, arguments); } finally { COA_OV = null; } }; }
+/* القائمة: لندى فقط */
+ICONS.dataed = LI('file'); PAGE.dataed = ['النظام', 'كل البيانات – مراجعة وتعديل'];
+{ const g = NAV.find(x => x.g === 'النظام') || NAV[NAV.length - 1]; g.items.unshift(['dataed', 'كل البيانات – مراجعة وتعديل', 'mgr']); }
+{ const _g = go; go = function(v, a){ if(v === 'dataed' && !isNada()){ toast('لمدير ضبط الجودة فقط'); return; } return _g(v, a); }; }
+{ const _r = render; render = function(){ const r = _r.apply(this, arguments); try{ if(!isNada()) $$('[data-v="dataed"]').forEach(b => b.style.display = 'none'); }catch(e){} return r; }; }
+/* من شاشة "مباشر" تفتح ندى الجولة للتعديل مباشرة */
+{ const _b = VIEWS.live.bind; VIEWS.live.bind = function(){ const r = _b.apply(this, arguments); if(isNada()) $$('[data-lvr]').forEach(el => el.onclick = () => { DE = {...DE, c: 'rounds', sel: String(keyOf(S.rounds.find(x => String(x.id) === el.dataset.lvr) || {})), who: '', q: '', f: '', t: ''}; go('dataed'); }); return r; }; }
 
 async function startApp(){
   if(GAS_MODE) serverMode = true;
