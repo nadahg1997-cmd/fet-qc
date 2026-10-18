@@ -1390,6 +1390,12 @@ body.exec.dark .aldiff s{background:rgba(231,76,60,.15)}body.exec.dark .aldiff i
 .erpst{border-inline-start:5px solid #1D4E89}.erpbig{display:flex;gap:14px;align-items:flex-start;margin-bottom:12px}.erpdot{width:16px;height:16px;border-radius:50%;background:#C9D1D9;margin-top:6px;flex:none}.erpdot.ok{background:#2ECC8F;box-shadow:0 0 0 5px rgba(46,204,143,.2)}.erpdot.bad{background:#E74C3C;box-shadow:0 0 0 5px rgba(231,76,60,.2)}
 .erpjson{background:#0E1620;color:#E6EDF3;border-radius:10px;padding:12px;font-size:12.5px;overflow:auto;white-space:pre-wrap}
 .erpchip{display:inline-block;cursor:pointer;font-size:13px;background:#EEF4FB;color:#1D4E89;border:1px solid #CFE0F2;border-radius:999px;padding:4px 14px;margin-bottom:10px}body.exec.dark .erpchip{background:rgba(29,78,137,.2);border-color:#273546;color:#9CCBEB}
+.cz{background:#FDF3F2;border:1px solid #F1C4BF;border-inline-start:5px solid #E74C3C;border-radius:14px;padding:10px 12px;margin-top:10px}.czh{display:flex;justify-content:space-between;align-items:center;gap:6px}.czh small{color:#8A6A12;font-size:12px}
+.czl{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}.czc{display:inline-flex;align-items:center;gap:6px;background:#17212B;color:#fff;border-radius:999px;padding:6px 12px;font-size:14px;font-weight:700}.czc.pr{background:#1D4E89}.czc.unk{background:#8A97A3}.czc i{font-style:normal;cursor:pointer;opacity:.8}
+.czhint{font-size:12.5px;background:#FFF8E6;color:#7A5A0A;border-radius:10px;padding:6px 10px;margin-top:6px}.czo{margin-top:8px;background:#fff;border-radius:12px;padding:8px}.czg{margin-bottom:6px}.czg small{display:block;color:#8A3F0E;font-weight:700;margin-bottom:4px}.czg div{display:flex;flex-wrap:wrap;gap:6px}
+.piedit{border-inline-start:5px solid #1D4E89}
+.czr{font-style:normal;font-size:11.5px;border-radius:999px;padding:1px 7px;background:rgba(255,255,255,.18)}.czr.y{background:#2ECC8F;color:#0E1620}.czr.n{background:#F5B041;color:#0E1620}
+.sevrule{margin-top:10px;background:#F7F9FB;border-radius:12px;padding:10px}.sevrule table{margin:6px 0;font-size:13px}.pirep{margin-top:14px;border-top:2px dashed #E4E8ED;padding-top:10px}.pirep h3{margin:0 0 8px}
 </style>
 </head>
 <body>
@@ -4505,7 +4511,7 @@ VIEWS.data.bind = function(){
 
 const LUCIDE = {"home": "<path d=\"M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8\" /> <path d=\"M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z\" />", "prod": "<path d=\"M12 16h.01\" /> <path d=\"M16 16h.01\" /> <path d=\"M3 19a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5a.5.5 0 0 0-.769-.422l-4.462 2.844A.5.5 0 0 1 15 10.5v-2a.5.5 0 0 0-.769-.422L9.77 10.922A.5.5 0 0 1 9 10.5V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2z\" /> <path d=\"M8 16h.01\" />", "mat": "<path d=\"M12 22V12\" /> <path d=\"m16 17 2 2 4-4\" /> <path d=\"M21 11.127V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.729l7 4a2 2 0 0 0 2 .001l1.32-.753\" /> <path d=\"M3.29 7 12 12l8.71-5\" /> <path d=\"m7.5 4.27 8.997 5.148\" />", "ncr": "<path d=\"M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z\" /> <path d=\"M12 8v4\" /> <path d=\"M12 16h.01\" />", "hold": "<path d=\"M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z\" /> <path d=\"m3.3 7 8.7 5 8.7-5\" /> <path d=\"M12 22V12\" />", "mon": "<rect width=\"8\" height=\"4\" x=\"8\" y=\"2\" rx=\"1\" ry=\"1\" /> <path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\" /> <path d=\"m9 14 2 2 4-4\" />", "rep": "<path d=\"M3 3v16a2 2 0 0 0 2 2h16\" /> <path d=\"M18 17V9\" /> <path d=\"M13 17V5\" /> <path d=\"M8 17v-3\" />", "team": "<path d=\"M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2\" /> <path d=\"M16 3.128a4 4 0 0 1 0 7.744\" /> <path d=\"M22 21v-2a4 4 0 0 0-3-3.87\" /> <circle cx=\"9\" cy=\"7\" r=\"4\" />", "mgr": "<path d=\"M16 7h6v6\" /> <path d=\"m22 7-8.5 8.5-5-5L2 17\" />", "more": "<rect width=\"7\" height=\"7\" x=\"3\" y=\"3\" rx=\"1\" /> <rect width=\"7\" height=\"7\" x=\"14\" y=\"3\" rx=\"1\" /> <rect width=\"7\" height=\"7\" x=\"14\" y=\"14\" rx=\"1\" /> <rect width=\"7\" height=\"7\" x=\"3\" y=\"14\" rx=\"1\" />", "hand": "<path d=\"M8 3 4 7l4 4\" /> <path d=\"M4 7h16\" /> <path d=\"m16 21 4-4-4-4\" /> <path d=\"M20 17H4\" />", "comp": "<path d=\"M22 17a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 21.286V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2z\" /> <path d=\"M12 15h.01\" /> <path d=\"M12 7v4\" />", "coa": "<path d=\"m15.477 12.89 1.515 8.526a.5.5 0 0 1-.81.47l-3.58-2.687a1 1 0 0 0-1.197 0l-3.586 2.686a.5.5 0 0 1-.81-.469l1.514-8.526\" /> <circle cx=\"12\" cy=\"8\" r=\"6\" />", "sup": "<path d=\"M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2\" /> <path d=\"M15 18H9\" /> <path d=\"M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 17.52 8H14\" /> <circle cx=\"17\" cy=\"18\" r=\"2\" /> <circle cx=\"7\" cy=\"18\" r=\"2\" />", "data": "<ellipse cx=\"12\" cy=\"5\" rx=\"9\" ry=\"3\" /> <path d=\"M3 5V19A9 3 0 0 0 21 19V5\" /> <path d=\"M3 12A9 3 0 0 0 21 12\" />", "bell": "<path d=\"M10.268 21a2 2 0 0 0 3.464 0\" /> <path d=\"M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326\" />", "search": "<path d=\"m21 21-4.34-4.34\" /> <circle cx=\"11\" cy=\"11\" r=\"8\" />", "logout": "<path d=\"m16 17 5-5-5-5\" /> <path d=\"M21 12H9\" /> <path d=\"M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4\" />", "dash": "<rect width=\"7\" height=\"9\" x=\"3\" y=\"3\" rx=\"1\" /> <rect width=\"7\" height=\"5\" x=\"14\" y=\"3\" rx=\"1\" /> <rect width=\"7\" height=\"9\" x=\"14\" y=\"12\" rx=\"1\" /> <rect width=\"7\" height=\"5\" x=\"3\" y=\"16\" rx=\"1\" />", "s_design": "<path d=\"M15.707 21.293a1 1 0 0 1-1.414 0l-1.586-1.586a1 1 0 0 1 0-1.414l5.586-5.586a1 1 0 0 1 1.414 0l1.586 1.586a1 1 0 0 1 0 1.414z\" /> <path d=\"m18 13-1.375-6.874a1 1 0 0 0-.746-.776L3.235 2.028a1 1 0 0 0-1.207 1.207L5.35 15.879a1 1 0 0 0 .776.746L13 18\" /> <path d=\"m2.3 2.3 7.286 7.286\" /> <circle cx=\"11\" cy=\"11\" r=\"2\" />", "s_print": "<path d=\"M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2\" /> <path d=\"M6 9V3a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v6\" /> <rect x=\"6\" y=\"14\" width=\"12\" height=\"8\" rx=\"1\" />", "s_draw": "<ellipse cx=\"12\" cy=\"5\" rx=\"9\" ry=\"3\" /> <path d=\"M3 5v14a9 3 0 0 0 18 0V5\" />", "s_sort": "<path d=\"M2 5h20\" /> <path d=\"M6 12h12\" /> <path d=\"M9 19h6\" />", "s_mix": "<path d=\"M14 2v6a2 2 0 0 0 .245.96l5.51 10.08A2 2 0 0 1 18 22H6a2 2 0 0 1-1.755-2.96l5.51-10.08A2 2 0 0 0 10 8V2\" /> <path d=\"M6.453 15h11.094\" /> <path d=\"M8.5 2h7\" />", "s_inj": "<path d=\"m18 2 4 4\" /> <path d=\"m17 7 3-3\" /> <path d=\"M19 9 8.7 19.3c-1 1-2.5 1-3.4 0l-.6-.6c-1-1-1-2.5 0-3.4L15 5\" /> <path d=\"m9 11 4 4\" /> <path d=\"m5 19-3 3\" /> <path d=\"m14 4 6 6\" />", "s_asm": "<path d=\"M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.106-3.105c.32-.322.863-.22.983.218a6 6 0 0 1-8.259 7.057l-7.91 7.91a1 1 0 0 1-2.999-3l7.91-7.91a6 6 0 0 1 7.057-8.259c.438.12.54.662.219.984z\" />", "s_cap": "<path d=\"M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z\" /> <path d=\"M12 22V12\" /> <polyline points=\"3.29 7 12 12 20.71 7\" /> <path d=\"m7.5 4.27 9 5.15\" />", "s_seal": "<path d=\"M14 13V8.5C14 7 15 7 15 5a3 3 0 0 0-6 0c0 2 1 2 1 3.5V13\" /> <path d=\"M20 15.5a2.5 2.5 0 0 0-2.5-2.5h-11A2.5 2.5 0 0 0 4 15.5V17a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1z\" /> <path d=\"M5 22h14\" />", "s_final": "<path d=\"M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z\" /> <path d=\"m16 9-5.5 5.5L8 12\" />", "thermo": "<path d=\"M14 4v10.54a4 4 0 1 1-4 0V4a2 2 0 0 1 4 0Z\" />", "ruler": "<path d=\"M21.3 15.3a2.4 2.4 0 0 1 0 3.4l-2.6 2.6a2.4 2.4 0 0 1-3.4 0L2.7 8.7a2.41 2.41 0 0 1 0-3.4l2.6-2.6a2.41 2.41 0 0 1 3.4 0Z\" /> <path d=\"m14.5 12.5 2-2\" /> <path d=\"m11.5 9.5 2-2\" /> <path d=\"m8.5 6.5 2-2\" /> <path d=\"m17.5 15.5 2-2\" />", "clean": "<path d=\"M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z\" /> <path d=\"M20 2v4\" /> <path d=\"M22 4h-4\" /> <circle cx=\"4\" cy=\"20\" r=\"2\" />", "plus": "<circle cx=\"12\" cy=\"12\" r=\"10\" /> <path d=\"M8 12h8\" /> <path d=\"M12 8v8\" />", "ok": "<path d=\"M21.801 10A10 10 0 1 1 17 3.335\" /> <path d=\"m9 11 3 3L22 4\" />", "warn": "<path d=\"m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3\" /> <path d=\"M12 9v4\" /> <path d=\"M12 17h.01\" />", "file": "<path d=\"M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z\" /> <path d=\"M14 2v5a1 1 0 0 0 1 1h5\" /> <path d=\"M10 9H8\" /> <path d=\"M16 13H8\" /> <path d=\"M16 17H8\" />", "scan": "<path d=\"M3 7V5a2 2 0 0 1 2-2h2\" /> <path d=\"M17 3h2a2 2 0 0 1 2 2v2\" /> <path d=\"M21 17v2a2 2 0 0 1-2 2h-2\" /> <path d=\"M7 21H5a2 2 0 0 1-2-2v-2\" /> <circle cx=\"12\" cy=\"12\" r=\"3\" /> <path d=\"m16 16-1.9-1.9\" />", "clock": "<circle cx=\"12\" cy=\"12\" r=\"10\" /> <path d=\"M12 6v6l4 2\" />", "alert": "<path d=\"M12 16h.01\" /> <path d=\"M12 8v4\" /> <path d=\"M15.312 2a2 2 0 0 1 1.414.586l4.688 4.688A2 2 0 0 1 22 8.688v6.624a2 2 0 0 1-.586 1.414l-4.688 4.688a2 2 0 0 1-1.414.586H8.688a2 2 0 0 1-1.414-.586l-4.688-4.688A2 2 0 0 1 2 15.312V8.688a2 2 0 0 1 .586-1.414l4.688-4.688A2 2 0 0 1 8.688 2z\" />", "activity": "<path d=\"M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2\" />", "gauge": "<path d=\"m12 14 4-4\" /> <path d=\"M3.34 19a10 10 0 1 1 17.32 0\" />"};
 /* [VERSION] رقم إصدار البرنامج – يظهر أسفل القائمة وفي شاشة الدخول */
-const APP_VERSION = '18.8';
+const APP_VERSION = '19.1';
 let SERVER_VERSION = '';
 async function checkServerVersion(){ if(!GAS_MODE) return; try{ const v = JSON.parse(await rpc('serverVersion', '')); SERVER_VERSION = v.version + (v.ocr ? '' : ' (Drive API غير مفعّل)'); }catch(e){ SERVER_VERSION = /NET/.test(String(e && e.message || e)) ? '' : 'قديم – انشر إصداراً جديداً'; } try{ renderTabs(); }catch(e){} }
 /* [ERRORS] بدل الصفحة الفارغة: رسالة واضحة وزر إعادة تحميل */
@@ -11205,7 +11211,7 @@ document.addEventListener('click', e => { const t = e.target.closest && e.target
   const k = t.dataset.blno || t.dataset.blback, f = blameFor(k); if(!f) return; f.__blList = !!t.dataset.blno; f.__blOther = false; f.blame = null; rerender(); }, true);
 document.addEventListener('input', e => { const t = e.target; if(t.matches && t.matches('[data-blkn]')){ const f = blameFor(t.dataset.blkn); if(f) f.blame = {name: t.value.trim(), stage: ''}; } }, true);
 const hasDefect = f => !!(f && f.decision && f.decision !== 'مقبول');
-const needBlame = f => plainUser() && hasDefect(f);
+const needBlame = f => false;
 /* في صفحات المراحل */
 const _sdMHtmlP14 = sdMachineHtml;
 sdMachineHtml = function(m, f){ let h = _sdMHtmlP14(m, f); if(!needBlame(f) || f.status !== 'run' || SDK === 'draw') return h; const ord = String(f.order || ((f.items || [])[0] || {}).order || '');
@@ -11214,12 +11220,11 @@ const _spHtmlP14 = spHtml;
 spHtml = function(f){ let h = _spHtmlP14(f); if(!needBlame(f)) return h; const ord = String(f.order || ((f.items || [])[0] || {}).order || '');
   return h.replace('<div class="grid qnact">', blameHtml('sp|', f, ord, 'print', f.operator || '') + '<div class="grid qnact">'); };
 const _rlHtmlP14 = VIEWS.release.html;
-VIEWS.release.html = function(){ let h = _rlHtmlP14.apply(this, arguments); const f = RL; if(!f || !(hasDefect(f) || +f.bad > 0) || !plainUser()) return h;
-  return h.replace('<div class="grid qnact">', blameHtml('rl|', f, f.order, 'final', '') + '<div class="grid qnact">'); };
+VIEWS.release.html = function(){ return _rlHtmlP14.apply(this, arguments); };
 /* الحفظ: إلزامي عند العيب + حفظه مع الجولة + تحديث عمال الطلبية */
 const _saveP14 = saveRound;
 saveRound = function(){
-  const f = F; if(f && !f.viewOnly && plainUser() && !['draw', 'print'].includes(f.stage) && (hasDefect(f) || (f.stage === 'final' && +(f.extra || {}).cartBad > 0))){ const src = f.stage === 'final' && RL ? RL : f; const b = src.blame || f.blame;
+  const f = F; if(false && f && !f.viewOnly && plainUser() && !['draw', 'print'].includes(f.stage) && (hasDefect(f) || (f.stage === 'final' && +(f.extra || {}).cartBad > 0))){ const src = f.stage === 'final' && RL ? RL : f; const b = src.blame || f.blame;
     if(!b || !b.name){ toast('حدّد العامل المسؤول عن العيب (أو "غير معروف")'); return null; } f.blame = b; }
   const id0 = f && f.editId, n0 = S.rounds.length, ret = _saveP14.apply(this, arguments);
   try{ if(ret !== null && f){ const r = id0 ? S.rounds.find(x => x.id === id0) : S.rounds.length > n0 ? S.rounds[S.rounds.length - 1] : null;
@@ -11238,7 +11243,7 @@ VIEWS.people.html = function(){ let h = _ppHtmlP14.apply(this, arguments); if(PP
   return h.replace('<div class="tw" style="margin-top:12px">', `<div class="panel blmp"><h3>🎯 عيوب لم يكتشفها العامل (حدّدها المراقب)</h3><div class="tw"><table class="t"><thead><tr><th>العامل</th><th>عدد العيوب التي فاتته</th><th>المرحلة</th><th>آخرها</th></tr></thead><tbody>${ws.sort((a, b) => b.missed.length - a.missed.length).map(w => { const last = w.missed[w.missed.length - 1]; return `<tr><td><b>${esc(w.name)}</b></td><td class="num"><b>${w.missed.length}</b></td><td>${[...new Set(w.missed.map(r => stageBy(r.blame.stage || r.stage).name))].map(esc).join('، ')}</td><td class="num">${esc(last.date)} · ${esc(ordersLabel(last))} · ${esc(stageBy(last.stage).name)}</td></tr>`; }).join('')}</tbody></table></div><p class="muted" style="font-size:12px;margin-bottom:0">عند تحديد العامل المسؤول، تُحسب المخالفة عليه وحده بدل كل عمال الآلة.</p></div><div class="tw" style="margin-top:12px">`); };
 
 document.addEventListener('click', e => { const b = e.target.closest && e.target.closest('[data-sdsave], #sdSave'); if(!b || !plainUser() || !SD) return;
-  const bad = SDK === 'draw' ? null : Object.entries(SD).find(([m, f]) => f.status === 'run' && hasDefect(f) && !(f.blame && f.blame.name)); if(bad){ e.stopImmediatePropagation(); e.preventDefault(); toast(`${bad[0]}: حدّد العامل المسؤول عن العيب (أو "غير معروف")`); const el = document.querySelector(`[data-blk="sd|${bad[0]}"]`); if(el){ el.scrollIntoView({block: 'center'}); el.focus(); } } }, true);
+  const bad = null; if(bad){ e.stopImmediatePropagation(); e.preventDefault(); toast(`${bad[0]}: حدّد العامل المسؤول عن العيب (أو "غير معروف")`); const el = document.querySelector(`[data-blk="sd|${bad[0]}"]`); if(el){ el.scrollIntoView({block: 'center'}); el.focus(); } } }, true);
 
 /* ================= [PHASE15] حساب ندى: بلا تشييك · "مراحل أخرى" · بلا بنود الفحص في مراحل الإنتاج ================= */
 function groupOtherStages(line){
@@ -11553,6 +11558,240 @@ ICONS.erpset = LI('activity'); PAGE.erpset = ['النظام', 'ربط ERP'];
 { const _r = render; render = function(){ const r = _r.apply(this, arguments); try{ if(!isNada()) $$('[data-v="erpset"]').forEach(b => b.style.display = 'none'); }catch(e){} return r; }; }
 /* حالة الربط تظهر لمدير القسم أعلى لوحة القيادة */
 { const _h = VIEWS.cmd.html; VIEWS.cmd.html = function(){ const h = _h.apply(this, arguments); if(!isNada() || !(S.settings || {}).erpStatus) return h; return h.replace('<section class="xsc">', `<div class="erpchip" data-cgo="erpset">🔗 ERP: ${erpStatusLine()}</div><section class="xsc">`); }; }
+
+
+/* ================= [PHASE22] معلومات الطباعة · خانة المسبب (أكثر من عامل) · التقييم التلقائي ================= */
+/* ---------- نوع العيب ← المرحلة المرجّحة ---------- */
+/* نوع العيب ← المرحلة: عيوب الحقن (رأس، فوهة، كتف…) تبقى على الحقن ولا تُحمَّل للمراحل السابقة */
+const DEF_STAGE = [['inj', ['رأس', 'راس', 'فوهة', 'فوهه', 'كتف', 'حقن', 'تسنين', 'لولب', 'ثقب', 'شفة', 'فلاش', 'زوائد', 'نقص مادة', 'حرق', 'فقاعات', 'مسنن']], ['cap', ['غطاء', 'تعبئة', 'كرتون', 'تغطية', 'تغليف']], ['asm', ['تركيب']], ['seal', ['ختم', 'تختيم']], ['sort', ['تصفيط', 'مصفوط', 'ترتيب', 'فرز', 'خلط', 'مخلوط', 'عدد']], ['print', ['خط', 'خطوط', 'لون', 'ألوان', 'الوان', 'حبر', 'تسجيل', 'طباعة', 'مطبوع', 'بقع', 'باهت', 'تبقيع', 'رهاج', 'فويل', 'ورنيش']], ['draw', ['لحام', 'طول', 'قطر', 'تجعد', 'تجعّد', 'سحب', 'قص', 'جسم', 'التواء']]];
+const defectStage = txt => { const W = String(txt || '').split(/[\s،,.؛:\-–()]+/).filter(Boolean), T = ' ' + W.join(' ') + ' ';
+  const hit = k => k.includes(' ') ? T.includes(k) : W.some(w => w === k || w === 'ال' + k || w === 'و' + k || w === 'بال' + k || (k.length >= 3 && w.includes(k)));
+  for(const [st, ks] of DEF_STAGE) if(ks.some(hit)) return st; return ''; };
+const stIdx = k => STAGES.findIndex(s => s.key === k);
+/* ---------- معلومات الطباعة (لمدير القسم فقط) ---------- */
+const printInfo = o => ((S.settings.printInfo || {})[String(o)]) || null;
+function printShiftsFor(order, roll){
+  const pi = printInfo(order); if(!pi || !(pi.entries || []).length) return [];
+  if(pi.mode === 'full') return [pi.entries[0].shift];
+  const r = parseInt(String(roll || '').replace(/\D/g, ''), 10);
+  if(!isNaN(r)){ const e = pi.entries.find(x => x.from !== '' && x.to !== '' && r >= +String(x.from).replace(/\D/g, '') && r <= +String(x.to).replace(/\D/g, '')); if(e) return [e.shift]; }
+  return [];
+}
+let PI = {o: ''};
+VIEWS.printinfo = {
+  html(){ const o = PI.o, pi = o ? (printInfo(o) || {mode: 'full', entries: [{date: todayStr(), shift: 'صباحية', rolls: '', from: '', to: ''}]}) : null, e = o && ordRows(o)[0];
+    if(o && !PI.edit) PI.edit = JSON.parse(JSON.stringify(pi)); const d = PI.edit;
+    const all = Object.entries(S.settings.printInfo || {}).sort((a, b) => b[0].localeCompare(a[0])).slice(0, 60);
+    return `<div class="pagehead"><div><h1 style="margin:0">معلومات الطباعة</h1><p>لكل طلبية: في أي وردية طُبعت، كاملة أو جزئية، وعدد الرولات في كل وردية. يستخدمها البرنامج لتحديد وردية الطباعة المسؤولة عن أي عيب طباعة.</p></div></div>
+      <div class="panel"><div class="row" style="gap:8px"><input type="search" id="piQ" list="piL" value="${esc(o)}" placeholder="رقم الطلبية" style="flex:1">${orderDatalist('piL')}<button class="btn p" id="piGo">فتح</button></div></div>
+      ${o ? `<div class="panel piedit"><h3 style="margin-top:0">طلبية ${esc(o)}${e ? ' · ' + esc(e.product_name_arabic || e.product_name || '') : ''}</h3>
+        <div class="q">كيف طُبعت؟</div><div class="pick">${[['full', 'كاملة في وردية واحدة'], ['partial', 'جزئية – على أكثر من وردية']].map(([k, l]) => `<button class="${d.mode === k ? 'on' : ''}" data-pim="${k}">${l}</button>`).join('')}</div>
+        <div class="tw"><table class="t"><thead><tr><th>التاريخ</th><th>الوردية</th>${d.mode === 'partial' ? '<th>عدد الرولات</th><th>من رول</th><th>إلى رول</th><th></th>' : ''}</tr></thead><tbody>${(d.mode === 'full' ? d.entries.slice(0, 1) : d.entries).map((x, i) => `<tr><td><input type="date" data-pie="${i}|date" value="${esc(x.date || '')}"></td><td><div class="pick">${['صباحية', 'مسائية'].map(s => `<button class="${x.shift === s ? 'on' : ''}" data-pis="${i}|${s}">${s === 'صباحية' ? '☀️' : '🌙'} ${s}</button>`).join('')}</div></td>${d.mode === 'partial' ? `<td><input type="number" min="0" data-pie="${i}|rolls" value="${esc(x.rolls || '')}" style="width:90px"></td><td><input data-pie="${i}|from" value="${esc(x.from || '')}" style="width:100px" dir="ltr"></td><td><input data-pie="${i}|to" value="${esc(x.to || '')}" style="width:100px" dir="ltr"></td><td><button class="btn sm d" data-pix="${i}">✕</button></td>` : ''}</tr>`).join('')}</tbody></table></div>
+        ${d.mode === 'partial' ? '<button class="btn sm" id="piAdd">+ إضافة وردية</button><p class="muted" style="font-size:12.5px">"من رول / إلى رول" اختياري: إذا كتبتِه يحدد البرنامج الوردية من رقم الرول الذي يكتبه مراقب السحب.</p>' : ''}
+        <div class="row" style="gap:8px;margin-top:10px"><button class="btn p" id="piSave">حفظ</button>${printInfo(o) ? '<button class="btn d" id="piDel">حذف</button>' : ''}</div></div>` : ''}
+      <div class="panel"><h3 style="margin-top:0">طلبيات لها معلومات طباعة (${Object.keys(S.settings.printInfo || {}).length})</h3><div class="tw"><table class="t"><thead><tr><th>الطلبية</th><th>الطباعة</th><th>الورديات</th></tr></thead><tbody>${all.map(([k, v]) => `<tr data-pio="${esc(k)}" style="cursor:pointer"><td class="num"><b>${esc(k)}</b></td><td>${v.mode === 'full' ? 'كاملة' : 'جزئية'}</td><td>${(v.entries || []).map(x => `${esc(x.date || '')} ${esc(x.shift)}${x.rolls ? ` (${esc(x.rolls)} رول)` : ''}`).join(' · ')}</td></tr>`).join('') || '<tr><td colspan="3">لا يوجد بعد.</td></tr>'}</tbody></table></div></div>`; },
+  bind(){ const open = v => { PI = {o: String(v || '').trim()}; rerender(); };
+    $('#piGo').onclick = () => open($('#piQ').value); $('#piQ').onkeydown = e => { if(e.key === 'Enter') open($('#piQ').value); };
+    $$('[data-pio]').forEach(r => r.onclick = () => open(r.dataset.pio)); const d = PI.edit; if(!d) return;
+    $$('[data-pim]').forEach(b => b.onclick = () => { d.mode = b.dataset.pim; if(d.mode === 'partial' && d.entries.length < 2) d.entries.push({date: d.entries[0].date, shift: d.entries[0].shift === 'صباحية' ? 'مسائية' : 'صباحية', rolls: '', from: '', to: ''}); rerender(); });
+    $$('[data-pis]').forEach(b => b.onclick = () => { const [i, s] = b.dataset.pis.split('|'); d.entries[+i].shift = s; rerender(); });
+    $$('[data-pie]').forEach(inp => inp.oninput = () => { const [i, k] = inp.dataset.pie.split('|'); d.entries[+i][k] = inp.value; });
+    $$('[data-pix]').forEach(b => b.onclick = () => { d.entries.splice(+b.dataset.pix, 1); if(!d.entries.length) d.mode = 'full', d.entries.push({date: todayStr(), shift: 'صباحية'}); rerender(); });
+    const a = $('#piAdd'); if(a) a.onclick = () => { d.entries.push({date: todayStr(), shift: 'صباحية', rolls: '', from: '', to: ''}); rerender(); };
+    $('#piSave').onclick = () => { const v = JSON.parse(JSON.stringify(d)); if(v.mode === 'full') v.entries = v.entries.slice(0, 1); setS('printInfo', all => { all[PI.o] = v; }); toast('✅ حُفظت معلومات الطباعة'); PI.edit = null; rerender(); };
+    const dl = $('#piDel'); if(dl) dl.onclick = () => { setS('printInfo', all => { delete all[PI.o]; }); PI = {o: ''}; toast('حُذفت'); rerender(); };
+  }
+};
+ICONS.printinfo = LI('s_print'); PAGE.printinfo = ['الجودة', 'معلومات الطباعة'];
+{ const g = NAV.find(x => x.g === 'الجودة') || NAV[1]; g.items.unshift(['printinfo', 'معلومات الطباعة', 'mgr']); }
+{ const _g = go; go = function(v, a){ if(v === 'printinfo' && !isNada()){ toast('لمدير ضبط الجودة فقط'); return; } return _g(v, a); }; }
+{ const _r = render; render = function(){ const r = _r.apply(this, arguments); try{ if(!isNada()) $$('[data-v="printinfo"]').forEach(b => b.style.display = 'none'); }catch(e){} return r; }; }
+
+/* ---------- سجل الصناديق: من عمل على كل صندوق في كل مرحلة ---------- */
+function boxAdd(order, box, stage, names, roll){ order = String(order || '').trim(); box = String(box || '').trim(); if(!order || !box) return;
+  const all = {...(S.settings.boxw || {})}, o = {...(all[order] || {})}, b = {...(o[box] || {})}; const L = splitNames(names || '').map(x => x.trim()).filter(Boolean);
+  if(L.length) b[stage] = [...new Set((b[stage] || []).concat(L))]; if(roll) b.roll = String(roll).trim(); o[box] = b; all[order] = o; S.settings.boxw = all; }
+const boxInfo = (order, box) => (((S.settings.boxw || {})[String(order)] || {})[String(box || '').trim()]) || {};
+/* ---------- المرشحون والاقتراح ---------- */
+function causeCands(order, box, stage, cur){
+  const bi = boxInfo(order, box), ow = (S.settings.ow || {})[String(order)] || {}, ci = stIdx(stage), G = [];
+  const pi = printInfo(order), shifts = pi ? [...new Set(pi.entries.map(e => e.shift))] : ['صباحية', 'مسائية'];
+  if(stage !== 'print') G.push(['الطباعة', shifts.map(s => ({t: 'p', shift: s}))]);
+  STAGES.filter(s => !['design', 'print', 'check'].includes(s.key) && stIdx(s.key) < ci).forEach(s => { const L = [...new Set((bi[s.key] || []).concat(ow[s.key] || []))]; if(L.length) G.push([s.name, L.map(n => ({t: 'w', name: n, stage: s.key}))]); });
+  const C = splitNames(cur || '').map(x => x.trim()).filter(Boolean); if(C.length) G.push([stageBy(stage).name + ' (هذه المرحلة)', C.map(n => ({t: 'w', name: n, stage}))]);
+  return G;
+}
+function causeSuggest(order, box, stage, cur, text){
+  const ds = defectStage(text), bi = boxInfo(order, box), ow = (S.settings.ow || {})[String(order)] || {}, C = splitNames(cur || '').map(x => x.trim()).filter(Boolean);
+  const names = st => [...new Set((bi[st] || []).length ? bi[st] : (ow[st] || []))].map(n => ({t: 'w', name: n, stage: st}));
+  /* الفرز مسؤول عن فرز عيوب الطباعة والسحب: إن ظهر عيب طباعة/سحب في الفرز أو بعده يشارك الفرز المسؤولية */
+  const sortShare = ['print', 'draw'].includes(ds) ? (stage === 'sort' ? C.map(n => ({t: 'w', name: n, stage: 'sort'})) : stIdx(stage) > stIdx('sort') ? names('sort') : []) : [];
+  if(ds === 'print' && stage !== 'print') return printShiftsFor(order, bi.roll).map(s => ({t: 'p', shift: s})).concat(sortShare);
+  if(ds && ds !== stage && stIdx(ds) < stIdx(stage)) return names(ds).concat(sortShare);
+  return C.map(n => ({t: 'w', name: n, stage}));
+}
+const czLabel = c => c.t === 'p' ? `طباعة ${c.shift}` : `${c.name} – ${stageBy(c.stage).name}`;
+const czKey = c => c.t === 'p' ? 'p|' + c.shift : 'w|' + c.stage + '|' + c.name;
+const hasProblem = f => !!(f && ((f.decision && f.decision !== 'مقبول') || f.opReported === 'yes' || f.opReported === 'no' || (f.stage === 'final' && +((f.extra || {}).cartBad || f.bad) > 0)));
+function causesHtml(key, f, order, box, stage, cur, text){
+  if(!f.causes && !f.causeUnknown){ f.causes = causeSuggest(order, box, stage, cur, text); f.__czAuto = true; }
+  const sel = f.causes || [], G = causeCands(order, box, stage, cur), keys = new Set(sel.map(czKey));
+  const ds = defectStage(text), own = ds === stage || (!ds && stage !== 'draw'), otherPicked = sel.some(c => !(c.t === 'w' && c.stage === stage));
+  return `<div class="cz"><div class="czh"><b>المسبب <span class="req">*</span></b>${f.__czAuto && sel.length ? '<small>اقتراح تلقائي – عدّل إذا لزم</small>' : ''}</div>
+    ${['print', 'draw'].includes(ds) && stIdx(stage) >= stIdx('sort') ? `<div class="czhint">🧺 الفرز مسؤول عن فرز عيوب الطباعة والسحب، فيشارك المسؤولية مع مصدر العيب</div>` : ''}
+    ${ds === stage ? `<div class="czhint">🔧 عيب ${esc(stageBy(stage).name)}: المسؤول عمال هذه المرحلة، ولا تُحمَّل المراحل السابقة${otherPicked ? ' – <b>تأكّد من المراحل السابقة المختارة</b>' : ''}</div>` : ''}
+    <div class="czl">${f.causeUnknown ? '<span class="czc unk">غير معروف <i data-czunk="' + esc(key) + '">✕</i></span>' : sel.map((c, i) => `<span class="czc ${c.t === 'p' ? 'pr' : ''}">${esc(czLabel(c))} <i data-czx="${esc(key)}|${i}">✕</i></span>`).join('') || '<span class="muted" style="font-size:13px">لم يُحدَّد بعد</span>'}</div>
+    <div class="row" style="gap:6px;margin-top:6px"><button type="button" class="btn sm" data-czadd="${esc(key)}">${f.__czOpen ? '▲ إغلاق' : '+ إضافة'}</button>${f.causeUnknown ? '' : `<button type="button" class="btn sm" data-czunk="${esc(key)}">غير معروف</button>`}</div>
+    ${f.__czOpen ? `<div class="czo">${G.map(([g, L]) => `<div class="czg"><small>${esc(g)}</small><div>${L.map(c => `<button type="button" class="btn sm ${keys.has(czKey(c)) ? 'p' : ''}" data-czp="${esc(key)}" data-czv="${esc(JSON.stringify(c))}">${esc(c.t === 'p' ? '🖨 ' + c.shift : c.name)}</button>`).join('')}</div></div>`).join('') || '<p class="muted">لا أسماء مسجلة لهذا الصندوق بعد.</p>'}</div>` : ''}</div>`;
+}
+const czFor = key => { const [k, m] = key.split('|'); return k === 'sd' ? SD[m] : k === 'rl' ? RL : null; };
+document.addEventListener('click', e => { const t = e.target.closest && e.target.closest('[data-czx], [data-czadd], [data-czp], [data-czunk]'); if(!t) return; e.preventDefault(); e.stopPropagation();
+  const key = t.dataset.czx ? t.dataset.czx.split('|').slice(0, 2).join('|') : (t.dataset.czadd || t.dataset.czp || t.dataset.czunk), f = czFor(key); if(!f) return;
+  if(t.dataset.czx){ const i = +t.dataset.czx.split('|')[2]; f.causes.splice(i, 1); f.__czAuto = false; }
+  else if(t.dataset.czadd) f.__czOpen = !f.__czOpen;
+  else if(t.dataset.czunk){ f.causeUnknown = !f.causeUnknown; if(f.causeUnknown) f.causes = []; f.__czAuto = false; }
+  else { const c = JSON.parse(t.dataset.czv), k = czKey(c), i = (f.causes || []).findIndex(x => czKey(x) === k); f.causes = f.causes || []; if(i >= 0) f.causes.splice(i, 1); else f.causes.push(c); f.causeUnknown = false; f.__czAuto = false; }
+  rerender(); }, true);
+/* ---------- الإدراج في صفحات المراحل ---------- */
+{ const _h = sdMachineHtml; sdMachineHtml = function(m, f){ let h = _h(m, f); if(f.status !== 'run' || !plainUser()) return h;
+    const ord = String(f.order || ((f.items || [])[0] || {}).order || ''), pi = printInfo(ord);
+    if(SDK === 'draw' && pi && pi.mode === 'partial') h = h.replace(/(<label class="f">رقم الصندوق <span class="req">\*<\/span><input type="text" data-sdbox value="[^"]*"><\/label>)/, `$1<label class="f">رقم الرول <span class="req">*</span><input type="text" data-sdroll value="${esc(f.roll || '')}" dir="ltr"></label>`);
+    if(!hasProblem(f)){ delete f.causes; delete f.causeUnknown; return h; }
+    return h.replace('<div class="grid qnact">', causesHtml('sd|' + m, f, ord, f.box, SDK, f.operator, (f.notes || '') + ' ' + (f.defects || []).join(' ')) + '<div class="grid qnact">'); }; }
+document.addEventListener('input', e => { const t = e.target; if(t.matches && t.matches('[data-sdroll]')){ const p = t.closest('[data-sdm]'); if(p && SD[p.dataset.sdm]) SD[p.dataset.sdm].roll = t.value; } }, true);
+{ const _h = VIEWS.release.html; VIEWS.release.html = function(){ let h = _h.apply(this, arguments); const f = RL; if(!f || !plainUser() || !hasProblem({decision: f.decision, stage: 'final', bad: f.bad})){ if(f){ delete f.causes; delete f.causeUnknown; } return h; }
+    const txt = (f.badNote || '') + ' ' + (f.cartons || []).map(c => c.note || '').join(' ') + ' ' + (f.notes || '');
+    return h.replace('<div class="grid qnact">', causesHtml('rl|', f, f.order, '', 'final', '', txt) + '<div class="grid qnact">'); }; }
+/* ---------- الحفظ: إلزامي عند المشكلة + حفظ المسببين + سجل الصناديق ---------- */
+{ const _s = saveRound; saveRound = function(){ const f = F; let src = f;
+    if(f && f.stage === 'final' && RL) src = RL;
+    if(f && !f.viewOnly && plainUser() && f.stage !== 'print' && hasProblem(f.stage === 'final' ? {decision: f.decision, stage: 'final', bad: (f.extra || {}).cartBad} : f) && !((src.causes || []).length || src.causeUnknown)){ toast('حدّد المسبب (أو "غير معروف")'); return null; }
+    if(f && f.stage === 'draw' && plainUser()){ const pi = printInfo(f.order || ((f.items || [])[0] || {}).order); if(pi && pi.mode === 'partial' && !String(f.roll || '').trim()){ toast('اكتب رقم الرول'); return null; } }
+    const id0 = f && f.editId, n0 = S.rounds.length, ret = _s.apply(this, arguments);
+    try{ if(ret !== null && f){ const r = id0 ? S.rounds.find(x => x.id === id0) : S.rounds.length > n0 ? S.rounds[S.rounds.length - 1] : null;
+        if(r){ if(src && ((src.causes || []).length || src.causeUnknown)){ r.causes = (src.causes || []).map(c => ({...c})); r.causeUnknown = !!src.causeUnknown; const w = r.causes.find(c => c.t === 'w'); r.blame = src.causeUnknown ? {name: 'غير معروف', stage: ''} : w ? {name: w.name, stage: w.stage} : r.blame; }
+          if(f.roll) r.roll = String(f.roll).trim();
+          const ord = r.order || ((r.items || [])[0] || {}).order; if(r.box) boxAdd(ord, r.box, r.stage, r.operator || f.operator, f.roll); save(); } } }catch(e){ console.warn(e); }
+    return ret; }; }
+document.addEventListener('click', e => { const b = e.target.closest && e.target.closest('[data-sdsave], #sdSave'); if(!b || !plainUser() || !SD) return;
+  const bad = Object.entries(SD).find(([m, f]) => f.status === 'run' && hasProblem(f) && !((f.causes || []).length || f.causeUnknown)); if(bad){ e.stopImmediatePropagation(); e.preventDefault(); toast(`${bad[0]}: حدّد المسبب (أو "غير معروف")`); } }, true);
+
+/* ---------- التقييم: المسببون (مقسوم) · الإبلاغ · الطباعة حسب الوردية ---------- */
+const _wkP22 = workerKPIs;
+workerKPIs = function(from, to){
+  const W = new Map(), get = n => { if(!W.has(n)){ const w = workersList().find(x => x.name === n); W.set(n, {name: n, dept: w ? w.dept : '', shift: w ? w.shift : '', rounds: 0, issues: 0, rep: 0, norep: 0, okr: 0, caused: 0, clean: 0, comps: [], notes: [], orders: new Set(), stages: new Set()}); } return W.get(n); };
+  S.rounds.filter(r => r.date >= from && r.date <= to).forEach(r => {
+    const opn = splitNames(r.operator || r.worker || (r.extra || {}).worker), issue = r.decision !== 'مقبول' || (r.defects || []).length || r.opReported === 'yes';
+    const C = (r.causes || (r.blame && r.blame.name && r.blame.name !== 'غير معروف' ? [{t: 'w', name: r.blame.name, stage: r.blame.stage}] : null)), selfCaused = C ? C.some(c => c.t === 'w' && opn.includes(c.name)) : true;
+    const note = [String(r.notes || '').trim(), String(r.action || '').trim() ? 'الإجراء: ' + String(r.action).trim() : ''].filter(Boolean).join(' · ');
+    opn.forEach(n => { const w = get(n); w.rounds++; w.stages.add(r.stage); itemsOf(r).forEach(i => i.order && w.orders.add(String(i.order)));
+      if(issue){ if(!C || r.causeUnknown || (selfCaused && C.some(c => c.t === 'w' && c.name === n))) w.issues++; if(r.opReported === 'yes') w.rep++; else if(r.opReported === 'no') w.norep++; } else w.okr++;
+      if(note) w.notes.push({date: r.date, stage: r.stage, text: note, issue: !!issue}); });
+    if(issue && C && C.length && !r.causeUnknown){ const share = 1 / C.length; C.forEach(c => { if(c.t !== 'w') return; const w = get(c.name); w.caused += share; w.stages.add(c.stage || r.stage); if(!opn.includes(c.name)) w.notes.push({date: r.date, stage: r.stage, text: `مسبب لعيب ظهر في ${stageBy(r.stage).name}${C.length > 1 ? ` (مشترك مع ${C.length - 1})` : ''}${note ? ' · ' + note : ''}`, issue: true}); }); }
+  });
+  S.audits.filter(a => a.date >= from && a.date <= to).forEach(a => Object.values(a.workers || {}).forEach(ns => splitNames(ns).forEach(n => get(n).clean++)));
+  S.complaints.filter(c => c.date >= from && c.date <= to).forEach(c => { const o = String(c.order || ''); if(!o) return; W.forEach(w => { if(w.orders.has(o)) w.comps.push(c.no || c.order); }); });
+  return [...W.values()].map(w => { const repPct = w.rep + w.norep ? Math.round(w.rep * 100 / (w.rep + w.norep)) : null; w.caused = Math.round(w.caused * 100) / 100;
+    let score = 100 - (w.rounds ? w.issues * 100 / w.rounds : 0) * .4 - w.norep * 5 - w.caused * 3 - w.clean * 4 - w.comps.length * 10 + Math.min(10, w.rep * 2) + (repPct !== null ? (repPct - 50) * .1 : 0);
+    score = Math.max(0, Math.min(100, Math.round(score)));
+    return {...w, repPct, score, grade: score >= 90 ? ['ممتاز','#1F7A5A'] : score >= 75 ? ['جيد','#4C9A2A'] : score >= 60 ? ['مقبول','#D99A2B'] : ['يحتاج متابعة','#B83227']}; })
+    .sort((a, b) => a.score - b.score || b.rounds - a.rounds);
+};
+function printShiftKPIs(from, to){
+  const P = {'صباحية': {rounds: 0, caused: 0}, 'مسائية': {rounds: 0, caused: 0}};
+  S.rounds.filter(r => r.date >= from && r.date <= to).forEach(r => { if(r.stage === 'print' && P[r.shift]) P[r.shift].rounds++;
+    const C = r.causes || []; if(r.causeUnknown || !C.length) return; const share = 1 / C.length; C.forEach(c => { if(c.t === 'p' && P[c.shift]) P[c.shift].caused += share; }); });
+  return Object.entries(P).map(([s, v]) => { const score = Math.max(0, Math.min(100, Math.round(100 - v.caused * 5 - (v.rounds ? v.caused * 100 / v.rounds : 0) * .2))); return {shift: s, rounds: v.rounds, caused: Math.round(v.caused * 100) / 100, score}; });
+}
+{ const _t = workerKPITable; workerKPITable = function(from, to){ const h = _t(from, to), P = printShiftKPIs(from, to);
+    return h + `<h3 class="mh3">الطباعة حسب الوردية</h3><div class="tw"><table class="t"><thead><tr><th>الوردية</th><th>جولات طباعة</th><th>عيوب تسببت بها (حدّدها المراقبون)</th><th>التقييم</th></tr></thead><tbody>${P.map(p => `<tr><td><b>${p.shift === 'صباحية' ? '☀️' : '🌙'} ${p.shift}</b></td><td class="num">${p.rounds}</td><td class="num ${p.caused ? 'cr' : ''}">${p.caused || ''}</td><td><span class="pcs s-${p.score >= 90 ? 'ok' : p.score >= 75 ? 'w' : 'bad'}">${p.score}</span></td></tr>`).join('')}</tbody></table></div>`; }; }
+
+/* ================= [PHASE23] تقارير الطباعة · هل بلّغت المرحلة المصدر؟ · تقييم بالنقاط حسب درجة العيب ================= */
+/* هل بلّغت الطباعة؟ من تقارير الطباعة المرفوعة للطلبية (بالشرحة/الرول إن وُجد) */
+const rollNo = v => { const n = parseInt(String(v || '').replace(/\D/g, ''), 10); return isNaN(n) ? null : n; };
+function printReported(order, roll, shift){ const pi = printInfo(order), R = (pi && pi.reports) || []; if(!R.length) return false; const rn = rollNo(roll);
+  return R.some(x => { const rolls = String(x.rolls || '').split(/[^\d]+/).filter(Boolean).map(Number); if(rn !== null && rolls.length) return rolls.includes(rn); return !shift || !x.shift || x.shift === shift; }); }
+/* هل بلّغت مرحلة سابقة عن هذا الصندوق؟ (من سجل الصناديق) */
+const stageReported = (order, box, stage) => !!boxInfo(order, box)[stage + '_rep'];
+function srcRep(c, order, box, roll){ return c.t === 'p' ? printReported(order, roll || boxInfo(order, box).roll, c.shift) : stageReported(order, box, c.stage); }
+/* الشارة بجانب كل مصدر في خانة المسبب */
+{ const _ch = causesHtml; causesHtml = function(key, f, order, box, stage, cur, text){ let h = _ch(key, f, order, box, stage, cur, text);
+    (f.causes || []).forEach((c, i) => { if(c.t === 'w' && c.stage === stage) return; const rep = srcRep(c, order, box, f.roll);
+      h = h.replace(`<i data-czx="${esc(key)}|${i}">✕</i></span>`, `<em class="czr ${rep ? 'y' : 'n'}">${rep ? '✓ مبلّغ' : '✗ غير مبلّغ'}</em> <i data-czx="${esc(key)}|${i}">✕</i></span>`); });
+    return h; }; }
+/* عند الحفظ: نثبّت حالة الإبلاغ لكل مصدر + نعلّم الصندوق إن كانت هذه المرحلة بلّغت */
+{ const _s = saveRound; saveRound = function(){ const f = F, id0 = f && f.editId, n0 = S.rounds.length, ret = _s.apply(this, arguments);
+    try{ if(ret !== null && f){ const r = id0 ? S.rounds.find(x => x.id === id0) : S.rounds.length > n0 ? S.rounds[S.rounds.length - 1] : null; if(r){
+      const ord = r.order || ((r.items || [])[0] || {}).order, roll = r.roll || boxInfo(ord, r.box).roll;
+      (r.causes || []).forEach(c => { c.rep = c.t === 'w' && c.stage === r.stage ? r.opReported === 'yes' : srcRep(c, ord, r.box, roll); });
+      const rep = (r.decision && r.decision !== 'مقبول') || r.opReported === 'yes' || String(r.notes || '').trim();
+      if(r.box && rep){ const all = {...(S.settings.boxw || {})}, o = {...(all[ord] || {})}, b = {...(o[r.box] || {})}; b[r.stage + '_rep'] = true; o[r.box] = b; all[ord] = o; S.settings.boxw = all; }
+      save(); } } }catch(e){ console.warn(e); }
+    return ret; }; }
+
+/* ---------- التقييم بالنقاط: درجة العيب تضاعف الخصم، وغير المبلّغ أكثر ---------- */
+const SEV_R = {'حرج': 2, 'رئيسي': 1.5, 'ثانوي': 1}, SEV_U = {'حرج': 4, 'رئيسي': 2, 'ثانوي': 1};
+const roundSev = r => r.cls && SEV_R[r.cls] ? r.cls : (r.decision === 'مرفوض' || r.decision === 'محجور') ? 'رئيسي' : 'ثانوي';
+function qcEvents(from, to){
+  const out = [];
+  S.rounds.filter(r => r.date >= from && r.date <= to).forEach(r => {
+    const issue = (r.decision && r.decision !== 'مقبول') || (r.defects || []).length || r.opReported === 'yes'; if(!issue) return;
+    const sev = roundSev(r), mR = SEV_R[sev], mU = SEV_U[sev], opn = splitNames(r.operator || r.worker || (r.extra || {}).worker), rep = r.opReported === 'yes';
+    const C = r.causeUnknown ? [] : (r.causes || (r.blame && r.blame.name && r.blame.name !== 'غير معروف' ? [{t: 'w', name: r.blame.name, stage: r.blame.stage}] : [])), self = C.filter(c => c.t === 'w' && c.stage === r.stage), prev = C.filter(c => !(c.t === 'w' && c.stage === r.stage));
+    const ord = r.order || ((r.items || [])[0] || {}).order;
+    opn.forEach(n => { const isSelf = self.some(c => c.name === n) || (!C.length && !r.causeUnknown);
+      const pts = rep ? (isSelf ? -1.5 * mR : 2) : (isSelf ? -5 * mU : -3 * mU);
+      out.push({who: n, kind: 'w', pts, r, sev, why: rep ? (isSelf ? 'أبلغ عن خطئه' : 'اكتشف وأبلغ') : (isSelf ? 'سبّب ولم يبلغ' : 'لم ينتبه')}); });
+    prev.forEach(c => { const share = 1 / prev.length, cr = c.rep !== undefined ? c.rep : srcRep(c, ord, r.box, r.roll), pts = (cr ? -1 * mR : -4 * mU) * share;
+      out.push({who: c.t === 'p' ? c.shift : c.name, kind: c.t === 'p' ? 'p' : 'w', pts, r, sev, why: (cr ? 'مصدر – بلّغ' : 'مصدر – لم يبلّغ') + (prev.length > 1 ? ` (مشترك ÷${prev.length})` : '')}); });
+  });
+  (S.tickets || []).filter(t => t.date >= from && t.date <= to && t.finder !== 'qc' && !t.round && t.stage && t.box).forEach(t => {
+    const sev = SEV_R[t.sev] ? t.sev : 'رئيسي', mR = SEV_R[sev], mU = SEV_U[sev], cur = (boxInfo(t.order, t.box)[t.stage] || []).join('، ');
+    const C = causeSuggest(t.order, t.box, t.stage, cur, t.defect || ''); if(!C.length) return; const share = 1 / C.length;
+    C.forEach(c => { const self = c.t === 'w' && c.stage === t.stage, cr = self ? false : srcRep(c, t.order, t.box, ''), pts = (self ? -5 * mU : (cr ? -1 * mR : -4 * mU)) * share;
+      out.push({who: c.t === 'p' ? c.shift : c.name, kind: c.t === 'p' ? 'p' : 'w', pts, r: t, sev, why: 'اكتشفه عامل التشييك' + (C.length > 1 ? ` (مشترك ÷${C.length})` : '')}); });
+  });
+  return out;
+}
+{ const _k = workerKPIs; workerKPIs = function(from, to){ const L = _k(from, to), E = qcEvents(from, to).filter(e => e.kind === 'w'), M = new Map(L.map(w => [w.name, w]));
+    E.forEach(e => { if(!M.has(e.who)){ const w = {name: e.who, dept: '', shift: '', rounds: 0, issues: 0, rep: 0, norep: 0, okr: 0, caused: 0, clean: 0, comps: [], notes: [], orders: new Set(), stages: new Set()}; M.set(e.who, w); L.push(w); } });
+    return L.map(w => { const ev = E.filter(e => e.who === w.name), pts = ev.reduce((a, e) => a + e.pts, 0), crit = ev.filter(e => e.sev === 'حرج' && e.pts < 0).length;
+      const score = Math.max(0, Math.min(100, Math.round(100 + pts - w.clean * 4 - (w.comps || []).length * 10)));
+      return {...w, pts: Math.round(pts * 10) / 10, crit, caused: Math.round(ev.filter(e => /مصدر/.test(e.why)).reduce((a, e) => a + Math.abs(e.pts) / 4, 0) * 10) / 10 || w.caused, events: ev, score, grade: score >= 90 ? ['ممتاز','#1F7A5A'] : score >= 75 ? ['جيد','#4C9A2A'] : score >= 60 ? ['مقبول','#D99A2B'] : ['يحتاج متابعة','#B83227']}; })
+      .sort((a, b) => a.score - b.score || b.rounds - a.rounds); }; }
+printShiftKPIs = function(from, to){ const E = qcEvents(from, to).filter(e => e.kind === 'p');
+  return ['صباحية', 'مسائية'].map(s => { const ev = E.filter(e => e.who === s), pts = ev.reduce((a, e) => a + e.pts, 0), rounds = S.rounds.filter(r => r.stage === 'print' && r.shift === s && r.date >= from && r.date <= to).length;
+    return {shift: s, rounds, caused: ev.length, rep: ev.filter(e => /بلّغ\b|– بلّغ/.test(e.why) && !/لم/.test(e.why)).length, crit: ev.filter(e => e.sev === 'حرج').length, score: Math.max(0, Math.min(100, Math.round(100 + pts)))}; }); };
+{ const _t = workerKPITable; workerKPITable = function(from, to){ let h = _t(from, to);
+    h = h.replace(/<p class="muted" style="font-size:12px">التقييم من 100:[\s\S]*?<\/p>/, `<div class="sevrule"><b>كيف يُحسب التقييم (يبدأ من 100):</b><table class="t"><thead><tr><th></th><th>ثانوي</th><th>رئيسي</th><th>حرج</th></tr></thead><tbody>
+      <tr><td>اكتشف وأبلغ (المصدر مرحلة سابقة)</td><td class="cg">+2</td><td class="cg">+2</td><td class="cg">+2</td></tr>
+      <tr><td>أبلغ عن خطئه هو</td><td>−1.5</td><td>−2.25</td><td>−3</td></tr>
+      <tr><td>لم ينتبه (المصدر مرحلة سابقة)</td><td>−3</td><td>−6</td><td class="cr"><b>−12</b></td></tr>
+      <tr><td>سبّب ولم يبلغ</td><td>−5</td><td>−10</td><td class="cr"><b>−20</b></td></tr>
+      <tr><td>مصدر العيب – وكان قد بلّغ</td><td>−1</td><td>−1.5</td><td>−2</td></tr>
+      <tr><td>مصدر العيب – ولم يبلّغ</td><td>−4</td><td>−8</td><td class="cr"><b>−16</b></td></tr></tbody></table>
+      <small class="muted">عند أكثر من مصدر يُقسم الخصم بينهم · مخالفة نظافة −4 · شكوى زبون −10</small></div>`);
+    h = h.replace('<th>جولات طباعة</th><th>عيوب تسببت بها (حدّدها المراقبون)</th>', '<th>جولات طباعة</th><th>عيوب كانت مصدرها</th><th>منها حرجة</th>');
+    printShiftKPIs(from, to).forEach(p => { h = h.replace(new RegExp(`(<b>${p.shift === 'صباحية' ? '☀️' : '🌙'} ${p.shift}</b></td><td class="num">${p.rounds}</td>)<td class="num[^"]*">[^<]*</td>`), `$1<td class="num ${p.caused ? 'cr' : ''}">${p.caused || ''}</td><td class="num ${p.crit ? 'cr' : ''}">${p.crit || ''}</td>`); });
+    return h; }; }
+
+/* ---------- رفع تقرير الطباعة في صفحة "معلومات الطباعة" ---------- */
+{ const _h = VIEWS.printinfo.html; VIEWS.printinfo.html = function(){ let h = _h.apply(this, arguments); if(!PI.o) return h; const R = ((printInfo(PI.o) || {}).reports) || [];
+    return h.replace('<div class="row" style="gap:8px;margin-top:10px"><button class="btn p" id="piSave">', `<div class="pirep"><h3>📄 تقارير الطباعة (مشاكل بلّغ عنها قسم الطباعة)</h3>
+      ${R.length ? `<div class="tw"><table class="t"><thead><tr><th>التاريخ</th><th>الوردية</th><th>الشرحات / الرولات</th><th>المشكلة</th><th>الملف</th><th></th></tr></thead><tbody>${R.map((x, i) => `<tr><td class="num">${esc(x.date)}</td><td>${esc(x.shift)}</td><td class="num">${esc(x.rolls || 'كل الطلبية')}</td><td>${esc(x.note || '')}</td><td>${x.url ? `<a href="${esc(x.url)}" target="_blank" rel="noopener">فتح</a>` : '—'}</td><td><button class="btn sm d" data-prx="${i}">✕</button></td></tr>`).join('')}</tbody></table></div>` : '<p class="muted">لا توجد تقارير لهذه الطلبية.</p>'}
+      <div class="grid" style="margin-top:8px"><label class="f">التاريخ<input type="date" id="prD" value="${todayStr()}"></label><label class="f">الوردية<select id="prS"><option>صباحية</option><option>مسائية</option></select></label><label class="f">أرقام الشرحات / الرولات<input id="prR" placeholder="1، 2" dir="ltr"></label><label class="f">المشكلة<input id="prN" placeholder="مشكلة بالرهاج"></label></div>
+      <label class="f">ملف التقرير (PDF أو صورة)<input type="file" id="prF" accept="application/pdf,image/*"></label>
+      <button class="btn" id="prAdd">+ إضافة التقرير</button></div>
+      <div class="row" style="gap:8px;margin-top:10px"><button class="btn p" id="piSave">`); }; }
+{ const _b = VIEWS.printinfo.bind; VIEWS.printinfo.bind = function(){ _b.apply(this, arguments); if(!PI.o) return;
+    $$('[data-prx]').forEach(b => b.onclick = () => ask('حذف هذا التقرير من الطلبية؟', 'حذف', () => { setS('printInfo', all => { const v = all[PI.o]; if(v && v.reports) v.reports.splice(+b.dataset.prx, 1); }); PI.edit = null; rerender(); }));
+    const add = $('#prAdd'); if(!add) return;
+    add.onclick = async () => { const file = $('#prF').files[0], entry = {id: 'PR' + uid(), date: $('#prD').value, shift: $('#prS').value, rolls: $('#prR').value.trim(), note: $('#prN').value.trim()};
+      if(!entry.rolls && !entry.note && !file){ toast('اكتبي الشرحات أو المشكلة أو أرفقي الملف'); return; }
+      if(file){ if(!GAS_MODE){ toast('رفع الملف يعمل مع نسخة Google فقط'); return; } if(file.size > 15e6){ toast('الملف أكبر من 15 ميغا'); return; }
+        toast('جارٍ رفع التقرير…'); try{ const b64 = await new Promise((res, rej) => { const fr = new FileReader(); fr.onload = () => res(String(fr.result).split(',')[1]); fr.onerror = rej; fr.readAsDataURL(file); });
+          const x = JSON.parse(await rpc('savePrintReport', JSON.stringify({order: PI.o, b64, mime: file.type}))); entry.url = x.url; entry.fileId = x.id; }catch(e){ toast('تعذر رفع الملف – انشري Code.gs الجديد (الخادم 18.5)'); return; } }
+      setS('printInfo', all => { const v = all[PI.o] || JSON.parse(JSON.stringify(PI.edit || {mode: 'full', entries: [{date: entry.date, shift: entry.shift}]})); v.reports = (v.reports || []).concat([entry]); all[PI.o] = v; }); PI.edit = null; toast('✅ أُضيف تقرير الطباعة'); rerender(); }; }; }
 
 async function startApp(){
   if(GAS_MODE) serverMode = true;
