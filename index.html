@@ -2872,8 +2872,10 @@ function dedupeKeys(){ let fixed = 0;
     if(drop.size) S[c] = A.filter((x, i) => !drop.has(i)); });
   return fixed; }
 const uid = () => { let v = Date.now()*1000 + Math.floor(Math.random()*1000); if(v <= _uidLast) v = _uidLast + 1 + Math.floor(Math.random()*7); _uidLast = v; return v; };
+/* [SEQ_MAX] الرقم التالي = أكبر رقم موجود + 1 (وليس عدد السجلات + 1) – يمنع تكرار الأرقام بعد الحذف أو الاسترجاع */
+function maxSeq(list, start, field='no'){ let mx = 0; (list||[]).forEach(x => { const v = String(x && x[field] || ''); if(v.startsWith(start)){ const m = v.slice(start.length).match(/^(\d+)/); if(m) mx = Math.max(mx, +m[1]); } }); return mx; }
 function seqNo(prefix, list, field='no', date=todayStr()){
-  const y = date.slice(0,4); const n = list.filter(x => String(x[field]||'').startsWith(`${prefix}-${y}-`)).length + 1;
+  const y = date.slice(0,4); const n = maxSeq(list, `${prefix}-${y}-`, field) + 1;
   return `${prefix}-${y}-${String(n).padStart(3,'0')}`;
 }
 function toast(m){ const t=$('#toast'); t.textContent=m; t.classList.remove('hide'); clearTimeout(t._h); t._h=setTimeout(()=>t.classList.add('hide'),2800); }
@@ -3185,7 +3187,7 @@ VIEWS.round = {
     $('#saveR').onclick = saveRound;
   }
 };
-function nextHoldNo(date){ const ymd = date.slice(2).replace(/-/g,''); return `H-${ymd}-${pad(S.holds.filter(h=>h.no.startsWith('H-'+ymd)).length+1)}`; }
+function nextHoldNo(date){ const ymd = date.slice(2).replace(/-/g,''); return `H-${ymd}-${pad(maxSeq(S.holds, 'H-'+ymd+'-')+1)}`; }
 function saveRound(){
   if(F && F.viewOnly){ toast('هذه الجولة للعرض فقط'); return; }
   const s = stageBy(F.stage);
@@ -3615,7 +3617,7 @@ VIEWS.coa = {
   bind(){
     $('#back').onclick = () => go('more');
     $$('[data-coa]').forEach(b => b.onclick = () => { const id = +b.dataset.coa; let c = S.coas.find(x=>x.round===id);
-      if(!c){ const y = todayStr().slice(0,4); const n = S.coas.filter(x=>x.no.startsWith('TUA'+y)).length + 1; c = {no:`TUA${y}${String(n).padStart(3,'0')}-01`, round:id, date:todayStr()}; S.coas.push(c); save(); }
+      if(!c){ const y = todayStr().slice(0,4); const n = maxSeq(S.coas, 'TUA'+y) + 1; c = {no:`TUA${y}${String(n).padStart(3,'0')}-01`, round:id, date:todayStr()}; S.coas.push(c); save(); }
       go('coaprint', {round:id}); });
   }
 };
@@ -7970,7 +7972,7 @@ const TK_STATUS = {new: ['بانتظار قرار الجودة', '#E8772E'], tod
 const TK_DEC = {none: 'لا يلزم إجراء', sort: 'فرز 100%', stop: 'إيقاف الآلة حتى الإصلاح', reject: 'رفض الكمية'};
 const TK_STAGES = ['print','draw','sort','inj','asm','cap','seal'];
 const TK_LIMIT = {'حرج': 10, 'رئيسي': 15, 'ثانوي': 30};
-function tkNo(){ const y = todayStr().slice(0, 4), n = (S.tickets || []).filter(t => String(t.no || '').startsWith('T-' + y)).length + 1; return `T-${y}-${String(n).padStart(3, '0')}`; }
+function tkNo(){ const y = todayStr().slice(0, 4), n = maxSeq(S.tickets, 'T-' + y + '-') + 1; return `T-${y}-${String(n).padStart(3, '0')}`; }
 function tkLog(t, action){ t.log = (t.log || []).concat([{at: todayStr() + ' ' + timeStr(), by: CUR.name || S.settings.inspector, action}]); }
 function tkMins(t){ const [h, m] = String(t.time || '0:0').split(':').map(Number), d = new Date(); return t.date === todayStr() ? (d.getHours() * 60 + d.getMinutes()) - (h * 60 + (m || 0)) : 9999; }
 /* ---------- إنشاء ---------- */
