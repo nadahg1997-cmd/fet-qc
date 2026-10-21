@@ -9412,7 +9412,7 @@ todos = function(){ const L = _todosPlain.apply(this, arguments); return isPlain
 /* ================= SERVER SYNC (لابتوب القسم) ================= */
 const PWA_API = (typeof window !== 'undefined' && window.PWA_API && /^(https:\/\/|http:\/\/localhost)/.test(window.PWA_API)) ? window.PWA_API : '';
 const GAS_MODE = (typeof google !== 'undefined' && !!(google.script && google.script.run)) || !!PWA_API;
-const RPC_TIMEOUT = fn => ['ocrImage','saveImage','getImage','saveDailyPdf','exportNow','saveFile','backupNow'].includes(fn) ? 90000 : 20000;
+const RPC_TIMEOUT = fn => ['ocrImage','saveImage','getImage','saveDailyPdf','exportNow','saveFile','backupNow'].includes(fn) ? 90000 : fn === 'sync' ? 60000 : 20000;
 async function pwaCall(fn, arg){
   const ac = new AbortController(), tm = setTimeout(() => ac.abort(), RPC_TIMEOUT(fn));
   let r; try{ r = await fetch(PWA_API, {method:'POST', body:JSON.stringify({fn, arg}), signal:ac.signal}); }catch(e){ clearTimeout(tm); throw new Error('NET'); }
@@ -9526,11 +9526,17 @@ function updateSyncPill(){
   el.textContent = online ? (dirty || pc ? `جارٍ الرفع${pc?' ('+pc+')':''}…` : `متصل · ${lastSync ? timeStr(lastSync) : ''}`) : `دون اتصال${pc?' · '+pc+' بانتظار الرفع':''}`;
   el.title = localSavedAt ? 'آخر حفظ على الجهاز ' + timeStr(localSavedAt) : '';
 }
-function collect(){
-  const out = {cols:{}, deleted:[]}, sent = {}; const now = Date.now(); let any = false;
+/* [SYNC_CHUNK] الرفع على دفعات صغيرة: عند وجود مئات السجلات بانتظار الرفع (بعد استرجاع نسخة أو انقطاع طويل)
+   كان الطلب الواحد يتجاوز مهلة الخادم فيبقى الجهاز "دون اتصال" ويعيد المحاولة بلا نهاية */
+const SYNC_MAX_ITEMS = 120, SYNC_MAX_BYTES = 700000;
+let syncMore = false;
+function collect(limit){
+  const out = {cols:{}, deleted:[]}, sent = {}; const now = Date.now(); let any = false; let nItems = 0, nBytes = 0; if(limit) syncMore = false;
   SYNC_COLS.forEach(c => {
     const seen = new Set(), arr = []; sent[c] = {};
-    (S[c] = S[c] || []).forEach(x => { const k = keyOf(x); seen.add(k); const j = strip(x); if(snap[c]?.[k] !== j){ x._m = now; arr.push(x); sent[c][k] = j; } });
+    (S[c] = S[c] || []).forEach(x => { const k = keyOf(x); seen.add(k); const j = strip(x); if(snap[c]?.[k] !== j){
+      if(limit && (nItems >= SYNC_MAX_ITEMS || (nItems > 0 && nBytes + j.length > SYNC_MAX_BYTES))){ syncMore = true; return; }
+      nItems++; nBytes += j.length; x._m = now; arr.push(x); sent[c][k] = j; } });
     if(arr.length){ out.cols[c] = arr; any = true; }
     Object.keys(snap[c] || {}).forEach(k => { if(!seen.has(k)){ out.deleted.push([c,k]); any = true; } });
   });
@@ -9561,7 +9567,7 @@ function apply(d){
 async function syncNow(){
   if(!serverMode || syncing) return; syncing = true;
   try{ dedupeKeys(); }catch(e){ console.warn('dedupe', e); }
-  let C0; try{ C0 = collect(); }catch(e){ console.error('collect', e); syncing = false; updateSyncPill(); return; }
+  let C0; try{ C0 = collect(true); }catch(e){ console.error('collect', e); syncing = false; updateSyncPill(); return; }
   const {body, sent, ss, any} = C0; const _hadSet = !!body.settings, _allDel = (body.deleted || []).slice();
   if(typeof isViewer === 'function' && isViewer()){ body.cols = {}; body.deleted = []; delete body.settings; delete body.orders; }
   if(typeof isChecker === 'function' && isChecker()){ const cc = body.cols || {}; body.cols = {onotes: cc.onotes || [], tickets: cc.tickets || [], stops: cc.stops || [], wnotes: cc.wnotes || [], alog: cc.alog || []}; body.deleted = []; delete body.settings; delete body.settingsPatch; delete body.orders; }
@@ -9593,6 +9599,7 @@ async function syncNow(){
     if(remote){ if(!FORM_VIEWS.includes(view) && !typing) rerender(); else renderTabs(); }
   }catch(e){ const was = online; online = false; wasOffline = true; if(was) render(); }
   syncing = false; updateSyncPill();
+  if(syncMore && online){ clearTimeout(syncTimer); syncTimer = setTimeout(syncNow, 400); }   /* الدفعة التالية */
 }
 function scheduleSync(){ clearTimeout(syncTimer); updateSyncPill(); syncTimer = setTimeout(syncNow, 300); }
 
@@ -12509,7 +12516,7 @@ document.addEventListener('click', e => { if(!VIEWAS) return; const t = e.target
   if(t.closest('#main') && /حفظ|إرسال|تم|سليمة|حذف|تعديل|طباعة|إضافة|تأكيد/.test(t.textContent || '')){ e.preventDefault(); e.stopImmediatePropagation(); toast('👁 وضع المشاهدة – للمشاهدة فقط'); } }, true);
 
 /* [SYNC_GUARD] لا يبقى الرفع معلّقاً: أي مزامنة تتجاوز 60 ثانية تُعاد */
-setInterval(() => { try{ if(syncing){ window.__syncT = window.__syncT || Date.now(); if(Date.now() - window.__syncT > 60000){ syncing = false; window.__syncT = 0; updateSyncPill(); scheduleSync(); } } else window.__syncT = 0; }catch(e){} }, 5000);
+setInterval(() => { try{ if(syncing){ window.__syncT = window.__syncT || Date.now(); if(Date.now() - window.__syncT > 90000){ syncing = false; window.__syncT = 0; updateSyncPill(); scheduleSync(); } } else window.__syncT = 0; }catch(e){} }, 5000);
 async function startApp(){
   if(GAS_MODE) serverMode = true;
   else if(location.protocol.startsWith('http')){
