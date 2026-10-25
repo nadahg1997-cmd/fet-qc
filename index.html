@@ -3205,7 +3205,7 @@ function saveRound(){
     defects:[...F.defects], failed, source:F.source, cls:F.cls ?? sg.cls, decision:F.decision ?? sg.dec, action:F.action, notes:F.notes, qty:F.qty, hold:old?old.hold:'', ncr:old?old.ncr:''};
   if(old){ r.editedBy = CUR.name || S.settings.inspector; r.editedAt = new Date().toISOString(); }
   const desc = [[...failed, ...r.defects].join('، '), r.notes].filter(Boolean).join(' – ');
-  if((r.decision==='محجور' || r.decision==='مرفوض') && !r.hold && r.stage!=='design'){
+  if(r.decision==='محجور' && !r.hold && r.stage!=='design'){
     r.hold = nextHoldNo(r.date);
     S.holds.push({id:uid(), no:r.hold, date:r.date, time:r.time, shift:r.shift, inspector:r.inspector, stage:r.stage, machine:r.machine, order:ordersLabel(r), items:r.items, product:itemsLabel(r), qty:F.qty, desc, cls:r.cls, status:'مفتوح', disposition:r.decision==='مرفوض'?'إتلاف':'', good:'', bad:'', closed:'', ncr:''});
   }
@@ -4387,7 +4387,7 @@ function renderDaily(s, opts) {
     s.problems.map(function (r) { return '<tr><td>' + e(r.time) + '<div class="mu">' + e(r.shift) + '</div></td><td>' + e(r.stage) + '<div class="mu">' + e(r.machine) + '</div></td><td>' + e(r.order) + '<div class="mu">' + e(r.product) + '</div></td><td>' + e(r.notok) + (r.cls ? ' <span class="pl ' + (r.cls === 'حرج' ? 'r' : 'o') + '">' + e(r.cls) + '</span>' : '') + '</td><td>' + pill(r.decision) + (r.hold ? '<div class="mu">' + e(r.hold) + '</div>' : '') + '</td><td>' + e(r.action) + (r.ncr ? '<div class="mu">' + e(r.ncr) + '</div>' : '') + '</td><td class="sm">' + e(r.inspector) + '</td></tr>'; }).join('') + '</tbody></table>' : '<p class="mu">لا توجد مشاكل.</p>');
   var MGR = s.manager || '';
   h += sec(7, 'فريق الجودة') + '<table class="t"><thead><tr><th>الاسم والصفة</th><th>الجولات</th><th>صباحي</th><th>مسائي</th><th>مشاكل اكتشفها</th><th>عيوب حرجة</th></tr></thead><tbody>' + (s.inspectors.length ? s.inspectors.map(function (i) { return '<tr><td><b>' + e(i.name) + '</b><div class="mu">' + (rcNorm(i.name) === rcNorm(MGR) ? 'مدير ضبط الجودة' : 'مراقب جودة') + '</div></td><td>' + i.n + '</td><td>' + i.m + '</td><td>' + i.e + '</td><td>' + i.issues + '</td><td>' + i.crit + '</td></tr>'; }).join('') : '<tr><td colspan="6" class="mu">لا يوجد نشاط.</td></tr>') + '</tbody></table>';
-  h += sec(8, 'المواد الواردة') + (s.mats.length ? '<table class="t"><thead><tr><th>الرقم</th><th>المادة</th><th>المورد</th><th>الدفعة</th><th>النتيجة</th><th>القرار</th></tr></thead><tbody>' + s.mats.map(function (m) { return '<tr><td>' + e(m.no) + '</td><td>' + e(m.name) + '</td><td>' + e(m.supplier) + '</td><td>' + e(m.lot) + '</td><td>' + e(m.score) + '%</td><td>' + pill(m.decision) + '</td></tr>'; }).join('') + '</tbody></table>' : '<p class="mu">لم تُفحص مواد واردة.</p>');
+  h += sec(8, 'المواد الواردة') + (s.mats.length ? '<table class="t"><thead><tr><th>الرقم</th><th>المادة</th><th>المورد</th><th>الكمية</th><th>المفحوص</th><th>القرار</th><th>ملاحظات</th></tr></thead><tbody>' + s.mats.map(function (m) { return '<tr><td>' + e(m.no) + '</td><td>' + e(m.name) + (m.code ? ' <span class="mu">' + e(m.code) + '</span>' : '') + '</td><td>' + e(m.supplier) + '</td><td>' + e(m.qty) + '</td><td>' + e(m.inspQty || (m.score != null && m.score !== '' ? m.score + '%' : '')) + '</td><td>' + pill(m.decision) + '</td><td>' + e(m.notes || '') + '</td></tr>'; }).join('') + '</tbody></table>' : '<p class="mu">لم تُفحص مواد واردة.</p>');
   h += sec(9, 'البنود المفتوحة') + '<table class="t"><thead><tr><th>البند</th><th>الرقم</th><th>التاريخ</th><th>التفاصيل</th></tr></thead><tbody>' +
     s.holdsOpen.map(function (x) { return '<tr><td>محجوز' + (x.age >= 2 ? ' <span class="pl r">' + x.age + ' يوم</span>' : '') + '</td><td>' + e(x.no) + '</td><td>' + e(x.date) + '</td><td>' + e(x.stage) + ' – ' + e(x.order) + ' – ' + e(x.desc) + ' ' + e(x.qty) + '</td></tr>'; }).join('') +
     s.ncrNew.map(function (x) { return '<tr><td>NCR جديدة</td><td>' + e(x.no) + '</td><td>' + e(s.date) + '</td><td>' + e(x.source) + ': ' + e(x.desc) + '</td></tr>'; }).join('') +
@@ -4408,7 +4408,7 @@ function renderDaily(s, opts) {
   h += sec(12, 'توقف الآلات') + (stp.length ? '<table class="t"><thead><tr><th>الوقت</th><th>الوردية</th><th>المرحلة / الآلة</th><th>السبب</th><th>التفاصيل</th><th>المراقب</th></tr></thead><tbody>' + stp.map(function (x) { return '<tr><td>' + e(x.time) + '</td><td>' + e(x.shift) + '</td><td>' + e(x.stage) + ' – ' + e(x.machine) + '</td><td><b>' + e(x.reason) + '</b></td><td>' + e(x.detail) + '</td><td class="sm">' + e(x.inspector) + '</td></tr>'; }).join('') + '</tbody></table>' : '<p class="mu">لم تُسجّل توقفات للآلات.</p>');
   h += sec(13, 'ملاحظات وقرارات مدير القسم') + '<div class="nt">' + (s.notes ? e(s.notes).replace(/\n/g, '<br>') : '&nbsp;') + '</div>';
   h += '<table class="sg"><tr><td><b>إعداد واعتماد القسم</b>' + e(opts.manager || 'ندى حجازي') + '<span>مدير قسم ضبط الجودة</span></td><td><b>اطّلاع واعتماد</b>' + e(opts.ceo || 'أيهم سكرية') + '<span>المدير التنفيذي</span></td><td class="lg"><img src="' + RC_LOGO + '" alt="F.E.T"><span>F.E.T Packaging</span></td></tr></table>';
-  h += '<div class="ft">QC-01-F20 · Issue 6.0 · F.E.T Packaging – تقرير مولّد آلياً من نظام ضبط الجودة</div></div>';
+  h += '<div class="ft">QC-01-F20 · Issue 6.0 · F.E.T Packaging</div></div>';
   return h;
 }
 var DAILY_CSS = '.drep{font-family:"IBM Plex Sans Arabic",Tahoma,Arial,sans-serif;color:#17212B;font-size:13px;background:#fff;max-width:960px;margin:0 auto}' +
@@ -4545,7 +4545,7 @@ VIEWS.product = {
       ${comps.map(x => `<tr><td>شكوى</td><td>${e(x.no)}</td><td>${e(x.date)}</td><td>${e(x.customer)}: ${e(x.desc)}</td><td>${e(x.status)}</td></tr>`).join('') || ''}
       ${holds.length+ncrs.length+comps.length?'':'<tr><td colspan="5" class="mu">لا يوجد.</td></tr>'}</tbody></table>`;
     h += sec(8,'سجل المشاكل') + `<table class="t"><thead><tr><th>التاريخ</th><th>المرحلة والآلة</th><th>الطلبية</th><th>غير المطابق</th><th>القرار</th><th>المراقب</th></tr></thead><tbody>${rs.filter(iss).slice(-40).reverse().map(r => `<tr><td>${e(r.date)} ${e(r.time)}</td><td>${e(stageBy(r.stage).name)}<div class="mu">${e(r.machine)}</div></td><td>${e(ordersLabel(r))}${itemsOf(r).length>1?'<div class="mu">مع: '+e(itemsLabel(r))+'</div>':''}</td><td>${e([...(r.failed||[]),...r.defects].join('، '))}</td><td>${pill(r.decision)}</td><td class="sm">${e(r.inspector)}</td></tr>`).join('') || '<tr><td colspan="6" class="mu">لا توجد مشاكل.</td></tr>'}</tbody></table>`;
-    h += `<div class="ft">تقرير جودة المنتج · F.E.T Packaging · مولّد من نظام ضبط الجودة</div></div>`;
+    h += `<div class="ft">تقرير جودة المنتج · F.E.T Packaging</div></div>`;
     return head + `<div class="rep" style="margin-top:16px">${h}</div>${DCSS}`;
   },
   bind(){
@@ -4575,7 +4575,7 @@ VIEWS.data.bind = function(){
 
 const LUCIDE = {"home": "<path d=\"M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8\" /> <path d=\"M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z\" />", "prod": "<path d=\"M12 16h.01\" /> <path d=\"M16 16h.01\" /> <path d=\"M3 19a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5a.5.5 0 0 0-.769-.422l-4.462 2.844A.5.5 0 0 1 15 10.5v-2a.5.5 0 0 0-.769-.422L9.77 10.922A.5.5 0 0 1 9 10.5V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2z\" /> <path d=\"M8 16h.01\" />", "mat": "<path d=\"M12 22V12\" /> <path d=\"m16 17 2 2 4-4\" /> <path d=\"M21 11.127V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.729l7 4a2 2 0 0 0 2 .001l1.32-.753\" /> <path d=\"M3.29 7 12 12l8.71-5\" /> <path d=\"m7.5 4.27 8.997 5.148\" />", "ncr": "<path d=\"M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z\" /> <path d=\"M12 8v4\" /> <path d=\"M12 16h.01\" />", "hold": "<path d=\"M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z\" /> <path d=\"m3.3 7 8.7 5 8.7-5\" /> <path d=\"M12 22V12\" />", "mon": "<rect width=\"8\" height=\"4\" x=\"8\" y=\"2\" rx=\"1\" ry=\"1\" /> <path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\" /> <path d=\"m9 14 2 2 4-4\" />", "rep": "<path d=\"M3 3v16a2 2 0 0 0 2 2h16\" /> <path d=\"M18 17V9\" /> <path d=\"M13 17V5\" /> <path d=\"M8 17v-3\" />", "team": "<path d=\"M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2\" /> <path d=\"M16 3.128a4 4 0 0 1 0 7.744\" /> <path d=\"M22 21v-2a4 4 0 0 0-3-3.87\" /> <circle cx=\"9\" cy=\"7\" r=\"4\" />", "mgr": "<path d=\"M16 7h6v6\" /> <path d=\"m22 7-8.5 8.5-5-5L2 17\" />", "more": "<rect width=\"7\" height=\"7\" x=\"3\" y=\"3\" rx=\"1\" /> <rect width=\"7\" height=\"7\" x=\"14\" y=\"3\" rx=\"1\" /> <rect width=\"7\" height=\"7\" x=\"14\" y=\"14\" rx=\"1\" /> <rect width=\"7\" height=\"7\" x=\"3\" y=\"14\" rx=\"1\" />", "hand": "<path d=\"M8 3 4 7l4 4\" /> <path d=\"M4 7h16\" /> <path d=\"m16 21 4-4-4-4\" /> <path d=\"M20 17H4\" />", "comp": "<path d=\"M22 17a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 21.286V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2z\" /> <path d=\"M12 15h.01\" /> <path d=\"M12 7v4\" />", "coa": "<path d=\"m15.477 12.89 1.515 8.526a.5.5 0 0 1-.81.47l-3.58-2.687a1 1 0 0 0-1.197 0l-3.586 2.686a.5.5 0 0 1-.81-.469l1.514-8.526\" /> <circle cx=\"12\" cy=\"8\" r=\"6\" />", "sup": "<path d=\"M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2\" /> <path d=\"M15 18H9\" /> <path d=\"M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 17.52 8H14\" /> <circle cx=\"17\" cy=\"18\" r=\"2\" /> <circle cx=\"7\" cy=\"18\" r=\"2\" />", "data": "<ellipse cx=\"12\" cy=\"5\" rx=\"9\" ry=\"3\" /> <path d=\"M3 5V19A9 3 0 0 0 21 19V5\" /> <path d=\"M3 12A9 3 0 0 0 21 12\" />", "bell": "<path d=\"M10.268 21a2 2 0 0 0 3.464 0\" /> <path d=\"M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326\" />", "search": "<path d=\"m21 21-4.34-4.34\" /> <circle cx=\"11\" cy=\"11\" r=\"8\" />", "logout": "<path d=\"m16 17 5-5-5-5\" /> <path d=\"M21 12H9\" /> <path d=\"M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4\" />", "dash": "<rect width=\"7\" height=\"9\" x=\"3\" y=\"3\" rx=\"1\" /> <rect width=\"7\" height=\"5\" x=\"14\" y=\"3\" rx=\"1\" /> <rect width=\"7\" height=\"9\" x=\"14\" y=\"12\" rx=\"1\" /> <rect width=\"7\" height=\"5\" x=\"3\" y=\"16\" rx=\"1\" />", "s_design": "<path d=\"M15.707 21.293a1 1 0 0 1-1.414 0l-1.586-1.586a1 1 0 0 1 0-1.414l5.586-5.586a1 1 0 0 1 1.414 0l1.586 1.586a1 1 0 0 1 0 1.414z\" /> <path d=\"m18 13-1.375-6.874a1 1 0 0 0-.746-.776L3.235 2.028a1 1 0 0 0-1.207 1.207L5.35 15.879a1 1 0 0 0 .776.746L13 18\" /> <path d=\"m2.3 2.3 7.286 7.286\" /> <circle cx=\"11\" cy=\"11\" r=\"2\" />", "s_print": "<path d=\"M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2\" /> <path d=\"M6 9V3a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v6\" /> <rect x=\"6\" y=\"14\" width=\"12\" height=\"8\" rx=\"1\" />", "s_draw": "<ellipse cx=\"12\" cy=\"5\" rx=\"9\" ry=\"3\" /> <path d=\"M3 5v14a9 3 0 0 0 18 0V5\" />", "s_sort": "<path d=\"M2 5h20\" /> <path d=\"M6 12h12\" /> <path d=\"M9 19h6\" />", "s_mix": "<path d=\"M14 2v6a2 2 0 0 0 .245.96l5.51 10.08A2 2 0 0 1 18 22H6a2 2 0 0 1-1.755-2.96l5.51-10.08A2 2 0 0 0 10 8V2\" /> <path d=\"M6.453 15h11.094\" /> <path d=\"M8.5 2h7\" />", "s_inj": "<path d=\"m18 2 4 4\" /> <path d=\"m17 7 3-3\" /> <path d=\"M19 9 8.7 19.3c-1 1-2.5 1-3.4 0l-.6-.6c-1-1-1-2.5 0-3.4L15 5\" /> <path d=\"m9 11 4 4\" /> <path d=\"m5 19-3 3\" /> <path d=\"m14 4 6 6\" />", "s_asm": "<path d=\"M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.106-3.105c.32-.322.863-.22.983.218a6 6 0 0 1-8.259 7.057l-7.91 7.91a1 1 0 0 1-2.999-3l7.91-7.91a6 6 0 0 1 7.057-8.259c.438.12.54.662.219.984z\" />", "s_cap": "<path d=\"M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z\" /> <path d=\"M12 22V12\" /> <polyline points=\"3.29 7 12 12 20.71 7\" /> <path d=\"m7.5 4.27 9 5.15\" />", "s_seal": "<path d=\"M14 13V8.5C14 7 15 7 15 5a3 3 0 0 0-6 0c0 2 1 2 1 3.5V13\" /> <path d=\"M20 15.5a2.5 2.5 0 0 0-2.5-2.5h-11A2.5 2.5 0 0 0 4 15.5V17a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1z\" /> <path d=\"M5 22h14\" />", "s_final": "<path d=\"M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z\" /> <path d=\"m16 9-5.5 5.5L8 12\" />", "thermo": "<path d=\"M14 4v10.54a4 4 0 1 1-4 0V4a2 2 0 0 1 4 0Z\" />", "ruler": "<path d=\"M21.3 15.3a2.4 2.4 0 0 1 0 3.4l-2.6 2.6a2.4 2.4 0 0 1-3.4 0L2.7 8.7a2.41 2.41 0 0 1 0-3.4l2.6-2.6a2.41 2.41 0 0 1 3.4 0Z\" /> <path d=\"m14.5 12.5 2-2\" /> <path d=\"m11.5 9.5 2-2\" /> <path d=\"m8.5 6.5 2-2\" /> <path d=\"m17.5 15.5 2-2\" />", "clean": "<path d=\"M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z\" /> <path d=\"M20 2v4\" /> <path d=\"M22 4h-4\" /> <circle cx=\"4\" cy=\"20\" r=\"2\" />", "plus": "<circle cx=\"12\" cy=\"12\" r=\"10\" /> <path d=\"M8 12h8\" /> <path d=\"M12 8v8\" />", "ok": "<path d=\"M21.801 10A10 10 0 1 1 17 3.335\" /> <path d=\"m9 11 3 3L22 4\" />", "warn": "<path d=\"m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3\" /> <path d=\"M12 9v4\" /> <path d=\"M12 17h.01\" />", "file": "<path d=\"M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z\" /> <path d=\"M14 2v5a1 1 0 0 0 1 1h5\" /> <path d=\"M10 9H8\" /> <path d=\"M16 13H8\" /> <path d=\"M16 17H8\" />", "scan": "<path d=\"M3 7V5a2 2 0 0 1 2-2h2\" /> <path d=\"M17 3h2a2 2 0 0 1 2 2v2\" /> <path d=\"M21 17v2a2 2 0 0 1-2 2h-2\" /> <path d=\"M7 21H5a2 2 0 0 1-2-2v-2\" /> <circle cx=\"12\" cy=\"12\" r=\"3\" /> <path d=\"m16 16-1.9-1.9\" />", "clock": "<circle cx=\"12\" cy=\"12\" r=\"10\" /> <path d=\"M12 6v6l4 2\" />", "alert": "<path d=\"M12 16h.01\" /> <path d=\"M12 8v4\" /> <path d=\"M15.312 2a2 2 0 0 1 1.414.586l4.688 4.688A2 2 0 0 1 22 8.688v6.624a2 2 0 0 1-.586 1.414l-4.688 4.688a2 2 0 0 1-1.414.586H8.688a2 2 0 0 1-1.414-.586l-4.688-4.688A2 2 0 0 1 2 15.312V8.688a2 2 0 0 1 .586-1.414l4.688-4.688A2 2 0 0 1 8.688 2z\" />", "activity": "<path d=\"M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2\" />", "gauge": "<path d=\"m12 14 4-4\" /> <path d=\"M3.34 19a10 10 0 1 1 17.32 0\" />"};
 /* [VERSION] رقم إصدار البرنامج – يظهر أسفل القائمة وفي شاشة الدخول */
-const APP_VERSION = '21.13';
+const APP_VERSION = '21.17';
 let SERVER_VERSION = '';
 async function checkServerVersion(){ if(!GAS_MODE) return; try{ const v = JSON.parse(await rpc('serverVersion', '')); SERVER_VERSION = v.version + (v.ocr ? '' : ' (Drive API غير مفعّل)'); }catch(e){ SERVER_VERSION = /NET/.test(String(e && e.message || e)) ? '' : 'قديم – انشر إصداراً جديداً'; } try{ renderTabs(); }catch(e){} }
 /* [ERRORS] بدل الصفحة الفارغة: رسالة واضحة وزر إعادة تحميل */
@@ -11223,11 +11223,11 @@ VIEWS.release = {
       const cs = f.cartons.filter(c => String(c.no).trim()), needC = Math.min(typeof FINAL_MIN_CARTONS !== 'undefined' ? FINAL_MIN_CARTONS : 1, +f.good || 1); if(cs.length < needC){ toast(`سجّل أرقام ${needC} كراتين معاينة على الأقل (مسجّل ${cs.length})`); return; }
       if(!(+f.good > 0)){ toast('اكتب عدد الكراتين السليمة'); return; }
       const nb = cs.find(c => c.st === 'bad' && !String(c.note).trim()); if(nb){ toast(`الكرتونة ${nb.no}: اكتب العيب`); return; }
-      const miss = RL_MEAS.find(([k]) => !f.meas[k].some(v => String(v).trim() !== '')); if(miss){ toast(`أدخل قياس ${miss[1]}`); return; }
+      const miss = relOf(f.order).length ? null : RL_MEAS.find(([k]) => !f.meas[k].some(v => String(v).trim() !== '')); if(miss){ toast(`أدخل قياس ${miss[1]}`); return; }
       if(!f.decision){ toast('اختر القرار'); return; }
       const keep = F; newRound('final'); const R = F; R.items = f.items.map(x => ({...x})); R.order = f.order; R.type = 'تحرير'; R.machine = R.machine || '—'; R.decision = f.decision; R.action = f.action; R.notes = f.notes; R.qty = (+f.good || 0) + (+f.bad || 0);
       RL_MEAS.forEach(([k]) => { const v = f.meas[k].filter(x => String(x).trim() !== ''); R.vals[k + '_r'] = v; R.vals[k] = avgOf(v) ?? ''; });
-      R.extra.rel = {seq: relOf(f.order).length + 1, finished: f.finished, good: +f.good || 0, bad: +f.bad || 0, total: R.qty, badNote: f.badNote, badOk: f.badOk, cartons: cs};
+      if(relOf(f.order).length) R.extra.measFrom = relOf(f.order)[0].no || relOf(f.order)[0].date; R.extra.rel = {seq: relOf(f.order).length + 1, finished: f.finished, good: +f.good || 0, bad: +f.bad || 0, total: R.qty, badNote: f.badNote, badOk: f.badOk, cartons: cs};
       const badC = cs.filter(c => c.st === 'bad'); if(badC.length) R.defects = badC.map(c => `كرتونة ${c.no}: ${c.note}`);
       R.extra.cartons = +f.good || 0; R.extra.cartBad = +f.bad || 0; R.extra.cartBadNote = f.badNote; R.cartonsInsp = cs.map(c => ({no: c.no, issues: c.st === 'bad' ? c.note : ''}));
       const ok = saveRound(); if(ok === null){ F = keep; return; } F = keep; RL = null; toast('✅ حُفظ تحرير المنتج النهائي'); go('prod'); };
@@ -12617,7 +12617,7 @@ document.addEventListener('click', e => { const b = e.target.closest && e.target
 function bxCt(r){ return [r.box ? 'صندوق ' + r.box : '', r.carton ? 'كرتونة ' + r.carton : ''].filter(Boolean).join(' · '); }
 
 /* ---------- ٢) فحص المواد الأولية: الكمية الكاملة، المفحوصة، الكود، الاسم، القرار، الملاحظات ---------- */
-const MAT_DEC = ['مقبول', 'مقبول بملاحظة', 'محجور', 'مرفوض'];
+const MAT_DEC = ['مقبول', 'مقبول بملاحظة', 'مرفوض'];
 function matAllLib(){ const out = [], seen = new Set(); Object.values((S.settings || {}).matlib || {}).forEach(l => (l || []).forEach(x => { const k = String(x.code || '') + '|' + String(x.name || ''); if(!seen.has(k)){ seen.add(k); out.push(x); } })); return out; }
 function matFindAny(field, v){ v = String(v || '').trim().toLowerCase(); if(!v) return null; return matAllLib().find(x => String(x[field] || '').trim().toLowerCase() === v) || null; }
 const matSupList = () => [...new Set(S.mats.map(x => String(x.supplier || '').trim()).filter(Boolean))].sort((a, b) => a.localeCompare(b, 'ar'));
@@ -13184,7 +13184,7 @@ const P41_NADA = ['myday', 'plan', 'shiftsum', 'mysum', 'pareto', 'sup'];
 NAV.forEach(g => { g.items = g.items.filter(i => !P41_ALL.includes(i[0])); });
 if(typeof INSPECTOR_NAV !== 'undefined') P41_ALL.forEach(v => { let i; while((i = INSPECTOR_NAV.indexOf(v)) >= 0) INSPECTOR_NAV.splice(i, 1); });
 const p41Hidden = v => P41_ALL.includes(v) || (isNada() && !VIEWAS && P41_NADA.includes(v));
-const p41Home = () => isProdRole() || (typeof isChecker === 'function' && isChecker()) ? 'board' : canSeeAll() ? 'cmd' : 'prod';
+const p41Home = () => isProdRole() || (typeof isChecker === 'function' && isChecker()) ? 'board' : canSeeAll() && !(isNada() && !VIEWAS) ? 'cmd' : 'prod';
 { const _g = go; go = function(v, a){ if(typeof isChecker === 'function' && isChecker() && v !== 'board') v = 'board'; else if(p41Hidden(v)) v = p41Home(); return _g(v, a); }; }
 function p41Hide(){ try{ const L = P41_ALL.concat(isNada() && !VIEWAS ? P41_NADA : []);
     L.forEach(v => $$(`[data-v="${v}"], [data-go="${v}"], [data-cgo="${v}"], [data-cgo2="${v}"], [data-nav="${v}"]`).forEach(b => { const li = b.closest('li'); (li || b).style.display = 'none'; }));
@@ -13451,7 +13451,7 @@ function dsumData(date){
   unrep.forEach(r => (r.operators && r.operators.length ? r.operators : [r.operator]).filter(Boolean).forEach(n => W(n, r.stage).norep++));
   const workers = Object.values(wk).sort((a, b) => (b.p + b.norep) - (a.p + a.norep) || b.crit - a.crit).slice(0, 5);
   const unrepL = unrep.map(r => ({time: r.time || '', stage: stageBy(r.stage).name + (r.machine && r.machine !== '—' ? ' / ' + r.machine : ''), who: (r.operators && r.operators.length ? r.operators : [r.operator]).filter(Boolean).join('، '), order: ordersLabel(r), desc: String((r.defects || [])[0] || r.notes || '').trim().slice(0, 45)}));
-  const mats = (S.mats || []).filter(m => m.date === date).map(m => ({no: m.no || '', name: m.name || m.material || '', code: m.code || '', supplier: m.supplier || '', lot: m.lot || m.batch || '', qty: m.qty ? `${m.qty} ${m.unit || ''}` : '', decision: m.decision || '', notes: String(m.notes || '').trim()}));
+  const mats = (S.mats || []).filter(m => m.date === date).map(m => ({no: m.no || '', name: m.name || m.material || '', code: m.code || '', supplier: m.supplier || '', qty: m.qty ? `${m.qty} ${m.unit || ''}` : '', inspQty: m.inspQty ? `${m.inspQty} ${m.unit || ''}` : '', decision: m.decision || '', notes: String(m.notes || '').trim()}));
   const ncrs = (S.ncrs || []).filter(n => n.date === date), ncrN = ncrs.length, ncrOpen = (S.ncrs || []).filter(n => !n.closed).length;
   const comps = (S.complaints || []).filter(c => c.date === date), compOpen = (S.complaints || []).filter(c => c.status !== 'مغلقة').length;
   return {date, rounds: R.length, m: R.filter(r => r.shift !== 'مسائية').length, e: R.filter(r => r.shift === 'مسائية').length, probs: P.length, cls, stages: Object.values(st).sort((a, b) => (b.crit + b.maj + b.min + b.held) - (a.crit + a.maj + a.min + a.held)), orders, defs, team: Object.values(team).sort((a, b) => b.n - a.n), mats, workers, unrepL, ncrN, ncrs, ncrOpen, comps, compOpen, holdsOpen: (S.holds || []).filter(h => h.status !== 'مغلق').length};
@@ -13490,7 +13490,7 @@ function renderDailySum(d, opts){ opts = opts || {}; const day = new Date(d.date
     <h3>حالات عدم المطابقة <span class="mu">(جديدة اليوم ${d.ncrs.length} · المفتوحة حتى الآن ${d.ncrOpen})</span></h3>${d.ncrs.length ? `<table class="t"><thead><tr><th>الرقم</th><th>القسم المعني</th><th>المصدر</th><th>الطلبية / المادة</th><th>الوصف</th><th>التصنيف</th><th>الحالة</th></tr></thead><tbody>${d.ncrs.slice(0, 4).map(n => `<tr><td><b>${esc(n.no || '')}</b></td><td>${esc(n.concDept || '—')}</td><td>${esc(n.source || '')}</td><td>${esc(n.matName || n.order || '—')}</td><td class="sm">${esc(String(n.desc || '').slice(0, 48))}</td><td class="${n.cls === 'حرج' ? 'cr' : ''}">${esc(n.cls || '')}</td><td class="sm">${n.closed ? 'مغلقة' : 'مفتوحة'}</td></tr>`).join('')}</tbody></table>${d.ncrs.length > 4 ? `<p class="mu">و${d.ncrs.length - 4} حالات أخرى في سجل حالات عدم المطابقة.</p>` : ''}` : '<p class="mu">لم تُسجل حالات عدم مطابقة اليوم.</p>'}
     <h3>شكاوى الزبائن <span class="mu">(جديدة اليوم ${d.comps.length} · المفتوحة حتى الآن ${d.compOpen})</span></h3>${d.comps.length ? `<table class="t"><thead><tr><th>الرقم</th><th>الزبون</th><th>الطلبية والمنتج</th><th>الشكوى</th><th>الكمية</th><th>الحالة</th></tr></thead><tbody>${d.comps.map(c => `<tr><td><b>${esc(c.no || '')}</b></td><td>${esc(String(c.customer || '').slice(0, 26))}</td><td>${esc(c.order || '')}<div class="mu">${esc(String(c.product || '').slice(0, 28))}</div></td><td class="sm">${esc(String(c.desc || '').slice(0, 50))}</td><td>${esc(c.qty || '')}</td><td class="sm">${esc(c.status || '')}</td></tr>`).join('')}</tbody></table>` : '<p class="mu">لا توجد شكاوى جديدة اليوم.</p>'}
     <h3>فريق الجودة</h3><table class="t"><thead><tr><th>الاسم</th><th>الجولات</th><th>صباحي</th><th>مسائي</th><th>مشاكل اكتشفها</th><th>عيوب حرجة</th></tr></thead><tbody>${d.team.map(i => `<tr><td><b>${esc(i.name)}</b></td><td>${i.n}</td><td>${i.m}</td><td>${i.e}</td><td>${i.p}</td><td class="${i.crit ? 'cr' : ''}">${i.crit}</td></tr>`).join('')}</tbody></table>
-    <h3>المواد الأولية</h3>${d.mats.length ? `<table class="t"><thead><tr><th>الرقم</th><th>المادة</th><th>المورد</th><th>الدفعة</th><th>الكمية</th><th>القرار</th><th>ملاحظات</th></tr></thead><tbody>${d.mats.map(m => `<tr><td>${esc(m.no)}</td><td>${esc(m.name)}<div class="mu">${esc(m.code)}</div></td><td>${esc(m.supplier || '—')}</td><td>${esc(m.lot || '—')}</td><td>${esc(m.qty)}</td><td>${pill(m.decision)}</td><td class="sm">${esc(m.notes)}</td></tr>`).join('')}</tbody></table>` : '<p class="mu">لم تُفحص مواد أولية اليوم.</p>'}
+    <h3>المواد الأولية</h3>${d.mats.length ? `<table class="t"><thead><tr><th>الرقم</th><th>المادة</th><th>المورد</th><th>الكمية</th><th>المفحوص</th><th>القرار</th><th>ملاحظات</th></tr></thead><tbody>${d.mats.map(m => `<tr><td>${esc(m.no)}</td><td>${esc(m.name)}<div class="mu">${esc(m.code)}</div></td><td>${esc(m.supplier || '—')}</td><td>${esc(m.qty)}</td><td>${esc(m.inspQty || '—')}</td><td>${pill(m.decision)}</td><td class="sm">${esc(m.notes)}</td></tr>`).join('')}</tbody></table>` : '<p class="mu">لم تُفحص مواد أولية اليوم.</p>'}
     <h3>ملاحظات وقرارات مدير القسم</h3><div class="nt">${opts.notes ? esc(opts.notes).replace(/\n/g, '<br>') : '&nbsp;'}</div>
     <table class="sg"><tr><td><b>إعداد واعتماد القسم</b>${esc(opts.manager || 'ندى حجازي')}<span>مدير قسم ضبط الجودة</span></td><td><b>اطّلاع واعتماد</b>${esc(opts.ceo || 'أيهم سكرية')}<span>المدير التنفيذي</span></td><td class="lgc"><img src="${opts.logo || LOGO}" alt=""><span>F.E.T Packaging</span></td></tr></table>
   </div></div>`; }
@@ -13509,7 +13509,7 @@ function dsumAutoText(d){ return `نُفذت ${d.rounds} جولة فحص (الص
 /* ===== [PHASE43] التقرير اليومي: المفصّل (كما هو) + الملخص للإدارة التنفيذية · تعديل ندى يُحفظ ويظهر في الاثنين · المواد الأولية محدّثة دائماً · الدفعة ===== */
 /* المواد الأولية في التقرير المفصّل تُقرأ من السجل الحالي (المورد والدفعة والقرار بعد أي تعديل) */
 { const _rd = renderDaily; renderDaily = function(s, opts){ let x = s;
-    try{ const live = (S.mats || []).filter(m => m.date === s.date); if(live.length || (s.mats || []).length){ x = {...s, mats: live.map(m => ({no: m.no || '', name: m.name || (typeof matBy === 'function' ? (matBy(m.type) || {}).name : '') || '', supplier: m.supplier || '', lot: m.lot || m.batch || '', score: m.score, decision: m.decision || ''}))}; } }catch(e){}
+    try{ const live = (S.mats || []).filter(m => m.date === s.date); if(live.length || (s.mats || []).length){ x = {...s, mats: live.map(m => ({no: m.no || '', name: m.name || (typeof matBy === 'function' ? (matBy(m.type) || {}).name : '') || '', code: m.code || '', supplier: m.supplier || '', qty: m.qty ? m.qty + ' ' + (m.unit || '') : '', inspQty: m.inspQty ? m.inspQty + ' ' + (m.unit || '') : '', score: m.score, decision: m.decision || '', notes: String(m.notes || '').trim()}))}; } }catch(e){}
     if(s.sumEdited) x = {...x, summary: s.summary};
     return _rd.call(this, x, opts).replace(/<td>(undefined|null|)%<\/td>/g, '<td>—</td>'); }; }
 let DR_TAB = 'full';
@@ -13529,17 +13529,6 @@ let DR_TAB = 'full';
     const rs = $('#dSumReset'); if(rs) rs.onclick = () => ask('الرجوع للملخص التلقائي في التقريرين؟', 'نعم', () => { s.sumEdited = false; delete s.sumBy; makeDaily(s.date); save(); render(); });
     const rg = $('#dRegen'); if(rg) rg.onclick = () => ask('إعادة توليد التقريرين من السجلات الحالية؟ تبقى ملاحظاتك وملخصك المعدّل كما هي.', 'إعادة التوليد', () => { const keep = {summary: s.summary, sumEdited: s.sumEdited, notes: s.notes}; makeDaily(s.date); const n = S.reports.find(x => x.date === s.date); if(n && keep.sumEdited){ n.summary = keep.summary; n.sumEdited = true; } if(n) n.notes = keep.notes; save(); render(); toast('تم تحديث التقريرين'); });
     return r; }; }
-/* سجل المفحوصات: خانة الدفعة (ندى) */
-{ const _h = VIEWS.mat.html; VIEWS.mat.html = function(){ let h = _h.apply(this, arguments); const nada = isNada();
-    h = h.replace('<th>المورد</th><th class="noprint"></th>', '<th>المورد</th><th>الدفعة</th><th class="noprint"></th>');
-    h = h.replace(/(<tr class="click" data-mid="([^"]+)">[\s\S]*?)(<td class="noprint">)/g, (all, a, id, b) => { const m = S.mats.find(x => String(x.id) === id) || {}; return a + `<td>${nada ? `<input type="text" class="msup ${String(m.lot || '').trim() ? 'has' : ''}" data-mlot="${esc(id)}" value="${esc(m.lot || '')}" placeholder="رقم الدفعة" style="max-width:120px">` : esc(m.lot || '')}</td>` + b; });
-    return h.replace('<td colspan="10" class="muted">', '<td colspan="11" class="muted">'); }; }
-{ const _b = VIEWS.mat.bind; VIEWS.mat.bind = function(){ const r = _b.apply(this, arguments);
-    $$('[data-mlot]').forEach(i => { i.onclick = e => e.stopPropagation(); i.onkeydown = e => { if(e.key === 'Enter') i.blur(); };
-      i.onchange = () => { if(!isNada()) return; const m = S.mats.find(x => String(x.id) === i.dataset.mlot); if(!m) return; const v = i.value.trim(); if(v === String(m.lot || '').trim()) return; m.lot = v; m.lotBy = (CUR && CUR.name) || ''; m.lotAt = p40Now(); i.classList.toggle('has', !!v); save(); toast(v ? `✓ الدفعة ${v} – ${m.no}` : `أُزيلت الدفعة – ${m.no}`); }; });
-    return r; }; }
-
-
 /* ===== [PHASE44] لصاقة القرار: معلومات الطلبية كاملة + القرار، لكل المراحل ===== */
 dlPng = async function(r){ const {w, h} = DL_SIZE(), k = 8, W = Math.round(w * k), H = Math.round(h * k), c = document.createElement('canvas'); c.width = W; c.height = H;
   const g = c.getContext('2d'), FF = 'Arial, "DejaVu Sans", sans-serif', pad = Math.round(Math.min(W, H) * .04), lw = Math.max(4, W * .008), d = dlDec(r), dark = d === 'محجور' || d === 'مرفوض';
@@ -13673,6 +13662,260 @@ NADA_ONLY.push('lbllog');
 /* نافذة المعاينة: لا تعديل للأبعاد إلا من سجل اللصاقات (ندى) */
 { const _o = dlOpen; dlOpen = async function(r){ await _o.apply(this, arguments); const o = document.getElementById('dlOv'); if(!o) return; o.querySelectorAll('.isosz').forEach(x => x.remove());
     const go2 = o.querySelector('#dlGo'); if(go2) go2.onclick = () => { dlPrintNow(r, +(o.querySelector('#dlN') || {}).value || 1); o.remove(); }; }; }
+
+
+/* ===== [PHASE46] أثناء الجولة: زر "لصاقة القرار" في كل المراحل، وزر "لصاقة الأرشفة" في التغطية والتعبئة والتركيب غير الآلي والتختيم ===== */
+const ARCH_STAGES = ['cap', 'asm', 'seal'];
+const p46Btns = (key, st) => { const f = p40F(key) || {}, it = (f.items || [])[0] || {}, o = String(it.order || f.order || '');
+  return `<div class="p46b noprint"><button type="button" class="btn" data-dlf="${esc(key)}">🏷 طباعة لصاقة القرار</button>${ARCH_STAGES.includes(st) ? `<button type="button" class="btn" ${o ? `data-stlbl="${esc(o)}" data-stg="${esc(st)}" data-stc="${esc(it.code || '')}"` : 'data-arl="1"'}>🗂 طباعة لصاقة الأرشفة</button>` : ''}</div>`; };
+{ const _h = sdMachineHtml; sdMachineHtml = function(m, f){ const h = _h(m, f); if(!f || f.status !== 'run' || !(f.items || []).length) return h; const b = p46Btns('sd|' + m, SDK), i = h.lastIndexOf('<button class="btn p big mcsave" data-sdsave');
+    return i >= 0 ? h.slice(0, i) + b + h.slice(i) : h + b; }; }
+{ const _h = spHtml; spHtml = function(f){ const h = _h(f); if(!f || f.status !== 'run' || !(f.items || []).length) return h; return h + p46Btns('sp|', 'print'); }; }
+{ const _h = VIEWS.round.html; VIEWS.round.html = function(){ const h = _h.apply(this, arguments); if(!F || ['design', 'check', 'mix'].includes(F.stage) || F.viewOnly) return h; return h.replace('<div class="sticky-save">', p46Btns('rf|', F.stage) + '<div class="sticky-save">'); }; }
+function p46Round(key){ const f = p40F(key); if(!f) return null; const [k, m] = key.split('|'), st = k === 'sd' ? SDK : k === 'sp' ? 'print' : (f.stage || '');
+  const it = (f.items || [])[0] || {}; return {...f, stage: st, machine: k === 'sd' ? m : (f.machine || (k === 'sp' ? 'الطابعة' : '')), items: f.items || [], order: it.order || f.order || '', code: it.code || f.code || '', product: it.product || f.product || '',
+    date: todayStr(), time: timeStr(), inspector: S.settings.inspector || (CUR && CUR.name) || '', no: f.editId ? ((S.rounds.find(r => r.id === f.editId) || {}).no || '') : 'قبل الحفظ', decision: f.noProb ? 'مقبول' : (f.decision || '')}; }
+window.addEventListener('click', e => { const b = e.target.closest && e.target.closest('[data-dlf]'); if(!b) return; e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation();
+  const r = p46Round(b.dataset.dlf); if(!r) return; if(!r.decision && !r.noProb){ toast('اختر القرار أولاً'); return; } if(!ordersLabel(r)){ toast('اختر الطلبية أولاً'); return; } dlPrint(r, 1); }, true);
+document.addEventListener('click', e => { const b = e.target.closest && e.target.closest('[data-arl]'); if(!b) return; e.preventDefault(); toast('اختر الطلبية أولاً'); }, true);
+document.head.insertAdjacentHTML('beforeend', `<style>.p46b{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}[data-sdm] .stlb{display:none!important}.p46b .btn{flex:1;min-width:150px;border:1.5px dashed #17212B;font-weight:700}</style>`);
+
+
+/* ===== [PHASE47] محتوى لصاقة القرار تتحكم به ندى · جولات الإنتاج لندى بهيكلية إيهاب وأحمد + التصميم · تبسيط القائمة · كل الحسابات ===== */
+const DLF_DEF = {head: 1, dec: 1, order: 1, box: 1, cust: 1, prod: 1, code: 1, def: 1, qty: 1, insp: 1, foot: 1, bc: 0};
+const DLF_LBL = {head: 'الشريط العلوي (العنوان والمرحلة والآلة)', dec: 'القرار المتخذ', order: 'رقم الطلبية', box: 'الصندوق / الكرتونة', cust: 'الزبون', prod: 'اسم المنتج', code: 'كود المنتج', def: 'العيب', qty: 'كمية العيب', insp: 'المراقب والتاريخ ورقم الجولة', foot: 'سطر "ممنوع تحريك الصندوق" للمحجور', bc: 'باركود رقم الطلبية'};
+const DLF = k => { const s = (S.settings.decTag || {}).show || {}; return k in s ? !!s[k] : !!DLF_DEF[k]; };
+function dlBars(g, text, x, y, w, h){ const codes = [104]; String(text).split('').forEach(ch => codes.push(Math.max(0, Math.min(94, ch.charCodeAt(0) - 32)))); let sum = codes[0]; for(let i = 1; i < codes.length; i++) sum += codes[i] * i; codes.push(sum % 103); codes.push(106);
+  let mods = 0; codes.forEach(c => { for(const d of C128[c]) mods += +d; }); const u = w / (mods + 20); let cx = x + 10 * u; g.fillStyle = '#000';
+  codes.forEach(c => { const p = C128[c]; for(let i = 0; i < p.length; i++){ const ww = +p[i] * u; if(i % 2 === 0) g.fillRect(cx, y, ww, h); cx += ww; } }); }
+dlPng = async function(r, size){ const {w, h} = size || DL_SIZE(), k = 8, W = Math.round(w * k), H = Math.round(h * k), c = document.createElement('canvas'); c.width = W; c.height = H;
+  const g = c.getContext('2d'), FF = 'Arial, "DejaVu Sans", sans-serif', pad = Math.round(Math.min(W, H) * .04), lw = Math.max(4, W * .008), d = r.noProb ? 'مقبول' : dlDec(r), dark = d === 'محجور' || d === 'مرفوض';
+  const cut = (t, max) => { t = String(t || '—'); if(g.measureText(t).width <= max) return t; while(g.measureText(t + '…').width > max && t.length > 3) t = t.slice(0, -1); return t + '…'; };
+  const fit = (t, max, wt, px) => { let s = px; g.font = `${wt} ${s}px ${FF}`; while(g.measureText(t).width > max && s > 10){ s -= 2; g.font = `${wt} ${s}px ${FF}`; } };
+  const it = itemsOf(r)[0] || {}, er = (ordRows(it.order || r.order) || []).find(x => !it.code || x.product_code === it.code) || {};
+  const cust = r.customer || er.customer || '', prod = it.product || r.product || er.product_name || '', code = it.code || r.code || er.product_code || '', ord = ordersLabel(r) || '', bx = typeof bxCt === 'function' ? bxCt(r) : (r.box || '');
+  g.fillStyle = '#fff'; g.fillRect(0, 0, W, H); g.strokeStyle = '#000'; g.lineWidth = lw; g.strokeRect(lw / 2, lw / 2, W - lw, H - lw); g.direction = 'rtl'; g.textBaseline = 'middle';
+  let y = 0; const st = stageBy(r.stage).name + (r.machine && r.machine !== '—' ? ' / ' + r.machine : '');
+  if(DLF('head')){ const hh = Math.round(H * .1); g.fillStyle = '#000'; g.fillRect(0, 0, W, hh); g.fillStyle = '#fff'; g.textAlign = 'right'; fit(DLT('head'), W * .5, 900, Math.round(hh * .58)); g.fillText(DLT('head'), W - pad, hh / 2); g.textAlign = 'left'; fit(st, W * .45, 800, Math.round(hh * .55)); g.fillText(st, pad, hh / 2); y = hh; }
+  y += Math.round(H * .02);
+  if(DLF('dec')){ const dh = Math.round(H * .17), t = dlTitle2(r); if(dark){ g.fillStyle = '#000'; g.fillRect(pad, y, W - pad * 2, dh); g.fillStyle = '#fff'; } else { g.strokeStyle = '#000'; g.lineWidth = lw * 1.4; g.strokeRect(pad, y, W - pad * 2, dh); g.fillStyle = '#000'; }
+    g.textAlign = 'center'; fit(t, W - pad * 4, 900, Math.round(dh * .62)); g.fillText(t, W / 2, y + dh / 2); y += dh + Math.round(H * .015); }
+  const sO = DLF('order'), sB = DLF('box');
+  if(sO || sB){ const oh = Math.round(H * .13), both = sO && sB, sp = both ? W * .42 : pad; g.strokeStyle = '#000'; g.lineWidth = lw * .8; g.strokeRect(pad, y, W - pad * 2, oh); if(both){ g.beginPath(); g.moveTo(sp, y); g.lineTo(sp, y + oh); g.stroke(); }
+    g.fillStyle = '#000'; g.textAlign = 'right';
+    if(sO){ const xr = W - pad * 1.6, mw = both ? W * .5 : W - pad * 4; g.font = `700 ${Math.round(oh * .3)}px ${FF}`; g.fillText(DLT('l_order'), xr, y + oh * .3); fit(ord || '—', mw, 900, Math.round(oh * .52)); g.fillText(ord || '—', xr, y + oh * .7); }
+    if(sB){ const xr = both ? sp - pad * .8 : W - pad * 1.6, mw = both ? W * .36 : W - pad * 4; g.font = `700 ${Math.round(oh * .3)}px ${FF}`; g.fillText(DLT('l_box'), xr, y + oh * .3); fit(bx || '—', mw, 900, Math.round(oh * .5)); g.fillText(bx || '—', xr, y + oh * .7); }
+    y += oh + Math.round(H * .01); }
+  const desc = r.noProb ? DLT('d_np').split('–').pop().trim() : [drDefs(r).join('، '), String(r.notes || '').trim()].filter(Boolean).join(' – ');
+  const rows = [['cust', DLT('l_cust'), cust], ['prod', DLT('l_prod'), prod], ['code', DLT('l_code'), code], ['def', DLT('l_def'), desc], ['qty', DLT('l_qty'), r.dq ? r.dq + ' ' + duLbl(r.du) : r.qty || ''], ['insp', DLT('l_insp'), `${r.inspector || ''} · ${r.date || ''} ${r.time || ''} · ${r.no || ''}`]].filter(x => DLF(x[0]) && x[2] && String(x[2]).trim());
+  const fh = DLF('foot') && d === 'محجور' ? Math.round(H * .085) : 0, bch = DLF('bc') && ord ? Math.round(H * .13) : 0, avail = H - y - fh - bch - pad * .4;
+  if(rows.length){ const rh = avail / rows.length, lx = W - pad * 1.2, split = Math.round(W * .8);
+    rows.forEach(([, l, v], i) => { const yy = y + rh * i + rh / 2; g.fillStyle = '#000'; g.textAlign = 'right'; g.font = `700 ${Math.round(Math.min(rh * .46, H * .05))}px ${FF}`; g.fillText(l + ':', lx, yy);
+      g.font = `700 ${Math.round(Math.min(rh * .5, H * .055))}px ${FF}`; g.fillText(cut(v, split - pad), split, yy);
+      if(i < rows.length - 1){ g.strokeStyle = '#999'; g.lineWidth = 1.5; g.beginPath(); g.moveTo(pad, y + rh * (i + 1)); g.lineTo(W - pad, y + rh * (i + 1)); g.stroke(); } }); }
+  if(bch){ const by = H - fh - bch - pad * .3; dlBars(g, String(ord).split(/[،,\s]/)[0], W * .15, by + bch * .05, W * .7, bch * .9); }
+  if(fh){ g.fillStyle = '#000'; g.fillRect(0, H - fh, W, fh); g.fillStyle = '#fff'; g.textAlign = 'center'; fit(DLT('foot'), W - pad * 2, 900, Math.round(fh * .55)); g.fillText(DLT('foot'), W / 2, H - fh / 2); }
+  return c.toDataURL('image/png'); };
+/* إعدادات اللصاقة: قسم "محتوى اللصاقة" (إظهار / إخفاء كل بند) */
+{ const _h = VIEWS.lbllog.html; VIEWS.lbllog.html = function(){ let h = _h.apply(this, arguments); if(LB.tab !== 'set' || !LB.edit) return h; const e = LB.edit; if(!e.show) e.show = {...DLF_DEF, ...((S.settings.decTag || {}).show || {})};
+    const box = `<h3>محتوى اللصاقة <small class="muted">(أشّري ما يظهر – يُطبّق على كل المراحل)</small></h3><div class="pick" style="flex-wrap:wrap">${Object.keys(DLF_DEF).map(k => `<button type="button" class="${e.show[k] ? 'on' : ''}" data-lbs="${k}">${e.show[k] ? '☑' : '☐'} ${esc(DLF_LBL[k])}</button>`).join('')}</div>`;
+    return h.replace('<h3>العبارات</h3>', box + '<h3>العبارات</h3>'); }; }
+{ const _b = VIEWS.lbllog.bind; VIEWS.lbllog.bind = function(){ const r = _b.apply(this, arguments); if(LB.tab !== 'set' || !LB.edit) return r; const e = LB.edit;
+    $$('[data-lbs]').forEach(b => b.onclick = () => { const k = b.dataset.lbs; e.show[k] = !e.show[k]; if(!['dec', 'order'].some(x => e.show[x]) && !e.show.def){ e.show[k] = true; toast('يجب أن تُظهر اللصاقة القرار أو الطلبية على الأقل'); return; } rerender(); });
+    /* المعاينة والحفظ يشملان المحتوى */
+    const pv = $('#lbPrev'); if(pv){ const _o = pv.onclick; pv.onclick = async () => { const keep = S.settings.decTag; S.settings.decTag = {...(keep || {}), show: e.show}; try{ await _o(); } finally { setTimeout(() => { S.settings.decTag = keep; }, 900); } }; pv.onclick(); }
+    const sv = $('#lbSave'); if(sv){ const _o = sv.onclick; sv.onclick = () => { _o(); setS('decTag', z => { z.show = {...e.show}; }); }; }
+    return r; }; }
+
+/* القائمة لندى: بلا لوحة القيادة ولوحة الإدارة والمراجعة السنوية وقائمة المتابعة · تقرير الإدارة الشهري من بند التقارير */
+['cmd', 'mgr', 'annual', 'watch'].forEach(v => { if(!P41_NADA.includes(v)) P41_NADA.push(v); });
+function p47Nav(){ try{ if(!isNada() || VIEWAS) return; $$('#side [data-v="board_m"], #tabs [data-v="board_m"]').forEach(b => b.style.display = 'none'); }catch(e){} }
+{ const _h = VIEWS.rep.html; VIEWS.rep.html = function(){ const h = _h.apply(this, arguments); if(!isNada()) return h; const card = `<div class="panel noprint" style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap"><div><b>📊 تقرير الإدارة الشهري</b><div class="muted" style="font-size:13px">تقرير شهري للإدارة التنفيذية بالمؤشرات والمخططات.</div></div><button class="btn p" data-p47go="board_m">فتح التقرير الشهري</button></div>`;
+    const i = h.indexOf('</div>', h.indexOf('class="pagehead"')); const j = i >= 0 ? h.indexOf('</div>', i + 6) : -1; return j >= 0 ? h.slice(0, j + 6) + card + h.slice(j + 6) : card + h; }; }
+document.addEventListener('click', e => { const b = e.target.closest && e.target.closest('[data-p47go]'); if(!b) return; e.preventDefault(); go(b.dataset.p47go); }, true);
+PARENT.board_m = 'rep';
+
+/* جولات الإنتاج لندى: نفس هيكلية إيهاب وأحمد (ترحيب ومؤشرات، بروفا ونهائي منفصلتان، مراحل أخرى) + مرحلة التصميم */
+function p47Prod(){ if(!isNada() || VIEWAS || view !== 'prod') return; const main = $('#main'), line = $('#main .line'); if(!line || line.dataset.p47) return; line.dataset.p47 = 1;
+  const t = todayStr(), T = S.rounds.filter(r => r.date === t), sh = typeof shiftForTime === 'function' ? shiftForTime() : S.settings.shift, now = new Date();
+  const tile = (name, ico, rs, extra) => { const last = rs[rs.length - 1], cls = !last ? '' : last.decision === 'مقبول' ? 's-ok' : last.decision === 'مقبول بملاحظة' ? 's-warn' : 's-bad', bad = rs.filter(r => r.decision !== 'مقبول').length;
+    const b = document.createElement('button'); b.className = 'st ' + cls; Object.entries(extra || {}).forEach(([k, v]) => b.dataset[k] = v);
+    b.innerHTML = `<span class="sti">${LI(ico)}</span><span class="n num"></span><span class="t">${name}</span><span class="c num"><b>${rs.length}</b> جولة${bad ? ` · <span style="color:var(--bad)">${bad} بمشاكل</span>` : ''}</span>`; return b; };
+  const pr = line.querySelector('[data-st="print"]'); if(pr){ const P = T.filter(r => r.stage === 'print');
+    const a = tile('بروفا الطباعة', STAGE_ICON.print, P.filter(r => (r.type || 'بدء تشغيل') === 'بدء تشغيل'), {pst: 'بدء تشغيل'}), f = tile('الطباعة النهائية', STAGE_ICON.print, P.filter(r => r.type === 'فحص نهائي'), {pst: 'فحص نهائي'}); pr.replaceWith(a); a.after(f);
+    [a, f].forEach(b => b.onclick = () => { if(!SP) newSP(); SP.type = b.dataset.pst; SP.lockType = true; go('printsimple'); }); }
+  line.querySelectorAll('.st').forEach((b, i) => { const n = b.querySelector('.n'); if(n) n.textContent = i + 1; });
+  const P = T.filter(r => r.stage !== 'design'), probs = P.filter(r => !r.noProb && r.decision !== 'مقبول' || String(r.notes || '').trim()), pend = hqPending().length, nc = ncrAwait().length, insp = [...new Set(P.map(r => r.inspector).filter(Boolean))];
+  const [a1, b1] = sh === 'صباحية' ? [8, 16] : [16, 24], prog = Math.max(0, Math.min(100, Math.round(((now.getHours() + now.getMinutes() / 60) - a1) * 100 / (b1 - a1))));
+  const hero = document.createElement('div'); hero.className = 'ihero';
+  hero.innerHTML = `<div class="ihl"><span class="ishift">${sh === 'صباحية' ? '☀️ الوردية الصباحية 08:00 – 16:00' : '🌙 الوردية المسائية 16:00 – 24:00'}</span><h1>${now.getHours() < 12 ? 'صباح الخير' : 'مساء الخير'} ${esc(String(CUR.name || 'ندى').replace(/^م\.\s*/, '').split(' ')[0])} 👋</h1><p>👥 ${insp.length ? 'المراقبون اليوم: ' + esc(insp.join('، ')) : 'لم تُسجل جولات اليوم بعد.'}</p><div class="iprog"><div><i style="width:${prog}%"></i></div><span>مضى ${prog}% من الوردية</span></div></div>
+    <div class="ihk"><div class="ihc"><b class="num">${P.length}</b><span>جولات القسم اليوم</span></div><div class="ihc hot"><b class="num">${probs.length}</b><span>مشكلة اليوم</span></div><button class="ihc go" data-p47go="holddec"><b class="num">${pend}</b><span>محجور بانتظار قرارك</span></button><button class="ihc go" data-p47go="ncr"><b class="num">${nc}</b><span>NCR بانتظارك</span></button><button class="ihc go" data-p47go="insum"><b>📋</b><span>ملخص المراقبين</span></button></div>`;
+  const ph = main.querySelector('.pagehead'); (ph || line).before(hero);
+  /* جدول جولات اليوم يُطوى */
+  const row = [...main.children].find(e => e.classList.contains('row') && /جولات اليوم/.test(e.textContent)), tw = row && row.nextElementSibling && row.nextElementSibling.classList.contains('tw') ? row.nextElementSibling : null;
+  if(row && tw){ const det = document.createElement('details'); det.className = 'sdbox'; det.style.marginTop = '14px'; det.innerHTML = `<summary>📋 جدول جولات اليوم (${T.length}) – فتح وتعديل وطباعة</summary>`; row.before(det); det.appendChild(row); det.appendChild(tw); const m = det.nextElementSibling; if(m && m.tagName === 'P' && m.classList.contains('muted')) det.appendChild(m); } }
+{ const _r = render; render = function(){ const r = _r.apply(this, arguments); try{ p47Prod(); p47Nav(); }catch(e){ console.warn(e); } return r; }; }
+{ const _rt = renderTabs; renderTabs = function(){ const r = _rt.apply(this, arguments); p47Nav(); return r; }; }
+
+/* كل الحسابات: تظهر كل الحسابات المسجلة في الخادم */
+let P47_USERS = null, P47_UL = false;
+async function p47LoadUsers(){ if(P47_UL || !serverMode || !isNada() || VIEWAS) return; P47_UL = true; try{ const l = await usersApi('get'); if(Array.isArray(l)) { P47_USERS = l; if(view === 'accts') rerender(); } }catch(e){ P47_UL = false; } }
+{ const _h = VIEWS.accts.html; VIEWS.accts.html = function(){ p47LoadUsers(); const keep = S.settings.users, m = {};
+    (keep || []).forEach(u => { if(u && u.name) m[normName(u.name)] = {...u}; }); (P47_USERS || []).forEach(u => { if(u && u.name){ const k = normName(u.name); m[k] = {...(m[k] || {}), name: u.name, role: u.role, title: u.title || (m[k] || {}).title || '', active: u.active !== false}; } });
+    const all = Object.values(m).filter(u => !sameP(u.name, (CUR && CUR.name) || '')).sort((a, b) => ['inspector', 'production', 'viewer', 'checker', 'manager'].indexOf(a.role) - ['inspector', 'production', 'viewer', 'checker', 'manager'].indexOf(b.role) || String(a.name).localeCompare(String(b.name), 'ar'));
+    S.settings.users = all.map(u => ({...u, role: u.role === 'manager' ? 'manager2' : u.role})); let h; try{ h = _h.apply(this, arguments); } finally { S.settings.users = keep; }
+    all.filter(u => u.active === false).forEach(u => { h = h.replace(`<b>${esc(u.name)}</b>`, `<b>${esc(u.name)}</b><span class="ncrst late">موقوف</span>`); });
+    return h.replace('<p>ملخص عمل كل حساب', `<p>${all.length} حساب · ملخص عمل كل حساب`); }; }
+ROLE_AR.manager2 = 'مدير';
+
+
+/* ===== [PHASE48] المحجور يفتح حجزاً فقط · إغلاق المحدد · المواد الأولية: 3 قرارات، رقم مناقلة المستودع، توليد حالة عدم مطابقة اختيارياً · التقرير المفصّل: الكمية والمفحوص والملاحظات ===== */
+['coq', 'scrap', 'scrapord', 'deck'].forEach(v => { if(!P41_NADA.includes(v)) P41_NADA.push(v); });
+/* سجل المحجوز: تحديد وإغلاق جماعي */
+let HSEL = new Set(), HBULK = '';
+function p48Hold(){ if(view !== 'hold') return; const main = $('#main'); if(!main || main.dataset.p48) return; main.dataset.p48 = 1;
+  const p = main.querySelector('p.muted'); if(p && /محجور أو مرفوض/.test(p.textContent)) p.textContent = 'يُفتح تلقائياً من الجولات بقرار "محجور بانتظار قرار مدير القسم" · القرار خلال 48 ساعة';
+  const open = [...main.querySelectorAll('[data-close]')].map(b => b.dataset.close); HSEL = new Set([...HSEL].filter(x => open.includes(x)));
+  main.querySelectorAll('[data-close]').forEach(b => { const card = b.closest('.panel'), no = b.dataset.close, row = card && card.querySelector('.row'); if(!row) return;
+    const l = document.createElement('label'); l.className = 'hsel'; l.innerHTML = `<input type="checkbox" data-hsel="${esc(no)}" ${HSEL.has(no) ? 'checked' : ''}>`; row.prepend(l); if(HSEL.has(no)) card.classList.add('hon'); });
+  if(!open.length || isViewer()) return;
+  const bar = document.createElement('div'); bar.className = 'panel hbar';
+  bar.innerHTML = `<label class="hsel"><input type="checkbox" id="hAll" ${HSEL.size && HSEL.size === open.length ? 'checked' : ''}> <b>تحديد الكل (${open.length})</b></label><span class="muted" id="hCnt">${HSEL.size} محدد</span>
+    <label class="f" style="margin:0;display:flex;gap:6px;align-items:center">القرار للمحددة التي بلا قرار<select id="hBulk"><option value=""></option>${opt(['فرز 100%', 'إعادة تشغيل', 'تنازل', 'إتلاف', 'تحرير بدون فرز'], HBULK)}</select></label><button class="btn k" id="hClose" ${HSEL.size ? '' : 'disabled'}>✓ إغلاق المحدد</button>`;
+  const hf = main.querySelector('#hf'); (hf || main.firstElementChild).after(bar);
+  const upd = () => { $('#hCnt').textContent = HSEL.size + ' محدد'; $('#hClose').disabled = !HSEL.size; $('#hAll').checked = HSEL.size === open.length; };
+  main.querySelectorAll('[data-hsel]').forEach(c => c.onchange = () => { c.checked ? HSEL.add(c.dataset.hsel) : HSEL.delete(c.dataset.hsel); c.closest('.panel').classList.toggle('hon', c.checked); upd(); });
+  $('#hAll').onchange = e => { HSEL = e.target.checked ? new Set(open) : new Set(); main.querySelectorAll('[data-hsel]').forEach(c => { c.checked = e.target.checked; c.closest('.panel').classList.toggle('hon', c.checked); }); upd(); };
+  $('#hBulk').onchange = e => HBULK = e.target.value;
+  $('#hClose').onclick = () => { const L = S.holds.filter(h => HSEL.has(h.no) && h.status !== 'مغلق'), miss = L.filter(h => !h.disposition && !HBULK);
+    if(miss.length === L.length){ toast('اختاري "القرار للمحددة التي بلا قرار" – المحددة كلها بلا قرار'); return; }
+    ask(`إغلاق ${L.length - miss.length} حجز${miss.length ? ` (يُترك ${miss.length} بلا قرار مفتوحاً)` : ''}؟`, 'إغلاق المحدد', () => { let n = 0; L.forEach(h => { if(!h.disposition && HBULK) h.disposition = HBULK; if(!h.disposition) return; h.status = 'مغلق'; h.closed = todayStr(); h.closedBy = (CUR && CUR.name) || ''; n++; HSEL.delete(h.no); });
+      save(); render(); toast(`✅ أُغلق ${n} حجز`); }); }; }
+{ const _r = render; render = function(){ const m = $('#main'); if(m) delete m.dataset.p48; const r = _r.apply(this, arguments); try{ const mm = $('#main'); if(mm) delete mm.dataset.p48; p48Hold(); }catch(e){ console.warn(e); } return r; }; }
+document.head.insertAdjacentHTML('beforeend', `<style>.hsel{display:inline-flex;align-items:center;gap:6px;cursor:pointer}.hsel input{width:22px;height:22px;accent-color:#1F7A5A}.hbar{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-top:10px;position:sticky;top:70px;z-index:5;border:1.5px solid #1F7A5A}.panel.hon{outline:2px solid #1F7A5A}.matncr{display:flex;gap:10px;align-items:center;margin-top:12px;padding:12px;border:1.5px dashed #B83227;border-radius:10px;background:#FFF7F6;font-weight:700;cursor:pointer}.matncr input{width:22px;height:22px}</style>`);
+
+/* المواد الأولية: حالة عدم المطابقة بالاختيار */
+function matMakeNCR(m){ if(!m || m.ncr) return m && m.ncr; const n = {id: uid(), v2: 1, no: seqNo('NCR', S.ncrs), date: todayStr(), time: timeStr(), by: (CUR && CUR.name) || S.settings.inspector || '', sentAt: p40Now(), source: 'مادة واردة', concDept: '', finder: m.inspector || (CUR && CUR.name) || '',
+    tgtType: 'sup', tgt: m.supplier || '', order: '', noOrder: true, items: [], matName: m.name || '', matCode: m.code || '', transfer: m.transfer || '', qty: `${m.qty || ''} ${m.unit || ''}`.trim(),
+    desc: `${m.decision === 'مرفوض' ? 'رفض' : 'قبول بملاحظة'} ${m.name || ''}${m.code ? ' (' + m.code + ')' : ''} – الكمية ${m.qty || ''} ${m.unit || ''} – المفحوص ${m.inspQty || ''} ${m.unit || ''}${m.notes ? ' – ' + m.notes : ''}`, cls: m.decision === 'مرفوض' ? 'حرج' : 'رئيسي', link: m.no || '', actions: [], whys: ['', '', '', '', '']};
+  if(isNada()) n.mgrAt = ''; S.ncrs.push(n); m.ncr = n.no; return n.no; }
+{ const _h = VIEWS.matform.html; VIEWS.matform.html = function(){ let h = _h.apply(this, arguments); if(!M) return h; const ro = !!(M.id && !isMgr()) || (typeof isViewer === 'function' && isViewer()), dis = ro ? 'disabled' : '';
+    h = h.replace(/(<label class="f"><span>الكمية المفحوصة[\s\S]*?<\/div><\/label>)/, `$1<label class="f">رقم مناقلة المستودع <small class="muted">(اختياري)</small><input type="text" id="mTr" value="${esc(M.transfer || '')}" ${dis} inputmode="numeric"></label>`);
+    h = h.replace(/<div class="banner warn" style="margin-top:12px">عند الحفظ: تُفتح حالة عدم مطابقة[\s\S]*?<\/div>/, '');
+    const need = ['مرفوض', 'مقبول بملاحظة'].includes(M.decision);
+    if(need && !M.ncr && !ro) h = h.replace('<div class="sticky-save">', `<label class="matncr"><input type="checkbox" id="mGenN" ${M.__genN ? 'checked' : ''}> 📄 توليد حالة عدم مطابقة لهذه المادة عند الحفظ <small class="muted" style="font-weight:500">(اختياري – تُرسل لمديرة القسم لتكملها)</small></label><div class="sticky-save">`);
+    if(M.ncr){ const n = S.ncrs.find(x => x.no === M.ncr); h = h.replace('<div class="sticky-save">', `<div class="panel" style="margin-top:12px"><b>📄 حالة عدم المطابقة:</b> ${n ? `<a href="#" data-mncr="${esc(String(n.id))}" class="num">${esc(n.no)}</a> · ${esc(ncrSt(n)[0])}` : esc(M.ncr)}</div><div class="sticky-save">`); }
+    else if(need && M.id && ro) h = h.replace('<div class="sticky-save">', '<div class="sticky-save"><button class="btn d" id="mGenNow">📄 توليد حالة عدم مطابقة</button>');
+    else if(need && M.id && !ro) h = h.replace('<button class="btn" id="lblM">', '<button class="btn d" id="mGenNow">📄 توليد حالة عدم مطابقة</button><button class="btn" id="lblM">');
+    return h; }; }
+{ const _b = VIEWS.matform.bind; VIEWS.matform.bind = function(){ const r = _b.apply(this, arguments); if(!M) return r;
+    const tr = $('#mTr'); if(tr) tr.oninput = () => M.transfer = tr.value.trim();
+    const g = $('#mGenN'); if(g) g.onchange = () => M.__genN = g.checked;
+    $$('[data-mncr]').forEach(a => a.onclick = e => { e.preventDefault(); N2 = null; go('ncrform', {id: a.dataset.mncr}); });
+    const gn = $('#mGenNow'); if(gn) gn.onclick = () => ask('توليد حالة عدم مطابقة لهذه المادة؟', 'توليد', () => { const m = S.mats.find(x => String(x.id) === String(M.id)); if(!m) return; const no = matMakeNCR(m); save(); const n = S.ncrs.find(x => x.no === no); M = null; toast(`✅ ${no} – أُرسلت لمديرة القسم`); N2 = null; if(n) go('ncrform', {id: n.id}); });
+    const sv = $('#saveM'); if(sv){ const _o = sv.onclick; sv.onclick = () => { const gen = !!M.__genN && ['مرفوض', 'مقبول بملاحظة'].includes(M.decision), id0 = M.id, n0 = S.mats.length; delete M.__genN; _o();
+        if(gen){ const m = id0 ? S.mats.find(x => String(x.id) === String(id0)) : (S.mats.length > n0 ? S.mats[S.mats.length - 1] : null); if(m && !m.ncr){ const no = matMakeNCR(m); save(); toast(`✅ حُفظ الفحص ${m.no} – وتولّدت ${no}`); } } }; }
+    return r; }; }
+/* PDF الفحص: رقم مناقلة المستودع */
+{ const _p = pdfMat; pdfMat = function(id){ const m = S.mats.find(x => String(x.id) === String(id)); if(!m || matOld(m) || !m.transfer) return _p(id); const _pd = printDoc;
+    printDoc = function(t, b){ printDoc = _pd; return _pd.call(this, t, String(b).replace(/(<tr><th>المورد<\/th>)/, `<tr><th>رقم مناقلة المستودع</th><td>${esc(m.transfer)}</td></tr>$1`)); }; try{ return _p(id); } finally { printDoc = _pd; } }; }
+
+
+/* صندوق طباعة اللصاقة: يُطوى بلمسة على عنوانه حتى لا يغطي زر الحفظ */
+let DLB_MIN = false;
+{ const _q = dlQueue; dlQueue = function(r){ DLB_MIN = false; return _q.apply(this, arguments); }; }
+{ const _b = p45Bar; p45Bar = function(){ _b.apply(this, arguments); const el = document.getElementById('dlBar'); if(!el) return; el.classList.toggle('min', DLB_MIN); const hd = el.querySelector('.dlbh b'); if(hd){ hd.style.cursor = 'pointer'; hd.textContent = DLB_MIN ? `🏷 لصاقات (${P45_RECENT.length}) ▴` : '🏷 طباعة لصاقة الجولة ▾'; hd.onclick = () => { DLB_MIN = !DLB_MIN; p45Bar(); }; } }; }
+document.head.insertAdjacentHTML('beforeend', `<style>#dlBar.min{width:auto;max-width:none}#dlBar.min .dlbi{display:none}#dlBar.min .dlbh{padding:0}@media (max-width:700px){#dlBar{bottom:74px;left:8px}}</style>`);
+
+
+/* ===== [PHASE49] كل التقارير: مستطيل "إعداد واعتماد القسم · اطّلاع واعتماد المدير التنفيذي · اللوغو" بعرض الورقة · بلا مساحة رمادية عند الطباعة ===== */
+document.head.insertAdjacentHTML('beforeend', `<style>
+table.fsg{display:table!important;width:100%!important;border-collapse:collapse;margin-top:16px;page-break-inside:avoid;table-layout:fixed}
+table.fsg td{border:1px solid #9AA6B2;height:78px;vertical-align:top;padding:7px 10px;font-size:12.5px;color:#17212B;background:#fff}
+table.fsg td.a,table.fsg td.b{width:40%}table.fsg td b{display:block;margin-bottom:4px;font-size:13px}table.fsg td span{display:block;color:#5B6B7A;font-size:11px;margin-top:2px}
+table.fsg td.lg{width:20%;text-align:center;vertical-align:middle}table.fsg td.lg img{width:54px;display:block;margin:0 auto 4px}table.fsg td.lg span{color:#17212B;font-size:10.5px}
+@media print{html,body,.app,main,#main,.rep,.dsum,.dsum .pg,#printArea,.pdoc{background:#fff!important;min-height:0!important;box-shadow:none!important}
+  .dsum .pg{width:auto!important;padding:0!important;page-break-after:auto!important}.dsum .t td:first-child{white-space:normal}
+  #sndBar,#dlBar,#toast,.toast{display:none!important}
+  .dsum .dsB,.dsum table.t tr,.dsum .dsTw,table.fsg{page-break-inside:avoid}}
+.dsum table.t th{padding:4px 5px!important;font-size:10.5px!important;background:#17212B!important;color:#fff!important}.dsum table.t td{padding:2px 5px!important;font-size:10.5px!important;height:auto!important}
+.dsum h3{margin:8px 0 4px!important}
+</style>`);
+function p49Sig(o){ o = o || {}; return `<table class="fsg"><tr><td class="a"><b>إعداد واعتماد القسم</b>${esc(o.manager || S.settings.manager || 'ندى حجازي')}<span>مدير قسم ضبط الجودة</span></td><td class="b"><b>اطّلاع واعتماد</b>${esc(o.ceo || S.settings.ceo || 'أيهم سكرية')}<span>المدير التنفيذي</span></td><td class="lg"><img src="${LOGO}" alt=""><span>F.E.T Packaging</span></td></tr></table>`; }
+/* التقرير اليومي المفصّل */
+{ const _rd = renderDaily; renderDaily = function(s, opts){ return _rd.apply(this, arguments).replace(/<table class="sg">[\s\S]*?<\/table>/, p49Sig(opts)); }; }
+/* التقرير اليومي الملخص */
+{ const _rs = renderDailySum; renderDailySum = function(d, opts){ return _rs.apply(this, arguments).replace(/<table class="sg">[\s\S]*?<\/table>/, p49Sig(opts)); }; }
+/* كل تقارير PDF والطباعة (عدا تقرير حالة عدم المطابقة الذي له مستطيل الإغلاق الخاص به) */
+{ const _p = printDoc; printDoc = function(title, body){ const isN = /^تقرير حالة عدم مطابقة/.test(String(title || '')); const b = isN || /class="(fsg|sgx|sg)"/.test(String(body || '')) ? body : String(body || '') + p49Sig(); return _p.call(this, title, b); }; }
+
+
+/* ===== [PHASE50] فتح جولة مسجلة: معلومات الجولة فقط · فحص المنتج النهائي: القياسات في التحرير الأول فقط + ملاحظات التحرير الأول · جولات الإنتاج لندى بهيكلية أحمد ===== */
+document.head.insertAdjacentHTML('beforeend', `<style>
+.rvw{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:2px 16px}.rvw div{padding:8px 0;border-bottom:1px solid #EEF1F4}.rvw span{display:block;color:#5B6B7A;font-size:12.5px}.rvw b{font-size:15px}
+.rvbig{white-space:pre-wrap;background:#F6F8FA;border-radius:10px;padding:10px 12px;margin-top:6px}
+.rvact{display:flex;gap:8px;flex-wrap:wrap}
+.rl1{border:1.5px solid #9BC9B4;background:#F3FBF7;border-radius:12px;padding:12px;margin:10px 0}.rl1 h4{margin:0 0 6px}.rl1 .mv{display:flex;gap:8px;flex-wrap:wrap}.rl1 .mv span{background:#fff;border:1px solid #CFE8DC;border-radius:8px;padding:4px 10px}
+.rl1n{border:1.5px solid #F3C98B;background:#FFFBF2;border-radius:12px;padding:12px;margin:10px 0}.rl1n h4{margin:0 0 6px}
+</style>`);
+/* ١) فتح جولة مسجلة: عرض معلومات الجولة فقط، وزر للتعديل */
+let P50_EDIT = false;
+{ const _or = openRound; openRound = function(id, from){ if(P50_EDIT){ P50_EDIT = false; return _or.apply(this, arguments); } const r = S.rounds.find(x => String(x.id) === String(id)); if(!r) return; go('rview', {id: r.id, from: from || view}); }; }
+const p50Can = r => !VIEWAS && !(typeof isViewer === 'function' && isViewer()) && (isNada() || isMgr() || sameP(r.inspector || '', (CUR && CUR.name) || S.settings.inspector || ''));
+const OPREP_L = {yes: 'نعم – اكتشفها وأبلغ', no: 'لا – لم ينتبه أو لم يبلغ'};
+VIEWS.rview = {
+  html(){ const r = S.rounds.find(x => String(x.id) === String((arg || {}).id)); if(!r) return '<p>الجولة غير موجودة.</p><button class="btn" id="rvB">رجوع</button>';
+    const s = stageBy(r.stage), it = itemsOf(r), er = (ordRows((it[0] || {}).order || r.order) || [])[0] || {}, rel = (r.extra || {}).rel, d = r.hq && r.hq.final ? r.hq.final : r.decision;
+    const desc = [drDefs(r).join('، '), String(r.notes || '').trim()].filter(Boolean).join('\n'), ops = (r.operators && r.operators.length ? r.operators : [r.operator]).filter(Boolean).join('، ');
+    const kv2 = L => `<div class="rvw">${L.filter(x => x[1] !== undefined && x[1] !== null && String(x[1]).trim() !== '').map(([k, v, raw]) => `<div><span>${esc(k)}</span><b>${raw ? v : esc(v)}</b></div>`).join('')}</div>`;
+    const meas = r.stage === 'final' ? RL_MEAS.map(([k, l, u]) => (r.vals || {})[k] !== undefined && (r.vals || {})[k] !== '' ? [l, `${r.vals[k]} ${u}`] : null).filter(Boolean) : [];
+    return `<div class="pagehead"><div><h1 style="margin:0">${esc(s.name)}${r.machine && r.machine !== '—' ? ' · ' + esc(r.machine) : ''} <span class="muted num" style="font-size:16px">${esc(r.no || '')}</span></h1><p>${esc(r.date || '')} ${esc(r.time || '')} · ${esc(r.shift || '')} · ${esc(r.inspector || '')}</p></div>
+      <div class="rvact noprint">${p50Can(r) ? `<button class="btn p" id="rvEd">✏️ تعديل الجولة</button>` : ''}<button class="btn" data-dlr="${esc(String(r.id))}">🏷 لصاقة</button><button class="btn" data-pdfr="${esc(String(r.id))}">PDF</button><button class="btn" id="rvB">رجوع</button></div></div>
+      <div class="panel"><h3 style="margin-top:0">الطلبية</h3>${kv2([['الطلبية', ordersLabel(r)], ['المنتج', itemsLabel(r)], ['الزبون', er.customer || ''], ['نوع الجولة', r.stage === 'print' ? (r.type === 'فحص نهائي' ? 'الطباعة النهائية' : 'بروفا الطباعة') : (r.type && r.type !== 'جولة' ? r.type : '')], ['الصندوق / الكرتونة', typeof bxCt === 'function' ? bxCt(r) : r.box], ['رقم الرول', r.roll], ['العمال', ops]])}</div>
+      <div class="panel"><h3 style="margin-top:0">القرار</h3>${kv2([['القرار', r.noProb ? 'لا يوجد مشاكل' : decLbl(r.decision || '')], ['التصنيف', r.noProb ? '' : (r.cls || P40_CLS[d] || (r.decision === 'محجور' ? 'بانتظار قرار مدير القسم' : ''))], ['قرار مدير القسم', r.hq ? (r.hq.final ? `${decLbl(r.hq.final)} · ${r.hq.dAt || ''}${r.hq.note ? ' · ' + r.hq.note : ''}` : 'بانتظار القرار') : ''], ['اطلاع المراقب على القرار', r.hq && r.hq.final ? (r.hq.ack ? '✓ ' + r.hq.ack : 'لم يطّلع بعد') : ''], ['الحجز', r.hold], ['حالة عدم المطابقة', r.ncr]])}
+        ${desc ? `<div style="margin-top:8px"><span class="muted">وصف العيب</span><div class="rvbig">${esc(desc)}</div></div>` : ''}
+        ${kv2([['كمية العيب', r.dq ? `${r.dq} ${duLbl(r.du)}` : (r.decision === 'محجور' ? r.qty : '')], ['الإجراء المتخذ', r.action], ['المسبب', r.causeUnknown ? 'غير معروف' : (r.causes || []).map(p40CzLabel).join('، ')], ['هل اكتشف العامل المشكلة وأبلغ؟', OPREP_L[r.opReported] || '']])}</div>
+      ${rel || meas.length || (r.extra || {}).measFrom ? `<div class="panel"><h3 style="margin-top:0">تحرير المنتج النهائي</h3>${kv2([['رقم التحرير', rel ? rel.seq : ''], ['انتهى الإنتاج؟', rel ? (rel.finished === 'yes' ? 'نعم – تحرير نهائي' : 'لا – تحرير جزئي') : ''], ['الكراتين السليمة', rel ? rel.good : ''], ['الكراتين المعيبة', rel && rel.bad ? rel.bad : ''], ['توضيح العيب', rel ? rel.badNote : ''], ['الكراتين المعاينة', rel ? (rel.cartons || []).map(c => c.no + (c.st === 'bad' ? ' (معيب: ' + c.note + ')' : '')).join('، ') : ''], ...meas, ['القياسات', (r.extra || {}).measFrom ? 'سُجّلت في التحرير الأول ' + r.extra.measFrom : '']])}</div>` : ''}
+      ${(r.lbl || []).length || r.editedBy ? `<p class="muted" style="font-size:12.5px">${(r.lbl || []).length ? `🏷 طُبعت اللصاقة ${r.lbl.length} مرة · ` : ''}${r.editedBy ? 'آخر تعديل: ' + esc(r.editedBy) + ' ' + esc(String(r.editedAt || '').slice(0, 16).replace('T', ' ')) : ''}</p>` : ''}`; },
+  bind(){ const id = (arg || {}).id, from = (arg || {}).from; $('#rvB').onclick = () => go(from && from !== 'rview' ? from : 'prod');
+    const e = $('#rvEd'); if(e) e.onclick = () => { P50_EDIT = true; openRound(id, from); }; }
+};
+PAGE.rview = ['جولات الإنتاج', 'تفاصيل الجولة']; PARENT.rview = 'prod'; NAV_OF.rview = 'prod'; ICONS.rview = LI('file');
+if(typeof INSPECTOR_VIEWS !== 'undefined' && !INSPECTOR_VIEWS.includes('rview')) INSPECTOR_VIEWS.push('rview');
+
+/* ٢) فحص المنتج النهائي: القياسات في أول تحرير للطلبية فقط · ملاحظات التحرير الأول */
+{ const _h = VIEWS.release.html; VIEWS.release.html = function(){ let h = _h.apply(this, arguments); const f = RL, it = f && f.items[0]; if(!it) return h; const prev = relOf(String(it.order)); if(!prev.length) return h;
+    const r1 = prev[0], x1 = (r1.extra || {}).rel || {}, mv = RL_MEAS.map(([k, l, u]) => (r1.vals || {})[k] !== undefined && r1.vals[k] !== '' ? `<span>${l}: <b class="num">${esc(String(r1.vals[k]))}</b> ${u}</span>` : '').join('');
+    const box = `<div class="rl1"><h4>✓ تم تسجيل القياسات من التحرير الأول</h4><div class="muted" style="font-size:13px;margin-bottom:6px">${esc(r1.no || '')} · ${esc(r1.date)} ${esc(r1.time)} · ${esc(r1.inspector || '')}</div>${mv ? `<div class="mv">${mv}</div>` : ''}</div>`;
+    const defs = [...(r1.defects || []), x1.badNote ? 'توضيح العيب: ' + x1.badNote : ''].filter(Boolean), nts = [r1.notes ? 'ملاحظات: ' + r1.notes : '', r1.action ? 'الإجراء المتخذ: ' + r1.action : ''].filter(Boolean);
+    const notes = `<div class="rl1n"><h4>📝 ملاحظات التحرير الأول</h4>${defs.length || nts.length ? `${defs.length ? `<div><b>العيوب التي ظهرت:</b><ul style="margin:4px 0">${defs.map(x => `<li>${esc(x)}</li>`).join('')}</ul></div>` : ''}${nts.map(x => `<div>${esc(x)}</div>`).join('')}<div class="muted" style="font-size:12.5px;margin-top:4px">قرار التحرير الأول: ${esc(decLbl(r1.decision || ''))}</div>` : '<p class="muted" style="margin:0">لا ملاحظات ولا عيوب في التحرير الأول.</p>'}</div>`;
+    return h.replace(/<h3 class="mh3">القياسات<\/h3>[\s\S]*?(?=<h3 class="mh3">القرار)/, box + notes); }; }
+
+/* ٣) جولات الإنتاج لندى: نفس هيكلية أحمد (بطاقة الترحيب، ملخص جولات اليوم، المراحل) + التصميم */
+p47Prod = function(){ if(!isNada() || VIEWAS || view !== 'prod') return; const main = $('#main'), line = $('#main .line'); if(!line || line.dataset.p47) return; line.dataset.p47 = 1;
+  const t = todayStr(), T = S.rounds.filter(r => r.date === t), now = new Date();
+  const tile = (name, ico, rs, extra) => { const last = rs[rs.length - 1], cls = !last ? '' : last.decision === 'مقبول' ? 's-ok' : last.decision === 'مقبول بملاحظة' ? 's-warn' : 's-bad', bad = rs.filter(r => r.decision !== 'مقبول').length;
+    const b = document.createElement('button'); b.className = 'st ' + cls; Object.entries(extra || {}).forEach(([k, v]) => b.dataset[k] = v);
+    b.innerHTML = `<span class="sti">${LI(ico)}</span><span class="n num"></span><span class="t">${name}</span><span class="c num"><b>${rs.length}</b> جولة${bad ? ` · <span style="color:var(--bad)">${bad} بمشاكل</span>` : ''}</span>`; return b; };
+  const pr = line.querySelector('[data-st="print"]'); if(pr){ const P = T.filter(r => r.stage === 'print');
+    const a = tile('بروفا الطباعة', STAGE_ICON.print, P.filter(r => (r.type || 'بدء تشغيل') === 'بدء تشغيل'), {pst: 'بدء تشغيل'}), f = tile('الطباعة النهائية', STAGE_ICON.print, P.filter(r => r.type === 'فحص نهائي'), {pst: 'فحص نهائي'}); pr.replaceWith(a); a.after(f);
+    [a, f].forEach(b => b.onclick = () => { if(!SP) newSP(); SP.type = b.dataset.pst; SP.lockType = true; go('printsimple'); }); }
+  line.querySelectorAll('.st').forEach((b, i) => { const n = b.querySelector('.n'); if(n) n.textContent = i + 1; });
+  const R = T.filter(r => r.stage !== 'design'), bad = R.filter(r => r.decision && r.decision !== 'مقبول'), wk = S.rounds.filter(r => r.date >= addDays(t, -6) && r.stage !== 'design'), caught = wk.filter(r => r.decision && r.decision !== 'مقبول').length, pend = hqPending().length, nc = ncrAwait().length;
+  const first = String(CUR.name || 'ندى').replace(/^م\.\s*/, '').trim().split(/\s+/)[0], hi = now.getHours() < 12 ? 'صباح الخير' : 'مساء الخير';
+  const msg = pend ? `⏳ ${pend} جولة محجورة بانتظار قرارك` : nc ? `📄 ${nc} حالة عدم مطابقة بانتظار استكمالك` : caught ? `🛡 اكتشف فريق الجودة ${caught} مشكلة هذا الأسبوع قبل أن تصل للزبون` : '💡 كل عيب يُكتشف اليوم يوفّر ساعات من إعادة العمل';
+  main.querySelectorAll('.ihero').forEach(x => x.remove());
+  main.insertAdjacentHTML('afterbegin', `<div class="motc"><div class="motc1"><span>${hi} يا ${esc(first)} 👋</span><b>${msg}</b></div>
+    <div class="motc2"><div><b class="num">${R.length}</b><span>جولة اليوم</span></div><div><b class="num">${wk.length}</b><span>هذا الأسبوع</span></div><div><b class="num">${bad.length}</b><span>مشكلة اليوم</span></div><div><b class="num">${pend}</b><span>محجور بانتظارك</span></div></div>
+    <button class="btn sm" data-p47go="${pend ? 'holddec' : 'insum'}">${pend ? 'قرارات المحجوز ›' : 'ملخص المراقبين ›'}</button></div>`);
+  const by = {}; R.forEach(r => { by[r.stage] = (by[r.stage] || 0) + 1; });
+  line.insertAdjacentHTML('beforebegin', `<div class="panel ahsum"><div class="row" style="justify-content:space-between;align-items:center"><h3 style="margin:0">📋 ملخص جولات اليوم</h3><button class="btn sm" data-p47go="insum">كل ما عمله المراقبون اليوم ←</button><span class="muted num">${esc(t)}</span></div>
+    <div class="ahk"><div><b class="num">${R.length}</b><span>جولة</span></div><div class="${bad.length ? 'w' : ''}"><b class="num">${bad.length}</b><span>بمشاكل</span></div><div><b class="num">${R.length ? Math.round((R.length - bad.length) * 100 / R.length) : 0}%</b><span>سليمة</span></div><div><b class="num">${R.length ? esc(R[R.length - 1].time || '') : '—'}</b><span>آخر جولة</span></div></div>
+    ${Object.keys(by).length ? `<div class="ahst">${Object.entries(by).map(([k, n]) => `<span>${esc(stageBy(k).name)}: <b>${n}</b></span>`).join('')}</div>` : '<p class="muted" style="margin:6px 0 0">لا جولات بعد اليوم.</p>'}
+    ${bad.length ? `<details class="sdbox"><summary>⚠ الجولات التي فيها مشاكل (${bad.length})</summary>${bad.slice().reverse().map(r => `<div class="bwr" data-rvo="${esc(String(r.id))}" style="cursor:pointer"><span class="num">${esc(r.time)}</span><span><b>${esc(stageBy(r.stage).name)}</b> ${esc(r.machine || '')}</span><span>${esc(ordersLabel(r))} · ${esc(decLbl(r.decision))} · ${esc(r.inspector || '')}</span><span></span></div>`).join('')}</details>` : ''}</div>`);
+  main.querySelectorAll('[data-rvo]').forEach(x => x.onclick = () => openRound(x.dataset.rvo, 'prod'));
+  /* بلا جدول جولات اليوم (متل أحمد) – الجولات من الملخص أو أرشيف الجولات */
+  [...main.children].forEach(e => { if((e.tagName === 'DETAILS' && /جدول جولات اليوم/.test(e.textContent)) || e.classList.contains('mini-motive') || (e.classList.contains('row') && /جولات اليوم/.test(e.textContent)) || e.classList.contains('tw') || (e.tagName === 'P' && /اضغط "فتح"/.test(e.textContent))) e.remove(); }); };
 
 startApp().catch(err => { console.error(err); if(typeof showFatal === 'function') showFatal((err && err.message) + '\n' + String(err && err.stack || '').split('\n').slice(0,4).join('\n'), true); });
 
