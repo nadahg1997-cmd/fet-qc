@@ -1,6 +1,6 @@
 // Service worker: يجعل البرنامج يفتح ويعمل دون إنترنت
 // الصفحة الرئيسية: من الإنترنت أولاً (لأخذ آخر تحديث)، ومن النسخة المحفوظة فقط عند انقطاع الإنترنت
-const CACHE = 'fet-qc-v21.65';
+const CACHE = 'fet-qc-v21.67';
 const CORE = ['./', './index.html', './config.js', './manifest.webmanifest', './icon-192.png', './icon-512.png', './xlsx.full.min.js'];
 /* التثبيت: تُجلب الملفات من الخادم مباشرة (لا من ذاكرة المتصفح) حتى لا تُحفظ نسخة قديمة */
 self.addEventListener('install', e => { e.waitUntil(caches.open(CACHE).then(c => Promise.all(CORE.map(u => fetch(new Request(u, {cache: 'reload'})).then(r => { if(r && r.ok) return c.put(u, r); }).catch(() => null)))).then(() => self.skipWaiting())); });
