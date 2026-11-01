@@ -1,19 +1,22 @@
 // Service worker: يجعل البرنامج يفتح ويعمل دون إنترنت
-// الصفحة الرئيسية: من الإنترنت أولاً (لأخذ آخر تحديث)، ومن النسخة المحفوظة عند انقطاعه
-const CACHE = 'fet-qc-v21.62';
+// الصفحة الرئيسية: من الإنترنت أولاً (لأخذ آخر تحديث)، ومن النسخة المحفوظة فقط عند انقطاع الإنترنت
+const CACHE = 'fet-qc-v21.63';
 const CORE = ['./', './index.html', './config.js', './manifest.webmanifest', './icon-192.png', './icon-512.png', './xlsx.full.min.js'];
-self.addEventListener('install', e => { e.waitUntil(caches.open(CACHE).then(c => c.addAll(CORE)).then(() => self.skipWaiting())); });
+/* التثبيت: تُجلب الملفات من الخادم مباشرة (لا من ذاكرة المتصفح) حتى لا تُحفظ نسخة قديمة */
+self.addEventListener('install', e => { e.waitUntil(caches.open(CACHE).then(c => Promise.all(CORE.map(u => fetch(new Request(u, {cache: 'reload'})).then(r => { if(r && r.ok) return c.put(u, r); }).catch(() => null)))).then(() => self.skipWaiting())); });
 self.addEventListener('activate', e => { e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== CACHE).map(k => caches.delete(k)))).then(() => self.clients.claim())); });
 const timeout = (p, ms) => Promise.race([p, new Promise((_, rej) => setTimeout(() => rej(new Error('timeout')), ms))]);
 self.addEventListener('fetch', e => {
   const req = e.request; if (req.method !== 'GET') return;
   const url = new URL(req.url);
+  if (url.pathname.endsWith('version.json') || url.pathname.endsWith('reset.html')) return;   /* دائماً من الخادم */
   const same = url.origin === self.location.origin, font = /fonts\.(googleapis|gstatic)\.com$/.test(url.hostname);
   if (!same && !font) return;
   const fresh = same && (req.mode === 'navigate' || /\/(index\.html|config\.js)?$/.test(url.pathname) || url.pathname.endsWith('config.js'));
   if (fresh) {
     e.respondWith(caches.open(CACHE).then(async c => {
-      try { const r = await timeout(fetch(req, { cache: 'no-store' }), 5000); if (r && r.ok) { c.put(req, r.clone()); return r; } throw 0; }
+      /* ملف البرنامج كبير (2 ميغا): ننتظر الإنترنت حتى 30 ثانية قبل الرجوع للنسخة المحفوظة */
+      try { const r = await timeout(fetch(req, { cache: 'no-store' }), 30000); if (r && r.ok) { c.put(url.pathname.endsWith('/') || req.mode === 'navigate' ? './index.html' : req, r.clone()); return r; } throw 0; }
       catch (err) { return (await c.match(req, { ignoreSearch: true })) || (await c.match('./index.html')) || new Response('', { status: 504 }); }
     }));
     return;
